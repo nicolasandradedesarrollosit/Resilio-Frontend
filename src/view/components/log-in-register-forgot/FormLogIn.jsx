@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import '../../../styles/log-in/formLogIn.css';
+import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
@@ -204,7 +204,7 @@ function FormLogIn() {
                 </form>
             </div>
         </>
-    )
+    );
 }
 
 export default FormLogIn;

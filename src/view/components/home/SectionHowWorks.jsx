@@ -45,7 +45,7 @@ function SectionHowWorks(){
                 })}
             </div>
         </>
-    )
+    );
 }
 
 export default SectionHowWorks;

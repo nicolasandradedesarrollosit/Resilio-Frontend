@@ -53,7 +53,7 @@ function MainSectionHome(){
                 </section>
             </main>
         </>
-    )
+    );
 }
 
 export default MainSectionHome;

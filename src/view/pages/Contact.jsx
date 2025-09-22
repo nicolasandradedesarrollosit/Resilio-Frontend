@@ -32,7 +32,7 @@ function Contact(){
                 </main>
             </div>
         </>
-    )
+    );
 }
 
 export default Contact;

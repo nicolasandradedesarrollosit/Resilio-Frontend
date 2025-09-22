@@ -53,7 +53,7 @@ function SectionFeatures(){
                 })}
             </div>
         </>
-    )
+    );
 }
 
 export default SectionFeatures;

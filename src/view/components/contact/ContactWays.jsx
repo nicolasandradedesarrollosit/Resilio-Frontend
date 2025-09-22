@@ -62,7 +62,7 @@ function ContactWays(){
                 </div>
             </div>
         </>
-    )
+    );
 }
 
 export default ContactWays;

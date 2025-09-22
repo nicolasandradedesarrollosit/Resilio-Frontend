@@ -1,9 +1,9 @@
 import { React, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import GoBack from '../components/others/GoBack';
-import FormLogIn from '../components/log-in/FormLogIn';
+import FormLogIn from '../components/log-in-register-forgot/FormLogIn';
 import logo from '../../../public/logo-resilio-group.png';
-import '../../styles/log-in/logIn.css';
+import '../../styles/log-in-register-forgot/logInRegForg.css';
 
 function LogIn() {
     useEffect(() => {
@@ -28,7 +28,7 @@ function LogIn() {
                 </section>
             </main>
         </>
-    )
+    );
 }
 
 export default LogIn;

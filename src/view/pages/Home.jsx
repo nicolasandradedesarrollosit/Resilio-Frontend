@@ -25,7 +25,7 @@ function Home(){
                 <Footer />
             </footer>
         </>
-    )
+    );
 }
 
 export default Home;

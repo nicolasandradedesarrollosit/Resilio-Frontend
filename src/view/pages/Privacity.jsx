@@ -91,7 +91,7 @@ function Privacity(){
           </div>
         </main>
       </>
-    )
+    );
 }
 
 export default Privacity;
