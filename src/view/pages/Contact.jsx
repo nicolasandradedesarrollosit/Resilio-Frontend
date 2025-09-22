@@ -6,11 +6,12 @@ import ContactWays from '../components/contact/ContactWays';
 
 function Contact(){
     useEffect(() => {
-    const contenedor = document.getElementById("top");
-    if (contenedor) {
-      contenedor.scrollIntoView({ behavior: "instant" });
-    }
-  }, []);
+        const contenedor = document.getElementById("top");
+        if (contenedor) {
+        contenedor.scrollIntoView({ behavior: "instant" });
+        }
+    }, []);
+    
     return(
         <>
             <div id="top"></div>

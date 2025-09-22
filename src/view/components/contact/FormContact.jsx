@@ -58,7 +58,7 @@ function FormContact(){
         const id = e.target.id;
         const content = e.target.value; 
         
-        validations.forEach((item, index) => { 
+        validations.forEach((item) => { 
         if(item.id === id){
             const isValid = validate(content, item.regex);
             

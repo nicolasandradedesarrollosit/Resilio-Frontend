@@ -32,7 +32,6 @@ ul, li {
   scrollbar-color: #000 #1a1a1a;      
 }
 
-/* Chrome, Edge, Safari */
 *::-webkit-scrollbar {
   width: 10px;                  
   height: 10px;                 
@@ -50,4 +49,30 @@ ul, li {
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: #222;           
+}
+
+#top{
+  display: flex;
+  height: 0;
+  width: 0;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
 }

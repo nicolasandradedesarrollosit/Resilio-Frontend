@@ -112,6 +112,39 @@
     transform: translateY(0); 
 }
 
+#button-2 {
+    background: transparent;
+    border: 2px solid hsl(268, 80%, 55%);
+    box-shadow: 0 0 15px rgba(170, 110, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+#button-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(100deg, hsla(268, 80%, 55%, 0.2) 0%, hsla(268, 100%, 70%, 0.2) 100%);
+    transition: 0.5s ease-in-out;
+    z-index: 1;
+}
+
+#button-2:hover {
+    transform: translateY(-2px);
+    border-color: hsl(268, 100%, 70%);
+}
+
+#button-2:hover::before {
+    left: 0;
+}
+
+#button-2:active {
+    transform: translateY(0);
+}
+
 @media screen and (max-width: 1024px) {
     .title-content-hero-section{
         font-size: 3rem;

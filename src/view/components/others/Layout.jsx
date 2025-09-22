@@ -4,6 +4,7 @@ import Home from '../../pages/Home.jsx';
 import Contact from '../../pages/Contact.jsx';
 import Terms from '../../pages/Terms.jsx';
 import Privacity from '../../pages/Privacity.jsx';
+import LogIn from '../../pages/LogIn.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -20,6 +21,7 @@ function Layout(){
         <Route path='/contact' element={<Contact />} />
         <Route path='/service' element={<Terms />} />
         <Route path='/privacity' element={<Privacity />} />
+        <Route path='/log-in' element={<LogIn />} />
       </Routes>
     </>
   );

@@ -15,15 +15,14 @@ function HeroSectionHome(){
                 </navbar>
                 <div className='content-hero-section'>
                     <span className='title-content-hero-section'>
-                        Somos Resilio Group
+                        Somos Resilio
                     </span>
                     <span className='subtitle-content-hero-section'>
                         Una comunidad, un grupo de jóvenes  amantes de la creatividad y de las buenas experiencias
                     </span>
                     <div className='container-buttons-content-hero-section'>
-                        <button className='item-button' id='button-1'>
-                            <Link to={'/contact'}>Contactarse</Link>
-                        </button>
+                        <Link className='item-button' id='button-1' to={'/contact'}>Contactarse</Link>
+                        <Link className='item-button' id='button-2' to={'/log-in'}>Inicie Sesión</Link>
                     </div>
                 </div>
             </section>
