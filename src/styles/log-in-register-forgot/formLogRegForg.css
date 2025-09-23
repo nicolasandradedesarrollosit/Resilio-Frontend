@@ -1,4 +1,4 @@
-.container-form-log-in {
+.container-form-log-in-reg-forg {
     flex: 1;
     max-width: 800px;
     background: rgba(30, 41, 59, 0.8);
@@ -9,7 +9,7 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.form-title-log-in{
+.form-title-log-in-reg-forg{
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 2rem;
@@ -17,12 +17,13 @@
     text-align: center;
 }
 
-.field-form-log-in {
+.field-form-log-in-reg-forg {
     position: relative;
     margin-bottom: 2rem;
 }
 
-.field-form-log-in input {
+.field-form-log-in-reg-forg input,
+.field-form-log-in-reg-forg select {
     width: 100%;
     padding: 1.2rem 1.5rem;
     border: 2px solid rgba(148, 163, 184, 0.2);
@@ -36,14 +37,32 @@
     margin: 0 0 10px 0;
 }
 
-.field-form-log-in input:focus {
+.field-form-log-in-reg-forg select{
+    appearance: none;       
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.5rem;
+  overflow: scroll;
+}
+
+.field-form-log-in-reg-forg option{
+  font-size: 14px;  
+  padding: 2px 6px;   
+
+}
+
+.field-form-log-in-reg-forg input:focus {
     outline: none;
     border-color: #8b5cf6;
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
     transform: translateY(-2px);
 }
 
-.field-form-log-in label {
+.field-form-log-in-reg-forg label {
     position: absolute;
     top: 1.2rem;
     left: 1.5rem;
@@ -56,8 +75,8 @@
     border-radius: 0.5rem;
 }
 
-.field-form-log-in input:focus + label,
-.field-form-log-in input:not(:placeholder-shown) + label {
+.field-form-log-in-reg-forg input:focus + label,
+.field-form-log-in-reg-forg input:not(:placeholder-shown) + label {
     top: -0.5rem;
     left: 1rem;
     font-size: 0.85rem;
@@ -65,12 +84,12 @@
     font-weight: 600;
 }
 
-.submit-container-log-in {
+.submit-container-log-in-reg-forg {
     display: flex;
     justify-content: center;
 }
 
-.submit-btn-log-in {
+.submit-btn-log-in-reg-forg {
     position: relative;
     padding: 1.2rem 3rem;
     border-radius: 50px;
@@ -89,7 +108,7 @@
     overflow: hidden;
 }
 
-.submit-btn-log-in:hover {
+.submit-btn-log-in-reg-forg:hover {
     border-color: transparent;
     transform: translateY(-2px);
     box-shadow: 
@@ -97,11 +116,11 @@
         0 0 60px rgba(139, 92, 246, 0.3);
 }
 
-.submit-btn-log-in:active {
+.submit-btn-log-in-reg-forg:active {
     transform: translateY(-1px);
 }
 
-.submit-btn-log-in::before {
+.submit-btn-log-in-reg-forg::before {
     content: '';
     position: absolute;
     top: 0;
@@ -114,11 +133,11 @@
     z-index: -1;
 }
 
-.submit-btn-log-in:hover::before {
+.submit-btn-log-in-reg-forg:hover::before {
     opacity: 1;
 }
 
-.cartel-validator-error-log-in{
+.cartel-validator-error-log-in-reg-forg{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,12 +145,12 @@
     color: #e66868b9;
 }
 
-.cartel-validator-error-log-in::before{
+.cartel-validator-error-log-in-reg-forg::before{
     content: "⚠";
     margin: 0 5px 0 0;
 }
 
-.cartel-validator-success-log-in{
+.cartel-validator-success-log-in-reg-forg{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -139,12 +158,12 @@
     color: #5f9749;
 }
 
-.cartel-validator-success-log-in::before{
+.cartel-validator-success-log-in-reg-forg::before{
     content: "✔";
     margin: 0 5px 0 0;
 }
 
-.link-container-log-in {
+.link-container-log-in-reg-forg {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -153,7 +172,7 @@
     flex-wrap: wrap;
 }
 
-.link-log-in {
+.link-log-in-reg-forg {
     color: #94a3b8;
     text-decoration: none;
     font-size: 0.95rem;
@@ -162,7 +181,7 @@
     padding-bottom: 2px;
 }
 
-.link-log-in::after {
+.link-log-in-reg-forg::after {
     content: '';
     position: absolute;
     width: 0;
@@ -173,15 +192,13 @@
     transition: width 0.3s ease;
 }
 
-.link-log-in:hover {
+.link-log-in-reg-forg:hover {
     color: #f8fafc;
 }
 
-.link-log-in:hover::after {
+.link-log-in-reg-forg:hover::after {
     width: 100%;
 }
-
-/* Loading Bar CSS - Agregar a formLogIn.css */
 
 .loading-bar-container {
     width: 100%;

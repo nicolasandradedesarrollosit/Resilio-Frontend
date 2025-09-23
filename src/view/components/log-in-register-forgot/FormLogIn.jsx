@@ -117,16 +117,18 @@ function FormLogIn() {
                         form.reset();
                     }
             }, 3000);
-            
+        }
+        else {
+            setRequestErrorState('Por favor, complete el formulario correctamente antes de enviar.');
         }
     }
 
     return (
         <>
-            <div className='container-form-log-in'>
-                <form id="form-log-in" className="form-log-in" onSubmit={handleSubmit}>
-                    <h2 className='form-title-log-in'>Inicio de Sesión</h2>
-                    <div className="field-form-log-in">
+            <div className='container-form-log-in-reg-forg'>
+                <form id="form-log-in-reg-forg" className="form-log-in-reg-forg" onSubmit={handleSubmit}>
+                    <h2 className='form-title-log-in-reg-forg'>Inicio de Sesión</h2>
+                    <div className="field-form-log-in-reg-forg">
                         <input
                         id="email"
                         name="email" 
@@ -137,23 +139,23 @@ function FormLogIn() {
                         <label htmlFor="email">Email</label>
                         
                         {validationStates.email === false && (
-                            <span className="cartel-validator-error-log-in">
+                            <span className="cartel-validator-error-log-in-reg-forg">
                                 {cartels[0].error}
                             </span>
                         )}
                         {requestErrorState && (
-                        <span className="cartel-validator-error-log-in">
+                        <span className="cartel-validator-error-log-in-reg-forg">
                             {requestErrorState}
                         </span>
                         )}
                         {validationStates.email === true && (
-                        <span className="cartel-validator-success-log-in">
+                        <span className="cartel-validator-success-log-in-reg-forg">
                             {cartels[0].success}
                         </span>
                         )}
                     </div>
                     
-                    <div className="field-form-log-in">
+                    <div className="field-form-log-in-reg-forg">
                         <input
                         id="password"
                         name="password"
@@ -164,30 +166,30 @@ function FormLogIn() {
                         <label htmlFor="password">Contraseña</label>
                     
                         {validationStates.password === false && (
-                        <span className="cartel-validator-error-log-in">
+                        <span className="cartel-validator-error-log-in-reg-forg">
                             {cartels[1].error}
                         </span>
                         )}
                         {requestErrorState && (
-                        <span className="cartel-validator-error-log-in">
+                        <span className="cartel-validator-error-log-in-reg-forg">
                             {requestErrorState}
                         </span>
                         )}
                         {validationStates.password === true && (
-                        <span className="cartel-validator-success-log-in">
+                        <span className="cartel-validator-success-log-in-reg-forg">
                             {cartels[1].success}
                         </span>
                         )}
                     </div>
-                    <div className='link-container-log-in'>
-                        <Link to={'/reset-password'} className='link-log-in'>¿Olvidaste tu contraseña?</Link>
-                        <Link to={'/register'} className='link-log-in'>Registrarse</Link>
+                    <div className='link-container-log-in-reg-forg'>
+                        <Link to={'/reset-password'} className='link-log-in-reg-forg'>¿Olvidaste tu contraseña?</Link>
+                        <Link to={'/register'} className='link-log-in-reg-forg'>Registrarse</Link>
                     </div>
 
-                    <div className="submit-container-log-in">
+                    <div className="submit-container-log-in-reg-forg">
                         <button 
                         type="submit" 
-                        className="submit-btn-log-in"
+                        className="submit-btn-log-in-reg-forg"
                         disabled={isLoading}>
                             {isLoading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
                         </button>

@@ -2,8 +2,7 @@ import { React, useEffect } from 'react';
 import GoBack from '../components/others/GoBack';
 import logo from '../../../public/logo-resilio-group.png';
 import '../../styles/log-in-register-forgot/logInRegForg.css';
-import
-// import RegisterForm from '../components/RegisterForm';
+import FormRegister from '../components/log-in-register-forgot/FormRegister';
 
 function Register() {
     useEffect(() => {
@@ -17,13 +16,13 @@ function Register() {
             <div id='top'></div>
             <main className='main-login'>
                 <nav className='navbar-login'>
-                    <GoBack dominio={'/'}/>
+                    <GoBack dominio={'/log-in'}/>
                     <div className='first-item-login'>
                         <img className='logo-login' src={logo} alt='logo' />
                     </div>
                 </nav>
                 <section className='container-form-login'>
-                    
+                    <FormRegister />
                 </section>
             </main>
         </>
