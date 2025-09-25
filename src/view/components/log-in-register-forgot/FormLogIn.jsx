@@ -75,9 +75,9 @@ function FormLogIn() {
             setTimeout(async () => {
                 try {
                     const response = await fetch('http://localhost:4000/api/log-in', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: emailValue, password: passwordValue }),
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: emailValue, password: passwordValue }),
                     });
 
                     const resp = await response.json();
@@ -106,9 +106,9 @@ function FormLogIn() {
                     form.reset();
 
                     if (decodedToken.role === 'admin') {
-                        navigate("/admin");
+                        navigate("/main/admin");
                     } else {
-                        navigate("/main");
+                        navigate("/main/user");
                     }
                 } 
                 catch (err) {

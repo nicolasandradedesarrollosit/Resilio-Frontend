@@ -16,14 +16,14 @@ function LogIn() {
     return (
         <>
             <div id='top'></div>
-            <main className='main-login'>
-                <nav className='navbar-login'>
+            <main className='main-log-in-reg-forg'>
+                <nav className='navbar-log-in-reg-forg'>
                     <GoBack dominio={'/'}/>
-                    <div className='first-item-login'>
-                        <img className='logo-login' src={logo} alt='logo' />
+                    <div className='first-item-log-in-reg-forg'>
+                        <img className='logo-log-in-reg-forg' src={logo} alt='logo' />
                     </div>
                 </nav>
-                <section className='container-form-login'>
+                <section className='container-log-in-reg-forg'>
                     <FormLogIn />
                 </section>
             </main>

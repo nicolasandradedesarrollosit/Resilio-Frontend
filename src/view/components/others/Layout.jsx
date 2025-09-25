@@ -6,6 +6,8 @@ import Terms from '../../pages/Terms.jsx';
 import Privacity from '../../pages/Privacity.jsx';
 import LogIn from '../../pages/LogIn.jsx';
 import Register from '../../pages/Register.jsx';
+import ForgotPassword from '../../pages/ForgotPassword.jsx';
+import MainUser from '../../pages/MainUser.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -24,6 +26,8 @@ function Layout(){
         <Route path='/privacity' element={<Privacity />} />
         <Route path='/log-in' element={<LogIn />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/reset-password' element={<ForgotPassword />} />
+        <Route path='/main/user' element={<MainUser />} />
       </Routes>
     </>
   );

@@ -1,4 +1,4 @@
-.main-login {
+.main-log-in-reg-forg {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -10,7 +10,7 @@
   line-height: 1.6;
 }
 
-.navbar-login {
+.navbar-log-in-reg-forg {
   position: sticky;
   top: 0;
   display: flex;
@@ -24,20 +24,20 @@
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-.first-item-login { 
+.first-item-log-in-reg-forg { 
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.logo-login {
+.logo-log-in-reg-forg {
   width: 48px; 
   height: 48px;
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(124, 58, 237, 0.35));
 }
 
-.container-form-login {
+.container-log-in-reg-forg {
   width: 100%;
   min-height: calc(100vh - 100px);
   display: flex;
