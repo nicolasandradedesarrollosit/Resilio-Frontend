@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 
 function ForgotPasswordForm() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [isValid, setIsValid] = useState(null);
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +46,7 @@ function ForgotPasswordForm() {
 
         setTimeout(async () => {
             try {
-                const response = await fetch('http://localhost:4000/api/forgot-password', {
+                const response = await fetch(`${API_URL}/api/forgot-password`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

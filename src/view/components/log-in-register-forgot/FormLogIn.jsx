@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 function FormLogIn() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [validationStates, setValidationStates] = useState({
         email: null,
         password: null
@@ -74,7 +75,7 @@ function FormLogIn() {
             })
             setTimeout(async () => {
                 try {
-                    const response = await fetch('http://localhost:4000/api/log-in', {
+                    const response = await fetch(`${API_URL}/api/log-in`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: emailValue, password: passwordValue }),

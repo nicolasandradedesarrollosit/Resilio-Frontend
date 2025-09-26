@@ -121,6 +121,7 @@ function FormRegister() {
     };
 
     const handleSubmit = (e) => {
+        const API_URL = import.meta.env.VITE_API_URL
         e.preventDefault();
         const form = e.target;
         const { name, province, city, phone_number, email, password } = form;
@@ -144,7 +145,7 @@ function FormRegister() {
             })
             setTimeout(async () => {
                 try {
-                    const response = await fetch('http://localhost:4000/api/register', {
+                    const response = await fetch(`${API_URL}/api/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: nameValue, province: provinceValue, city: cityValue, phone_number: phoneNumberValue, email: emailValue, password: passwordValue }),
