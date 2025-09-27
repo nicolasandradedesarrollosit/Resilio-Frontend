@@ -121,11 +121,6 @@ function ForgotPasswordForm() {
                                     {cartels[0]}
                                 </span>
                             )}
-                            {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
-                            </span>
-                            )}
                             {isValid === true && (
                             <span className="cartel-validator-success-log-in-reg-forg">
                                 {cartels[1]}
@@ -155,6 +150,11 @@ function ForgotPasswordForm() {
                                 Enviando email...
                             </div>
                         </div>
+                        {requestErrorState && (
+                            <span id='request-error' className="cartel-validator-error-log-in-reg-forg">
+                                {requestErrorState}
+                            </span>
+                        )}
                     </form>
                 </div>
 

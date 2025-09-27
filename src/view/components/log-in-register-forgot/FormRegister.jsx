@@ -201,11 +201,6 @@ function FormRegister() {
                                 {cartels[0].error}
                             </span>
                         )}
-                        {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
-                            </span>
-                        )}
                         {validationStates.name === true && (
                             <span className="cartel-validator-success-log-in-reg-forg">
                                 {cartels[0].success}
@@ -231,11 +226,6 @@ function FormRegister() {
                                 {cartels[1].error}
                             </span>
                         )}
-                        {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
-                            </span>
-                        )}
                         {validationStates.province === true && (
                             <span className="cartel-validator-success-log-in-reg-forg">
                                 {cartels[1].success}
@@ -256,11 +246,6 @@ function FormRegister() {
                         {validationStates.city === false && (
                             <span className="cartel-validator-error-log-in-reg-forg">
                                 {cartels[2].error}
-                            </span>
-                        )}
-                        {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
                             </span>
                         )}
                         {validationStates.city === true && (
@@ -285,11 +270,6 @@ function FormRegister() {
                                 {cartels[3].error}
                             </span>
                         )}
-                        {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
-                            </span>
-                        )}
                         {validationStates.phone_number === true && (
                             <span className="cartel-validator-success-log-in-reg-forg">
                                 {cartels[3].success}
@@ -312,11 +292,6 @@ function FormRegister() {
                                 {cartels[4].error}
                             </span>
                         )}
-                        {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
-                            </span>
-                        )}
                         {validationStates.email === true && (
                             <span className="cartel-validator-success-log-in-reg-forg">
                                 {cartels[4].success}
@@ -337,11 +312,6 @@ function FormRegister() {
                         {validationStates.password === false && (
                             <span className="cartel-validator-error-log-in-reg-forg">
                                 {cartels[5].error}
-                            </span>
-                        )}
-                        {requestErrorState && (
-                            <span className="cartel-validator-error-log-in-reg-forg">
-                                {requestErrorState}
                             </span>
                         )}
                         {validationStates.password === true && (
@@ -374,6 +344,11 @@ function FormRegister() {
                                 Procesando registro...
                             </div>
                         </div>
+                    )}
+                    {requestErrorState && (
+                        <span id='request-error' className="cartel-validator-error-log-in-reg-forg">
+                            {requestErrorState}
+                        </span>
                     )}
                 </form>
             </div>

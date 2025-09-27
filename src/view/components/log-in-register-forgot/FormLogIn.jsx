@@ -117,7 +117,7 @@ function FormLogIn() {
                         setIsLoading(false);
                         form.reset();
                     }
-            }, 3000);
+            }, 1500);
         }
         else {
             setRequestErrorState('Por favor, complete el formulario correctamente antes de enviar.');
@@ -144,11 +144,11 @@ function FormLogIn() {
                                 {cartels[0].error}
                             </span>
                         )}
-                        {requestErrorState && (
+                        {/* {requestErrorState && (
                         <span className="cartel-validator-error-log-in-reg-forg">
                             {requestErrorState}
                         </span>
-                        )}
+                        )} */}
                         {validationStates.email === true && (
                         <span className="cartel-validator-success-log-in-reg-forg">
                             {cartels[0].success}
@@ -171,11 +171,6 @@ function FormLogIn() {
                             {cartels[1].error}
                         </span>
                         )}
-                        {requestErrorState && (
-                        <span className="cartel-validator-error-log-in-reg-forg">
-                            {requestErrorState}
-                        </span>
-                        )}
                         {validationStates.password === true && (
                         <span className="cartel-validator-success-log-in-reg-forg">
                             {cartels[1].success}
@@ -186,6 +181,8 @@ function FormLogIn() {
                         <Link to={'/reset-password'} className='link-log-in-reg-forg'>¿Olvidaste tu contraseña?</Link>
                         <Link to={'/register'} className='link-log-in-reg-forg'>Registrarse</Link>
                     </div>
+
+                    
 
                     <div className="submit-container-log-in-reg-forg">
                         <button 
@@ -204,6 +201,11 @@ function FormLogIn() {
                             Verificando credenciales...
                         </div>
                     </div>
+                    {requestErrorState && (
+                        <span id="request-error" className="cartel-validator-error-log-in-reg-forg">
+                            {requestErrorState}
+                        </span>
+                    )}
                 </form>
             </div>
         </>
