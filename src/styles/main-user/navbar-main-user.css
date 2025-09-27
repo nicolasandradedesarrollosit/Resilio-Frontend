@@ -8,7 +8,6 @@
   position: relative;
   z-index: 999;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-
 }
 
 .logo-main-user-navbar {
@@ -87,34 +86,111 @@
 @media (max-width: 768px) {
   .navbar-main-user {
     flex-direction: column;
-    gap: clamp(12px, 3vw, 20px);
-    padding: clamp(12px, 3vw, 16px);
+    gap: 0;
+    padding: 0;
     min-height: auto;
+    border-bottom: none;
+  }
+
+  .avatar-container {
+    order: 0;
+    width: 100%;
+    padding: clamp(12px, 3vw, 16px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(9, 36, 63, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  .avatar-container .avatar {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
   }
 
   .logo-main-user-navbar {
     position: static;
     transform: none;
     order: 1;
-    margin-bottom: clamp(8px, 2vw, 12px);
+    margin: 0;
+    padding: clamp(24px, 6vw, 32px);
+    width: 100%;
+    height: auto !important;
+    min-height: clamp(80px, 15vw, 120px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(9, 36, 63, 0.2);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Forzar tamaño del logo */
+    max-width: none !important;
+    max-height: clamp(60px, 12vw, 90px) !important;
+    min-width: clamp(60px, 12vw, 90px) !important;
+    object-fit: contain !important;
   }
 
   .logo-main-user-navbar:hover {
-    transform: scale(1.05);
-  }
-
-  .avatar-container {
-    order: 0;
-    align-self: flex-start;
-    position: static;
-    padding: 0;
+    transform: scale(1.02);
   }
 
   .container-links-main-user {
     order: 2;
-    margin-left: 0;
-    justify-content: center;
+    margin: 0;
+    width: 100%;
+    justify-content: space-around;
     gap: clamp(16px, 4vw, 24px);
+    padding: clamp(16px, 4vw, 20px);
+    background: rgba(9, 36, 63, 0.25);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-direction: row;
+  }
+
+  .link-navigate-user {
+    flex: none;
+    text-align: center;
+    padding: clamp(8px, 2vw, 12px) 0;
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    border: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    word-wrap: normal;
+    font-size: clamp(15px, 3.5vw, 18px);
+    position: relative;
+  }
+
+  .link-navigate-user::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #8f6ddf, #b794f6);
+    transition: width 0.3s ease;
+  }
+
+  .link-navigate-user:hover {
+    background: transparent;
+    border-color: transparent;
+    transform: translateY(-1px);
+    color: #8f6ddf;
+  }
+
+  .link-navigate-user:hover::after {
+    width: 100%;
+  }
+
+  .link-navigate-user.active {
+    background: transparent;
+    border-color: transparent;
+    color: #8f6ddf;
+  }
+
+  .link-navigate-user.active::after {
     width: 100%;
   }
 }
@@ -122,26 +198,46 @@
 @media (max-width: 480px) {
   .container-links-main-user {
     gap: clamp(12px, 3vw, 16px);
-    flex-wrap: wrap;
-    justify-content: center;
+    padding: clamp(16px, 4vw, 20px);
+    flex-direction: row;
   }
 
   .link-navigate-user {
-    font-size: 14px;
-    padding: 6px 0;
+    flex: none;
+    width: auto;
+    margin: 0;
+    padding: clamp(10px, 2.5vw, 14px) 0;
+    font-size: clamp(14px, 3vw, 16px);
+    font-weight: 500;
   }
 
   .logo-main-user-navbar {
-    height: clamp(28px, 5vw, 36px);
+    min-height: clamp(70px, 12vw, 100px);
+    max-height: clamp(50px, 10vw, 75px) !important;
+    min-width: clamp(50px, 10vw, 75px) !important;
+    padding: clamp(20px, 5vw, 28px);
   }
 }
 
 @media (max-width: 360px) {
+  .avatar-container {
+    padding: 10px;
+  }
+
+  .logo-main-user-navbar {
+    padding: 18px;
+    min-height: clamp(60px, 10vw, 80px);
+    max-height: clamp(45px, 8vw, 60px) !important;
+    min-width: clamp(45px, 8vw, 60px) !important;
+  }
+
   .container-links-main-user {
-    gap: 8px;
+    padding: 14px;
+    gap: 10px;
   }
 
   .link-navigate-user {
+    padding: 8px 0;
     font-size: 13px;
   }
 }
@@ -152,17 +248,18 @@
   }
 
   .logo-main-user-navbar:hover {
-    transform: translate(-50%, -50%);
+    transform: none;
   }
 
   .link-navigate-user:active {
     color: #8f6ddf;
     transform: scale(0.98);
+    background: transparent;
   }
 
   @media (max-width: 768px) {
-    .logo-main-user-navbar:hover {
-      transform: none;
+    .logo-main-user-navbar:active {
+      transform: scale(0.98);
     }
   }
 }
