@@ -1,7 +1,8 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { supabase } from '../../../viewmodel/oauth/Supabase';
 
 function FormLogIn() {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -12,6 +13,77 @@ function FormLogIn() {
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    const [user, setUser] = useState(null);
+
+    ///////////////////
+    // Funcion que verifica si la sesion del usuario esta activa con Google
+    ///////////////////
+
+    useEffect(() => {
+        const initAuth = async () => {
+            try{
+                const { data: {session}, error} = await supabase.auth.getSession();
+                if(error){
+                    console.error('Error obteniendo sesión: ', error.message);
+                    setRequestErrorState('Error al verificar sesión')
+                    return;
+                }
+                if(session?.user){
+                    setUser(session.user);
+                    handleUserNavigation(session.user);
+                }
+            }
+            catch(err){
+                console.error('Error inesperado:', error);
+                setRequestErrorState('Error inesperado al verificar sesión')
+            }
+        };
+        
+        initAuth();
+
+        const {data: { suscription }} = supabase.auth.onAuthStateChange(
+            (e, session) => {
+                if(session?.user){
+                    setUser(session.user);
+                    
+                    navigate("/main/user")
+                }
+                else{
+                    setUser(null);
+                }
+                setIsGoogleLoading(false);
+            }
+        );
+        return () => suscription.unsuscribe();
+    }, []);
+
+    ///////////////////
+    // Sign in con Google
+    ///////////////////
+
+    const handleGoogleLogIn = async (e) =>{
+        try{
+            setIsGoogleLoading(true);
+            setRequestErrorState('');
+
+            const { error } = await supabase.auth.signInWithOauth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/log-in`
+                }
+            })
+
+            if(error){
+                setRequestErrorState('Error inesperado al conectar con Google: ' + error.message);
+                setIsGoogleLoading(false);
+            }
+        }
+        catch{
+            setRequestErrorState('Error inesperado al conectar con Google');
+            setIsGoogleLoading(false)
+        }
+    }
 
     const validations = [
         {
@@ -124,6 +196,20 @@ function FormLogIn() {
         }
     }
 
+    if (user) {
+        return (
+            <div className='container-form-log-in-reg-forg'>
+                <div className="form-log-in-reg-forg welcome-message">
+                    <h2 className='form-title-log-in-reg-forg'>Bienvenido</h2>
+                    <p className="welcome-user-email">Ya estás autenticado como {user.email}</p>
+                    <p className="welcome-redirect-text">
+                        Redirigiendo<span className="welcome-loading"></span>
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <div className='container-form-log-in-reg-forg'>
@@ -144,11 +230,6 @@ function FormLogIn() {
                                 {cartels[0].error}
                             </span>
                         )}
-                        {/* {requestErrorState && (
-                        <span className="cartel-validator-error-log-in-reg-forg">
-                            {requestErrorState}
-                        </span>
-                        )} */}
                         {validationStates.email === true && (
                         <span className="cartel-validator-success-log-in-reg-forg">
                             {cartels[0].success}
@@ -177,28 +258,56 @@ function FormLogIn() {
                         </span>
                         )}
                     </div>
+
+                    <div className="auth-separator">
+                        <div className="auth-separator-line"></div>
+                        <span className="auth-separator-text">o</span>
+                        <div className="auth-separator-line"></div>
+                    </div>
+                    
+                    <div className="google-login-container">
+                        <button 
+                            type="button"
+                            onClick={handleGoogleLogIn}
+                            disabled={isGoogleLoading || isLoading}
+                            className="google-login-btn"
+                        >
+                            {isGoogleLoading ? (
+                                'Conectando con Google...'
+                            ) : (
+                                <>
+                                    <svg className="google-icon" viewBox="0 0 24 24">
+                                        <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                        <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                        <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                        <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                    </svg>
+                                    Continuar con Google
+                                </>
+                            )}
+                        </button>
+                    </div>
+
                     <div className='link-container-log-in-reg-forg'>
                         <Link to={'/reset-password'} className='link-log-in-reg-forg'>¿Olvidaste tu contraseña?</Link>
                         <Link to={'/register'} className='link-log-in-reg-forg'>Registrarse</Link>
                     </div>
 
-                    
-
                     <div className="submit-container-log-in-reg-forg">
                         <button 
                         type="submit" 
                         className="submit-btn-log-in-reg-forg"
-                        disabled={isLoading}>
+                        disabled={isLoading || isGoogleLoading}>
                             {isLoading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
                         </button>
                     </div>
 
-                    <div className={`loading-bar-container ${isLoading ? 'active' : ''}`}>
+                    <div className={`loading-bar-container ${(isLoading || isGoogleLoading) ? 'active' : ''}`}>
                         <div className="loading-bar">
                             <div className="loading-bar-fill"></div>
                         </div>
                         <div className="loading-text">
-                            Verificando credenciales...
+                            {isGoogleLoading ? 'Conectando con Google...' : 'Verificando credenciales...'}
                         </div>
                     </div>
                     {requestErrorState && (
