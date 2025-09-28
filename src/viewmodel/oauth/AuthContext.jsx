@@ -64,7 +64,7 @@ const AuthProvider = ({ children }) => {
             console.log('URL actual:', window.location.origin);
             console.log('URL completa:', window.location.href);
             
-            // Para producción - redirecciona a una página sin hash primero
+            // Para producción con BrowserRouter
             const redirectUrl = `${window.location.origin}/auth/callback`;
             console.log('Redirect URL que se enviará:', redirectUrl);
             
