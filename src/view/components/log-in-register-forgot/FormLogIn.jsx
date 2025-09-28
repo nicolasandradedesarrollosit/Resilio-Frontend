@@ -39,6 +39,18 @@ function FormLogIn() {
     const { loginWithGoogle } = useContext(AuthContext);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
+    const handleGoogleLogin = async () => { // <--- Nueva función
+        setIsGoogleLoading(true);
+        try {
+            await loginWithGoogle(); 
+        } catch (error) {
+            console.error(error);
+            setRequestErrorState('Error al iniciar sesión con Google.');
+        } finally {
+            setIsGoogleLoading(false); 
+        }
+    };
+
     const validateField = (e) => {
         setRequestErrorState('');
         const id = e.target.id;
@@ -185,7 +197,7 @@ function FormLogIn() {
                     <div className="google-login-container">
                         <button 
                             type="button"
-                            onClick={loginWithGoogle}
+                            onClick={handleGoogleLogin}
                             disabled={isGoogleLoading || isLoading}
                             className="google-login-btn"
                         >
