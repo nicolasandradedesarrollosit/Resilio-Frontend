@@ -31,7 +31,7 @@ function FormLogIn() {
                 }
                 if(session?.user){
                     setUser(session.user);
-                    handleUserNavigation(session.user);
+                    navigate("main/user");
                 }
             }
             catch(err){
@@ -55,7 +55,7 @@ function FormLogIn() {
                 setIsGoogleLoading(false);
             }
         );
-        return () => suscription.unsuscribe();
+        return () => suscription.unsubscribe();
     }, []);
 
     ///////////////////
@@ -67,7 +67,7 @@ function FormLogIn() {
             setIsGoogleLoading(true);
             setRequestErrorState('');
 
-            const { error } = await supabase.auth.signInWithOauth({
+            const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
                     redirectTo: `${window.location.origin}/log-in`
