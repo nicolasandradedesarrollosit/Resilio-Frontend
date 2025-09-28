@@ -61,22 +61,42 @@ const AuthProvider = ({ children }) => {
     const loginWithGoogle = async () => {
         try {
             console.log('Iniciando login con Google...');
+            console.log('URL actual:', window.location.origin);
+            console.log('URL completa:', window.location.href);
             
-            const { error } = await supabase.auth.signInWithOAuth({
+            // Para producción - redirecciona a una página sin hash primero
+            const redirectUrl = `${window.location.origin}/auth/callback`;
+            console.log('Redirect URL que se enviará:', redirectUrl);
+            
+            const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    // Cambia esta URL por la tuya exacta
-                    redirectTo: window.location.origin + '/main/user'
+                    redirectTo: redirectUrl,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    }
                 }
             });
+
+            console.log('Respuesta completa de OAuth:', { data, error });
 
             if (error) {
                 console.error('Error de OAuth:', error);
                 throw error;
             }
 
-            // No esperamos data aquí porque la redirección ya comenzó
-            console.log('Redirección a Google iniciada...');
+            // Forzar redirección si no ocurre automáticamente
+            if (data?.url) {
+                console.log('URL de Google recibida:', data.url);
+                console.log('Iniciando redirección manual...');
+                
+                // Redirección inmediata
+                window.location.replace(data.url);
+            } else {
+                console.log('No se recibió URL de redirección');
+                throw new Error('No se pudo obtener la URL de autenticación');
+            }
 
         } catch (error) {
             console.error('Error en loginWithGoogle:', error);
