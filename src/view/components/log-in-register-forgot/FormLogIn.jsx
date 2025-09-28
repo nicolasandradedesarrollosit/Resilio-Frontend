@@ -47,14 +47,14 @@ function FormLogIn() {
             setIsGoogleLoading(true);
             
             console.log('Llamando a loginWithGoogle...');
-            const result = await loginWithGoogle();
-            console.log('Resultado de login:', result);
+            await loginWithGoogle();
             
-            // Si llegamos aquí, el login se inició correctamente
-            // La redirección la maneja automáticamente Supabase
+            // Si llegamos aquí sin error, la redirección se iniciará automáticamente
+            // El usuario será redirigido a Google y luego de vuelta a tu app
+            console.log('OAuth iniciado correctamente - redirigiendo a Google...');
             
         } catch (error) {
-            console.error('Error completo:', error);
+            console.error('Error al iniciar OAuth:', error);
             setRequestErrorState(`Error al conectar con Google: ${error.message}`);
             setIsGoogleLoading(false);
         }

@@ -36,6 +36,7 @@ const AuthProvider = ({ children }) => {
 
         getSession();
 
+        // Listener para cambios de estado
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             console.log('Evento de auth:', event, session);
             
@@ -61,22 +62,22 @@ const AuthProvider = ({ children }) => {
         try {
             console.log('Iniciando login con Google...');
             
-            const { data, error } = await supabase.auth.signInWithOAuth({
+            const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
                     // Cambia esta URL por la tuya exacta
-                    redirectTo: window.location.origin + '#/main/user'
+                    redirectTo: window.location.origin + '/main/user'
                 }
             });
-
-            console.log('Resultado de OAuth:', data, error);
 
             if (error) {
                 console.error('Error de OAuth:', error);
                 throw error;
             }
 
-            return data;
+            // No esperamos data aquí porque la redirección ya comenzó
+            console.log('Redirección a Google iniciada...');
+
         } catch (error) {
             console.error('Error en loginWithGoogle:', error);
             throw error;
