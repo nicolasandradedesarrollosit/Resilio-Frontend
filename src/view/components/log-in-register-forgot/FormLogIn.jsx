@@ -22,60 +22,57 @@ function FormLogIn() {
 
     useEffect(() => {
         let mounted = true;
-        let subscription = null;
 
         const handleOAuthRedirect = async () => {
-            try {
             const hash = window.location.hash;
-            if (hash) {
+            if (hash && hash.includes('access_token')) {
                 const params = new URLSearchParams(hash.replace(/^#/, ''));
                 const access_token = params.get('access_token');
                 const refresh_token = params.get('refresh_token');
 
-                if (access_token) {
-                const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
-                if (error) {
-                    console.error('Error seteando sesión:', error);
-                } else if (mounted) {
-                    setUser(data.user);
-                    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-                    navigate(data.user.role === 'admin' ? '/main/admin' : '/main/user');
-                    return;
-                }
-                }
-            }
+                if (access_token && refresh_token) {
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token,
+                        refresh_token
+                    });
 
-            const { data: { session }, error } = await supabase.auth.getSession();
-            if (error) console.error('Error obteniendo sesión:', error);
-            else if (session?.user && mounted) {
-                setUser(session.user);
-                navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
-            }
+                    if (error) {
+                        console.error('Error al setear sesión OAuth manualmente:', error);
+                        return;
+                    }
 
-            } catch (err) {
-            console.error('Error procesando redirect/session:', err);
+                    if (mounted && data?.user) {
+                        setUser(data.user);
+                        window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+                        navigate(data.user.role === 'admin' ? '/main/admin' : '/main/user');
+                    }
+                }
+            } else {
+                const { data: { session } = {} } = await supabase.auth.getSession();
+                if (session?.user && mounted) {
+                    setUser(session.user);
+                    navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
+                }
             }
         };
 
         handleOAuthRedirect();
 
-        const { data } = supabase.auth.onAuthStateChange((event, session) => {
-            setIsGoogleLoading(false);
+        const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
             if (session?.user) {
-            setUser(session.user);
-            navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
+                setUser(session.user);
+                navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
             } else {
-            setUser(null);
+                setUser(null);
             }
+            setIsGoogleLoading(false);
         });
-        subscription = data?.subscription ?? data;
 
         return () => {
             mounted = false;
-            if (subscription?.unsubscribe) subscription.unsubscribe();
-            else if (subscription?.remove) subscription.remove();
+            subscription?.unsubscribe?.();
         };
-        }, []);
+    }, []);
 
     ///////////////////
     // Sign in con Google
