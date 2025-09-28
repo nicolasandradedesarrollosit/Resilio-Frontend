@@ -1,106 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import supabase from '../../../viewmodel/oauth/Supabase';
+import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 
 function FormLogIn() {
+    const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
+
     const [validationStates, setValidationStates] = useState({
         email: null,
         password: null
     });
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
-    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-    const [user, setUser] = useState(null);
-
-    ///////////////////
-    // Funcion que verifica si la sesion del usuario esta activa con Google
-    ///////////////////
-
-    useEffect(() => {
-        let mounted = true;
-
-        const handleOAuthRedirect = async () => {
-            const hash = window.location.hash;
-            if (hash && hash.includes('access_token')) {
-                const params = new URLSearchParams(hash.replace(/^#/, ''));
-                const access_token = params.get('access_token');
-                const refresh_token = params.get('refresh_token');
-
-                if (access_token && refresh_token) {
-                    const { data, error } = await supabase.auth.setSession({
-                        access_token,
-                        refresh_token
-                    });
-
-                    if (error) {
-                        console.error('Error al setear sesión OAuth manualmente:', error);
-                        return;
-                    }
-
-                    if (mounted && data?.user) {
-                        setUser(data.user);
-                        window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-                        navigate(data.user.role === 'admin' ? '/main/admin' : '/main/user');
-                    }
-                }
-            } else {
-                const { data: { session } = {} } = await supabase.auth.getSession();
-                if (session?.user && mounted) {
-                    setUser(session.user);
-                    navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
-                }
-            }
-        };
-
-        handleOAuthRedirect();
-
-        const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
-            if (session?.user) {
-                setUser(session.user);
-                navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
-            } else {
-                setUser(null);
-            }
-            setIsGoogleLoading(false);
-        });
-
-        return () => {
-            mounted = false;
-            subscription?.unsubscribe?.();
-        };
-    }, []);
-
-    ///////////////////
-    // Sign in con Google
-    ///////////////////
-
-    const handleGoogleLogIn = async (e) =>{
-        try{
-            setIsGoogleLoading(true);
-            setRequestErrorState('');
-
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: `${window.location.origin}/#/log-in`
-                }
-            })
-
-            if(error){
-                setRequestErrorState('Error inesperado al conectar con Google: ' + error.message);
-                setIsGoogleLoading(false);
-            }
-        }
-        catch{
-            setRequestErrorState('Error inesperado al conectar con Google');
-            setIsGoogleLoading(false)
-        }
-    }
-
     const validations = [
         {
             id: 'email',
@@ -111,7 +24,6 @@ function FormLogIn() {
             regex: /^.{8,72}$/
         }
     ];
-
     const cartels = [
         {
             error: 'El email debe tener un formato válido example@provider.com',
@@ -123,6 +35,9 @@ function FormLogIn() {
             success: 'La contraseña tiene un formato válido',
         }
     ];
+
+    const { loginWithGoogle } = useContext(AuthContext);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
     const validateField = (e) => {
         setRequestErrorState('');
@@ -212,20 +127,6 @@ function FormLogIn() {
         }
     }
 
-    if (user) {
-        return (
-            <div className='container-form-log-in-reg-forg'>
-                <div className="form-log-in-reg-forg welcome-message">
-                    <h2 className='form-title-log-in-reg-forg'>Bienvenido</h2>
-                    <p className="welcome-user-email">Ya estás autenticado como {user.email}</p>
-                    <p className="welcome-redirect-text">
-                        Redirigiendo<span className="welcome-loading"></span>
-                    </p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
             <div className='container-form-log-in-reg-forg'>
@@ -284,7 +185,7 @@ function FormLogIn() {
                     <div className="google-login-container">
                         <button 
                             type="button"
-                            onClick={handleGoogleLogIn}
+                            onClick={loginWithGoogle}
                             disabled={isGoogleLoading || isLoading}
                             className="google-login-btn"
                         >
