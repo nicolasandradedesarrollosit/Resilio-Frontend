@@ -70,7 +70,7 @@ function FormLogIn() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/log-in`
+                    redirectTo: `${window.location.origin}/#/log-in`
                 }
             })
 
