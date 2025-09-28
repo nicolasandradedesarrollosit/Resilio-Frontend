@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -7,7 +7,7 @@ import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 function FormLogIn() {
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
-    const { user, loginWithGoogle, loading: authLoading } = useContext(AuthContext);
+    const { loginWithGoogle } = useContext(AuthContext);
 
     const [validationStates, setValidationStates] = useState({
         email: null,
@@ -39,25 +39,23 @@ function FormLogIn() {
         }
     ];
 
-    // Redirigir si el usuario ya está autenticado
-    useEffect(() => {
-        if (user && !authLoading) {
-            navigate('/main/user');
-        }
-    }, [user, authLoading, navigate]);
-
-    const handleGoogleLogin = async () => { 
+    const handleGoogleLogin = async () => {
+        console.log('Click en botón Google');
+        
         try {
             setRequestErrorState('');
             setIsGoogleLoading(true);
-
-            await loginWithGoogle();
-            // La redirección se manejará automáticamente por el redirect_to de Supabase
+            
+            console.log('Llamando a loginWithGoogle...');
+            const result = await loginWithGoogle();
+            console.log('Resultado de login:', result);
+            
+            // Si llegamos aquí, el login se inició correctamente
+            // La redirección la maneja automáticamente Supabase
             
         } catch (error) {
-            console.error('Error en Google login:', error);
-            setRequestErrorState('Error al iniciar sesión con Google. Inténtalo de nuevo.');
-        } finally {
+            console.error('Error completo:', error);
+            setRequestErrorState(`Error al conectar con Google: ${error.message}`);
             setIsGoogleLoading(false);
         }
     };
@@ -151,20 +149,6 @@ function FormLogIn() {
         }
     }
 
-    // Mostrar loading si el contexto de auth está cargando
-    if (authLoading) {
-        return (
-            <div className='container-form-log-in-reg-forg'>
-                <div className="loading-container">
-                    <div className="loading-bar">
-                        <div className="loading-bar-fill"></div>
-                    </div>
-                    <div className="loading-text">Cargando...</div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
             <div className='container-form-log-in-reg-forg'>
@@ -239,12 +223,28 @@ function FormLogIn() {
                             onClick={handleGoogleLogin}
                             disabled={isGoogleLoading || isLoading}
                             className="google-login-btn"
+                            style={{ 
+                                opacity: (isGoogleLoading || isLoading) ? 0.6 : 1,
+                                cursor: (isGoogleLoading || isLoading) ? 'not-allowed' : 'pointer'
+                            }}
                         >
                             {isGoogleLoading ? (
-                                'Conectando con Google...'
+                                <>
+                                    <div style={{
+                                        display: 'inline-block',
+                                        width: '20px',
+                                        height: '20px',
+                                        border: '2px solid #f3f3f3',
+                                        borderTop: '2px solid #4285f4',
+                                        borderRadius: '50%',
+                                        animation: 'spin 1s linear infinite',
+                                        marginRight: '8px'
+                                    }}></div>
+                                    Conectando con Google...
+                                </>
                             ) : (
                                 <>
-                                    <svg className="google-icon" viewBox="0 0 24 24">
+                                    <svg className="google-icon" viewBox="0 0 24 24" style={{ width: '20px', height: '20px', marginRight: '8px' }}>
                                         <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                         <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                                         <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -261,21 +261,19 @@ function FormLogIn() {
                         <Link to={'/register'} className='link-log-in-reg-forg'>Registrarse</Link>
                     </div>
 
-                    <div className={`loading-bar-container ${(isLoading || isGoogleLoading) ? 'active' : ''}`}>
-                        <div className="loading-bar">
-                            <div className="loading-bar-fill"></div>
-                        </div>
-                        <div className="loading-text">
-                            {isGoogleLoading ? 'Conectando con Google...' : 'Verificando credenciales...'}
-                        </div>
-                    </div>
-
                     {requestErrorState && (
                         <span id="request-error" className="cartel-validator-error-log-in-reg-forg">
                             {requestErrorState}
                         </span>
                     )}
                 </form>
+
+                <style jsx>{`
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `}</style>
             </div>
         </>
     );
