@@ -1,8 +1,8 @@
-import { React, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { supabase } from '../../../viewmodel/oauth/Supabase';
+import supabase from '../../../viewmodel/oauth/Supabase';
 
 function FormLogIn() {
     const API_URL = import.meta.env.VITE_API_URL;
