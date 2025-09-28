@@ -7,7 +7,12 @@ import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 function FormLogIn() {
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
-    const { loginWithGoogle } = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
+    
+    console.log('AuthContext en FormLogIn:', authContext);
+    console.log('loginWithGoogle function:', authContext.loginWithGoogle);
+    
+    const { loginWithGoogle } = authContext;
 
     const [validationStates, setValidationStates] = useState({
         email: null,
@@ -47,14 +52,17 @@ function FormLogIn() {
             setIsGoogleLoading(true);
             
             console.log('Llamando a loginWithGoogle...');
-            await loginWithGoogle();
             
-            // Si llegamos aquí sin error, la redirección se iniciará automáticamente
-            // El usuario será redirigido a Google y luego de vuelta a tu app
+            // Llamada directa con debugging
+            const result = await loginWithGoogle();
+            console.log('Resultado de loginWithGoogle:', result);
+            
             console.log('OAuth iniciado correctamente - redirigiendo a Google...');
             
         } catch (error) {
-            console.error('Error al iniciar OAuth:', error);
+            console.error('ERROR COMPLETO:', error);
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
             setRequestErrorState(`Error al conectar con Google: ${error.message}`);
             setIsGoogleLoading(false);
         }
