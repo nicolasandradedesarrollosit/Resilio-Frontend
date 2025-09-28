@@ -21,67 +21,61 @@ function FormLogIn() {
     ///////////////////
 
     useEffect(() => {
-    let mounted = true;
-    let subscription = null;
+        let mounted = true;
+        let subscription = null;
 
-    const handleOAuthRedirect = async () => {
-        try {
-        const { data: sessionData, error: redirectError } = await supabase.auth.getSessionFromUrl({ storeSession: true });
+        const handleOAuthRedirect = async () => {
+            try {
+            const hash = window.location.hash;
+            if (hash) {
+                const params = new URLSearchParams(hash.replace(/^#/, ''));
+                const access_token = params.get('access_token');
+                const refresh_token = params.get('refresh_token');
 
-        if (redirectError) {
-            console.warn('getSessionFromUrl no extrajo sesión (quizás no venías de OAuth):', redirectError.message || redirectError);
-        } else if (sessionData?.session) {
-            const user = sessionData.session.user;
-            if (mounted) {
-            setUser(user);
-            window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-            navigate(user?.role === 'admin' ? '/main/admin' : '/main/user');
+                if (access_token) {
+                const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+                if (error) {
+                    console.error('Error seteando sesión:', error);
+                } else if (mounted) {
+                    setUser(data.user);
+                    window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+                    navigate(data.user.role === 'admin' ? '/main/admin' : '/main/user');
+                    return;
+                }
+                }
             }
-            return;
-        }
 
-        const { data: { session } = {}, error: getSessionError } = await supabase.auth.getSession();
-        if (getSessionError) {
-            console.error('Error en getSession:', getSessionError);
-        } else if (session?.user) {
-            if (mounted) {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error) console.error('Error obteniendo sesión:', error);
+            else if (session?.user && mounted) {
+                setUser(session.user);
+                navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
+            }
+
+            } catch (err) {
+            console.error('Error procesando redirect/session:', err);
+            }
+        };
+
+        handleOAuthRedirect();
+
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+            setIsGoogleLoading(false);
+            if (session?.user) {
             setUser(session.user);
             navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
+            } else {
+            setUser(null);
             }
-        } else {
-            const { data: userData, error: getUserError } = await supabase.auth.getUser();
-            if (getUserError) console.warn('getUser error:', getUserError);
-            else if (userData?.user) {
-            if (mounted) {
-                setUser(userData.user);
-                navigate(userData.user.role === 'admin' ? '/main/admin' : '/main/user');
-            }
-            }
-        }
-        } catch (err) {
-        console.error('Error procesando redirect/session:', err);
-        }
-    };
+        });
+        subscription = data?.subscription ?? data;
 
-    handleOAuthRedirect();
-
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-        setIsGoogleLoading(false);
-        if (session?.user) {
-        setUser(session.user);
-        navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
-        } else {
-        setUser(null);
-        }
-    });
-    subscription = data?.subscription ?? data; 
-
-    return () => {
-        mounted = false;
-        if (subscription?.unsubscribe) subscription.unsubscribe();
-        else if (subscription?.remove) subscription.remove();
-    };
-    }, []);
+        return () => {
+            mounted = false;
+            if (subscription?.unsubscribe) subscription.unsubscribe();
+            else if (subscription?.remove) subscription.remove();
+        };
+        }, []);
 
     ///////////////////
     // Sign in con Google
