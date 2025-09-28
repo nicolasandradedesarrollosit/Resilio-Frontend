@@ -1,65 +1,100 @@
 import React, { createContext, useState, useEffect } from 'react';
-import supabase  from './Supabase';
+import supabase from './Supabase';
 
 export const AuthContext = createContext({
     user: null,
     loginWithGoogle: async () => {},
     loginWithApple: async () => {},
-    logOut: async () => {}
+    logOut: async () => {},
+    loading: false
 });
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Auth state changed: ', event, session);
-            if (session){
+        // Obtener sesión inicial
+        const getInitialSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
                 setUser({
-                    id: session.user.user_metadata.id,
-                    email: session.user.user_metadata.email,
+                    id: session.user.id,
+                    email: session.user.email,
                     avatar: session.user.user_metadata.avatar_url,
-                    name: session.user.user_metadata.name,
-                })
+                    name: session.user.user_metadata.full_name || session.user.user_metadata.name,
+                });
             }
-            else{
-                setUser(null);
+            setLoading(false);
+        };
+
+        getInitialSession();
+
+        // Escuchar cambios en el estado de autenticación
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                console.log('Auth state changed: ', event, session);
+                setLoading(true);
+                
+                if (session) {
+                    setUser({
+                        id: session.user.id,
+                        email: session.user.email,
+                        avatar: session.user.user_metadata.avatar_url,
+                        name: session.user.user_metadata.full_name || session.user.user_metadata.name,
+                    });
+                } else {
+                    setUser(null);
+                }
+                
+                setLoading(false);
             }
-        });
+        );
 
         return () => {
-             authListener.subscription.unsubscribe();
-        }
-    }, [])
+            subscription.unsubscribe();
+        };
+    }, []);
 
     const loginWithGoogle = async () => {
         try {
             const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'google'
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/main/user`
+                }
             });
 
             if (error) {
+                console.error('Error de autenticación con Google:', error);
                 throw new Error('Ha ocurrido algo inesperado durante la autenticación con Google: ' + error.message);
             }
 
-
+            return data;
         } catch (err) {
-            console.error(err);
+            console.error('Error en loginWithGoogle:', err);
+            throw err;
         }
     };
     
     const loginWithApple = async () => {
         try {
             const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'apple'
+                provider: 'apple',
+                options: {
+                    redirectTo: `${window.location.origin}/main/user`
+                }
             });
 
             if (error) {
+                console.error('Error de autenticación con Apple:', error);
                 throw new Error('Ha ocurrido algo inesperado durante la autenticación con Apple: ' + error.message);
             }
 
+            return data;
         } catch (err) {
-            console.error(err);
+            console.error('Error en loginWithApple:', err);
+            throw err;
         }
     };
 
@@ -73,7 +108,8 @@ const AuthProvider = ({ children }) => {
 
             setUser(null); 
         } catch (err) {
-            console.error(err);
+            console.error('Error en logout:', err);
+            throw err;
         }
     };
 
@@ -81,7 +117,8 @@ const AuthProvider = ({ children }) => {
         user, 
         loginWithGoogle,
         loginWithApple, 
-        logOut
+        logOut,
+        loading
     };
 
     return (

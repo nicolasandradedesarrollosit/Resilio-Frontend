@@ -7,6 +7,7 @@ import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 function FormLogIn() {
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
+    const { user, loginWithGoogle, loading: authLoading } = useContext(AuthContext);
 
     const [validationStates, setValidationStates] = useState({
         email: null,
@@ -14,6 +15,8 @@ function FormLogIn() {
     });
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
     const validations = [
         {
             id: 'email',
@@ -24,11 +27,11 @@ function FormLogIn() {
             regex: /^.{8,72}$/
         }
     ];
+
     const cartels = [
         {
             error: 'El email debe tener un formato válido example@provider.com',
             success: 'El email tiene un formato válido',
-
         },
         {
             error: 'La contraseña debe tener entre 8 y 72 caracteres',
@@ -36,14 +39,27 @@ function FormLogIn() {
         }
     ];
 
-    const { loginWithGoogle } = useContext(AuthContext);
-    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    // Redirigir si el usuario ya está autenticado
+    useEffect(() => {
+        if (user && !authLoading) {
+            navigate('/main/user');
+        }
+    }, [user, authLoading, navigate]);
 
-    const handleGoogleLogin = () => { 
-        setRequestErrorState('');
-        setIsGoogleLoading(true); 
+    const handleGoogleLogin = async () => { 
+        try {
+            setRequestErrorState('');
+            setIsGoogleLoading(true);
 
-        loginWithGoogle(); 
+            await loginWithGoogle();
+            // La redirección se manejará automáticamente por el redirect_to de Supabase
+            
+        } catch (error) {
+            console.error('Error en Google login:', error);
+            setRequestErrorState('Error al iniciar sesión con Google. Inténtalo de nuevo.');
+        } finally {
+            setIsGoogleLoading(false);
+        }
     };
 
     const validateField = (e) => {
@@ -54,12 +70,12 @@ function FormLogIn() {
 
         validations.forEach((item) => {
             if(item.id === id){
-                id === 'email' ? sanitizedContent = content.toLowerCase().trim() :  sanitizedContent = content;
+                id === 'email' ? sanitizedContent = content.toLowerCase().trim() : sanitizedContent = content;
                 const isValid = validate(sanitizedContent, item.regex);
                 setValidationStates(prevState => ({
-                ...prevState,
-                [id]: isValid
-            }));
+                    ...prevState,
+                    [id]: isValid
+                }));
             }
         });
     }
@@ -82,7 +98,8 @@ function FormLogIn() {
             setValidationStates({
                 email: null,
                 password: null
-            })
+            });
+
             setTimeout(async () => {
                 try {
                     const response = await fetch(`${API_URL}/api/log-in`, {
@@ -112,7 +129,6 @@ function FormLogIn() {
                     const decodedToken = jwtDecode(accessToken);
 
                     setRequestErrorState('');
-
                     setIsLoading(false);
                     form.reset();
 
@@ -123,10 +139,11 @@ function FormLogIn() {
                     }
                 } 
                 catch (err) {
-                        setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
-                        setIsLoading(false);
-                        form.reset();
-                    }
+                    console.error('Error en login:', err);
+                    setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
+                    setIsLoading(false);
+                    form.reset();
+                }
             }, 1500);
         }
         else {
@@ -134,18 +151,34 @@ function FormLogIn() {
         }
     }
 
+    // Mostrar loading si el contexto de auth está cargando
+    if (authLoading) {
+        return (
+            <div className='container-form-log-in-reg-forg'>
+                <div className="loading-container">
+                    <div className="loading-bar">
+                        <div className="loading-bar-fill"></div>
+                    </div>
+                    <div className="loading-text">Cargando...</div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <div className='container-form-log-in-reg-forg'>
                 <form id="form-log-in-reg-forg" className="form-log-in-reg-forg" onSubmit={handleSubmit}>
                     <h2 className='form-title-log-in-reg-forg'>Inicio de Sesión</h2>
+                    
                     <div className="field-form-log-in-reg-forg">
                         <input
-                        id="email"
-                        name="email" 
-                        type="text"
-                        placeholder=" "
-                        onChange={validateField}
+                            id="email"
+                            name="email" 
+                            type="text"
+                            placeholder=" "
+                            onChange={validateField}
+                            disabled={isLoading || isGoogleLoading}
                         />
                         <label htmlFor="email">Email</label>
                         
@@ -155,32 +188,43 @@ function FormLogIn() {
                             </span>
                         )}
                         {validationStates.email === true && (
-                        <span className="cartel-validator-success-log-in-reg-forg">
-                            {cartels[0].success}
-                        </span>
+                            <span className="cartel-validator-success-log-in-reg-forg">
+                                {cartels[0].success}
+                            </span>
                         )}
                     </div>
                     
                     <div className="field-form-log-in-reg-forg">
                         <input
-                        id="password"
-                        name="password"
-                        type="password" 
-                        placeholder=" "
-                        onChange={validateField}
+                            id="password"
+                            name="password"
+                            type="password" 
+                            placeholder=" "
+                            onChange={validateField}
+                            disabled={isLoading || isGoogleLoading}
                         />
                         <label htmlFor="password">Contraseña</label>
                     
                         {validationStates.password === false && (
-                        <span className="cartel-validator-error-log-in-reg-forg">
-                            {cartels[1].error}
-                        </span>
+                            <span className="cartel-validator-error-log-in-reg-forg">
+                                {cartels[1].error}
+                            </span>
                         )}
                         {validationStates.password === true && (
-                        <span className="cartel-validator-success-log-in-reg-forg">
-                            {cartels[1].success}
-                        </span>
+                            <span className="cartel-validator-success-log-in-reg-forg">
+                                {cartels[1].success}
+                            </span>
                         )}
+                    </div>
+
+                    <div className="submit-container-log-in-reg-forg">
+                        <button 
+                            type="submit" 
+                            className="submit-btn-log-in-reg-forg"
+                            disabled={isLoading || isGoogleLoading}
+                        >
+                            {isLoading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
+                        </button>
                     </div>
 
                     <div className="auth-separator">
@@ -217,15 +261,6 @@ function FormLogIn() {
                         <Link to={'/register'} className='link-log-in-reg-forg'>Registrarse</Link>
                     </div>
 
-                    <div className="submit-container-log-in-reg-forg">
-                        <button 
-                        type="submit" 
-                        className="submit-btn-log-in-reg-forg"
-                        disabled={isLoading || isGoogleLoading}>
-                            {isLoading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
-                        </button>
-                    </div>
-
                     <div className={`loading-bar-container ${(isLoading || isGoogleLoading) ? 'active' : ''}`}>
                         <div className="loading-bar">
                             <div className="loading-bar-fill"></div>
@@ -234,6 +269,7 @@ function FormLogIn() {
                             {isGoogleLoading ? 'Conectando con Google...' : 'Verificando credenciales...'}
                         </div>
                     </div>
+
                     {requestErrorState && (
                         <span id="request-error" className="cartel-validator-error-log-in-reg-forg">
                             {requestErrorState}
