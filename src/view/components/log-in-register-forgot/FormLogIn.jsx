@@ -39,16 +39,11 @@ function FormLogIn() {
     const { loginWithGoogle } = useContext(AuthContext);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-    const handleGoogleLogin = async () => { // <--- Nueva función
-        setIsGoogleLoading(true);
-        try {
-            await loginWithGoogle(); 
-        } catch (error) {
-            console.error(error);
-            setRequestErrorState('Error al iniciar sesión con Google.');
-        } finally {
-            setIsGoogleLoading(false); 
-        }
+    const handleGoogleLogin = () => { 
+        setRequestErrorState('');
+        setIsGoogleLoading(true); 
+
+        loginWithGoogle(); 
     };
 
     const validateField = (e) => {
