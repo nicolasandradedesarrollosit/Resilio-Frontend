@@ -21,41 +21,66 @@ function FormLogIn() {
     ///////////////////
 
     useEffect(() => {
-        const initAuth = async () => {
-            try{
-                const { data: {session}, error} = await supabase.auth.getSession();
-                if(error){
-                    console.error('Error obteniendo sesión: ', error.message);
-                    setRequestErrorState('Error al verificar sesión')
-                    return;
-                }
-                if(session?.user){
-                    setUser(session.user);
-                    navigate("main/user");
-                }
-            }
-            catch(err){
-                console.error('Error inesperado:', error);
-                setRequestErrorState('Error inesperado al verificar sesión')
-            }
-        };
-        
-        initAuth();
+    let mounted = true;
+    let subscription = null;
 
-        const {data: { suscription }} = supabase.auth.onAuthStateChange(
-            (e, session) => {
-                if(session?.user){
-                    setUser(session.user);
-                    
-                    navigate("/main/user")
-                }
-                else{
-                    setUser(null);
-                }
-                setIsGoogleLoading(false);
+    const handleOAuthRedirect = async () => {
+        try {
+        const { data: sessionData, error: redirectError } = await supabase.auth.getSessionFromUrl({ storeSession: true });
+
+        if (redirectError) {
+            console.warn('getSessionFromUrl no extrajo sesión (quizás no venías de OAuth):', redirectError.message || redirectError);
+        } else if (sessionData?.session) {
+            const user = sessionData.session.user;
+            if (mounted) {
+            setUser(user);
+            window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+            navigate(user?.role === 'admin' ? '/main/admin' : '/main/user');
             }
-        );
-        return () => suscription.unsubscribe();
+            return;
+        }
+
+        const { data: { session } = {}, error: getSessionError } = await supabase.auth.getSession();
+        if (getSessionError) {
+            console.error('Error en getSession:', getSessionError);
+        } else if (session?.user) {
+            if (mounted) {
+            setUser(session.user);
+            navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
+            }
+        } else {
+            const { data: userData, error: getUserError } = await supabase.auth.getUser();
+            if (getUserError) console.warn('getUser error:', getUserError);
+            else if (userData?.user) {
+            if (mounted) {
+                setUser(userData.user);
+                navigate(userData.user.role === 'admin' ? '/main/admin' : '/main/user');
+            }
+            }
+        }
+        } catch (err) {
+        console.error('Error procesando redirect/session:', err);
+        }
+    };
+
+    handleOAuthRedirect();
+
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        setIsGoogleLoading(false);
+        if (session?.user) {
+        setUser(session.user);
+        navigate(session.user.role === 'admin' ? '/main/admin' : '/main/user');
+        } else {
+        setUser(null);
+        }
+    });
+    subscription = data?.subscription ?? data; 
+
+    return () => {
+        mounted = false;
+        if (subscription?.unsubscribe) subscription.unsubscribe();
+        else if (subscription?.remove) subscription.remove();
+    };
     }, []);
 
     ///////////////////
