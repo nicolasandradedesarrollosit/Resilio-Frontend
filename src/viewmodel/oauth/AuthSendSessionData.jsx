@@ -12,12 +12,11 @@ const sendUserData = async() => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         supabaseToken: session.access_token,
-        email: session.user.email,
-        googleId: session.user.id
+        email: session.user.email
       })
     });
     console.log(session.access_token)
-    console.log(response.data);
+    console.log(response);
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
