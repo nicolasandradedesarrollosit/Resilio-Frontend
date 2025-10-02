@@ -1,5 +1,4 @@
 import supabase from './Supabase';
-import { storage } from './storage';
 
 const sendUserData = async() => {
   try {
