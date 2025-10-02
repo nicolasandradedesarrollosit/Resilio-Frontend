@@ -118,7 +118,7 @@ function FormLogIn() {
                         return;
                     }
 
-                    localStorage.setItem('token', accessToken);
+                    localStorage.setItem('access_token', accessToken);
                     const decodedToken = jwtDecode(accessToken);
 
                     setRequestErrorState('');

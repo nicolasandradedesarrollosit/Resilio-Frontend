@@ -15,8 +15,6 @@ const sendUserData = async() => {
         email: session.user.email
       })
     });
-    console.log(session.access_token)
-    console.log(response);
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
