@@ -13,14 +13,11 @@ const sendUserData = async() => {
       body: JSON.stringify({
         supabaseToken: session.access_token,
         email: session.user.email,
-        googleId: session.user.id,
-        provider: 'google',
-        userData: {
-          name: session.user.user_metadata?.full_name,
-          avatar: session.user.user_metadata?.avatar_url
-        }
+        googleId: session.user.id
       })
     });
+    console.log(session.access_token)
+    console.log(response.data);
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
