@@ -9,8 +9,6 @@ function FormLogIn() {
     const API_URL = import.meta.env.VITE_API_URL;
     const authContext = useContext(AuthContext);
     
-    console.log('AuthContext en FormLogIn:', authContext);
-    console.log('loginWithGoogle function:', authContext.loginWithGoogle);
     
     const { loginWithGoogle } = authContext;
 
@@ -45,24 +43,13 @@ function FormLogIn() {
     ];
 
     const handleGoogleLogin = async () => {
-        console.log('Click en botón Google');
         
         try {
             setRequestErrorState('');
             setIsGoogleLoading(true);
-            
-            console.log('Llamando a loginWithGoogle...');
-            
-            // Llamada directa con debugging
             const result = await loginWithGoogle();
-            console.log('Resultado de loginWithGoogle:', result);
-            
-            console.log('OAuth iniciado correctamente - redirigiendo a Google...');
             
         } catch (error) {
-            console.error('ERROR COMPLETO:', error);
-            console.error('Error message:', error.message);
-            console.error('Error stack:', error.stack);
             setRequestErrorState(`Error al conectar con Google: ${error.message}`);
             setIsGoogleLoading(false);
         }
