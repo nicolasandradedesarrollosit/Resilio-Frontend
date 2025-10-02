@@ -23,13 +23,13 @@ const sendUserData = async() => {
       throw new Error(errorData.message || 'Error al procesar la autenticación');
     }
     
-    const { token } = await response.json();
+    const { accessToken } = await response.json();
     
-    localStorage.setItem('access_token', token);
+    localStorage.setItem('access_token', accessToken);
     
     await supabase.auth.signOut();
     
-    return { token, user };
+    return { accessToken, user: session.user };
     
   } catch (err) {
     if (import.meta.env.DEV) {
