@@ -15,7 +15,7 @@ function NavbarMainUser() {
       const response = await fetch(`${VITE_API_URL}/api/user-data`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(decodedToken.sub)
+        body: JSON.stringify({userId: decodedToken.sub})
       });
 
       if(!response.ok) throw new Error('Error en el token');
