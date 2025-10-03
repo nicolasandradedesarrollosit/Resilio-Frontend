@@ -5,6 +5,7 @@ import { HashLink } from 'react-router-hash-link';
 import logo from '../../../../public/logo-resilio-group.png';
 
 function HeroSectionHome(){
+    const token = localStorage.getItem('access_token');
     return(
         <>
             <section className='hero-section-home'>
@@ -22,7 +23,19 @@ function HeroSectionHome(){
                     </span>
                     <div className='container-buttons-content-hero-section'>
                         <Link className='item-button' id='button-1' to={'/contact'}>Contactarse</Link>
-                        <Link className='item-button' id='button-2' to={'/log-in'}>Inicie Sesión</Link>
+                        {token && (
+                            <Link className='item-button' 
+                            id='button-2' to={'/main/user'}
+                            >Ir a tu cuenta
+                            </Link>
+                            )
+                        }
+                        {!token && (
+                            <Link className='item-button' 
+                            id='button-2' to={'/log-in'}
+                            >Inicie Sesión
+                            </Link>
+                        )}
                     </div>
                 </div>
             </section>
