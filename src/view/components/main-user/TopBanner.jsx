@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../../styles/main-user/top-banner.css'
 
 function TopBanner() {
     const [bannerData, setBannerData] = useState(null);
