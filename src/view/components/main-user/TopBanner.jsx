@@ -3,6 +3,8 @@ import '../../../styles/main-user/top-banner.css'
 
 function TopBanner() {
     const [bannerData, setBannerData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const fetchBannerData = async () => {
             try {
@@ -13,7 +15,6 @@ function TopBanner() {
                 
                 console.log('Response status:', response.status);
                 console.log('Response ok:', response.ok);
-                console.log('API URL:', import.meta.env.VITE_API_URL);
                 
                 if(!response.ok) {
                     const errorText = await response.text();
@@ -22,7 +23,9 @@ function TopBanner() {
                 }
 
                 const result = await response.json();
-                console.log('Result:', result);
+                console.log('Result completo:', result);
+                console.log('Result.data:', result.data);
+                console.log('Content:', result.data?.content);
 
                 if(result.ok && result.data) {
                     setBannerData(result.data); 
@@ -31,19 +34,25 @@ function TopBanner() {
             catch (err) {
                 console.error('Error en banner data', err);   
             }
+            finally {
+                setLoading(false);
+            }
         }
         fetchBannerData();
     }, []);
+
+    if (loading) {
+        return null;
+    }
+
+    if (!bannerData || !bannerData.content) {
+        return null;
+    }
+
     return (
-        <>
-            <div className='banner-top'>
-                {
-                    bannerData && (
-                        <p className='banner-message'>{bannerData.content}</p>
-                    )
-                }
-            </div>
-        </>
+        <div className='banner-top'>
+            <p className='banner-message'>{bannerData.content}</p>
+        </div>
     );
 }
 

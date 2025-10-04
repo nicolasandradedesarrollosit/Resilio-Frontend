@@ -1,7 +1,7 @@
 .banner-top {
     width: 100%;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 12px 20px;
+    padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,6 +30,31 @@
     }
 }
 
+.banner-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .banner-message {
     margin: 0;
     color: #ffffff;
@@ -46,7 +71,7 @@
         padding: 10px 15px;
     }
 
-    .data-message {
+    .banner-message {
         font-size: 13px;
     }
 }
@@ -56,7 +81,7 @@
         padding: 8px 12px;
     }
 
-    .data-message {
+    .banner-message {
         font-size: 12px;
     }
 }
