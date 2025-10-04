@@ -23,13 +23,9 @@ function TopBanner() {
                 }
 
                 const result = await response.json();
-                console.log('Result completo:', result);
-                console.log('Result.data:', result.data);
-                console.log('Content:', result.data?.content);
 
-                if(result.ok && result.data) {
-                    setBannerData(result.data); 
-                }
+                setBannerData(result); 
+                
             }
             catch (err) {
                 console.error('Error en banner data', err);   
