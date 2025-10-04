@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../../../public/logo-resilio-group.png';
 import Avatar from '../../components/others/Avatar';
-import '../../../styles/main-user/navbar-main-user.css';
+import '../../../styles/main-user/navbarMainUser.css';
 
 function NavbarMainUser() {
   const [userData, setUserData] = useState(null);

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/main-user/main-user.css';
+import '../../styles/main-user/mainUser.css';
 import NavbarMainUser from '../components/main-user/NavbarMainUser';
 import TopBanner from '../components/main-user/TopBanner';
 
