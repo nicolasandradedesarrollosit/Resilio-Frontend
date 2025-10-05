@@ -72,7 +72,7 @@ function PartnerBenefits() {
                             <div className="benefit_image_wrapper">
                                 <img 
                                     src={item.route_jpg} 
-                                    alt={item.title || "Beneficio"} 
+                                    alt={item.name || "Beneficio"} 
                                     className="benefit_image"
                                     onError={(e) => {
                                         e.target.src = '/placeholder-image.jpg';
@@ -80,8 +80,10 @@ function PartnerBenefits() {
                                 />
                             </div>
                             <div className="benefit_content">
-                                <h3 className="benefit_title">{item.title}</h3>
-                                <p className="benefit_description">{item.description}</p>
+                                <h3 className="benefit_title">{item.name}</h3>
+                                <p className="benefit_description">
+                                    Descuento de: %{item.discount} hasta {item.q_of_codes} códigos.
+                                </p>
                             </div>
                         </div>
                     ))}
