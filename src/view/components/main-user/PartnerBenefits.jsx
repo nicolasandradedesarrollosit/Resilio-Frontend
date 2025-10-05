@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import '../../../styles/main-user/PartnerBenefits.css'
+import '../../../styles/main-user/partnerBenefits.css'
 
 function PartnerBenefits() {
     const [benefits, setBenefits] = useState([]);
