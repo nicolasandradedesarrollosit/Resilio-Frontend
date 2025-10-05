@@ -13,12 +13,7 @@ function TopBanner() {
                     headers: { 'Content-Type': 'application/json' }
                 });
                 
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-                
                 if(!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Error response:', errorText);
                     throw new Error(`Error en banner data: ${response.status}`);
                 }
 
