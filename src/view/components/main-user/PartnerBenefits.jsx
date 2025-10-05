@@ -20,6 +20,10 @@ function PartnerBenefits() {
                 
                 const result = await response.json();
                 const data = result.data;
+
+                if (data.q_of_codes === null){
+                    data.q_of_codes = "ilimitados";
+                }
                 
                 if(result.ok && Array.isArray(data)) {
                     setBenefits(data);
@@ -82,7 +86,7 @@ function PartnerBenefits() {
                             <div className="benefit_content">
                                 <h3 className="benefit_title">{item.name}</h3>
                                 <p className="benefit_description">
-                                    Descuento de: %{item.discount} hasta {item.q_of_codes} códigos.
+                                    Descuento de: {item.discount}% hasta {item.q_of_codes} códigos.
                                 </p>
                             </div>
                         </div>

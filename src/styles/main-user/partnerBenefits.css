@@ -17,8 +17,7 @@
     color: hsl(280, 100%, 98%);
     margin-bottom: 2.5rem;
     text-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    padding: 0 2rem;
 }
 
 .partner_benefits_grid {
