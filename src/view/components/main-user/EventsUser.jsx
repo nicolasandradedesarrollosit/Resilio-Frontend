@@ -17,7 +17,6 @@ function EventsUser() {
                     return;
                 }
                 const result = await response.json();
-                console.log(result);
                 
                 if (result.ok && result.data) {
                     setEvents(result.data);
