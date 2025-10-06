@@ -10,7 +10,6 @@ function Profile(){
         province: null,
         city: null,
         phone_number: null,
-        email: null
     });
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -58,10 +57,6 @@ function Profile(){
         {
             id: 'phone_number',
             regex: /^[0-9]{9,15}$/
-        },
-        {
-            id: 'email',
-            regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         }
     ];
 
@@ -81,10 +76,6 @@ function Profile(){
         {
             error: 'El número de teléfono debe contener solo números y tener entre 9 y 15 dígitos',
             success: 'El número de teléfono tiene un formato válido'
-        },
-        {
-            error: 'El email debe tener un formato válido example@provider.com',
-            success: 'El email tiene un formato válido'
         }
     ];
 
@@ -96,7 +87,6 @@ function Profile(){
 
         validations.forEach((item) => {
             if(item.id === id) {
-                id === 'email' ? sanitizedContent = content.toLowerCase().trim() : sanitizedContent = content;
                 const isValid = validate(sanitizedContent, item.regex);
                 setValidationStates(prevState => ({
                     ...prevState,
@@ -126,29 +116,48 @@ function Profile(){
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
-        const { name, province, city, phone_number, email } = form;
+        const { name, province, city, phone_number } = form;
         
         const nameValue = name.value.trim();
         const provinceValue = province.value;
         const cityValue = city.value.trim();
         const phoneNumberValue = phone_number.value;
-        const emailValue = email.value.toLowerCase().trim();
 
         if(Object.values(validationStates).every(Boolean)) {
             setIsLoading(true);
             setRequestErrorState('');
 
+            // Crear objeto solo con campos modificados
+            const updatedFields = {};
+            
+            if (nameValue !== userData.name) {
+                updatedFields.name = nameValue;
+            }
+            if (provinceValue !== userData.province) {
+                updatedFields.province = provinceValue;
+            }
+            if (cityValue !== userData.city) {
+                updatedFields.city = cityValue;
+            }
+            if (phoneNumberValue !== userData.phone_number) {
+                updatedFields.phone_number = phoneNumberValue;
+            }
+
+            if (Object.keys(updatedFields).length === 0) {
+                setRequestErrorState('No se detectaron cambios en los datos.');
+                setIsLoading(false);
+                return;
+            }
+
             try {
+                const token = localStorage.getItem('access_token');
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-user`, {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        name: nameValue, 
-                        province: provinceValue, 
-                        city: cityValue, 
-                        phone_number: phoneNumberValue, 
-                        email: emailValue 
-                    })
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatedFields)
                 });
                 
                 const resp = await response.json();
@@ -214,22 +223,22 @@ function Profile(){
 
                 <div className="profile-field">
                     <label>Provincia:</label>
-                    <p>{userData.province || 'No especificado'}</p>
+                    <p>{userData.province === '-' ? 'No especificado' : userData.province}</p>
                 </div>
 
                 <div className="profile-field">
                     <label>Ciudad:</label>
-                    <p>{userData.city || 'No especificado'}</p>
+                    <p>{userData.city === '-' ? 'No especificado' : userData.city}</p>
                 </div>
                 
                 <div className="profile-field">
                     <label>Premium:</label>
-                    <p>{userData.ispremium ? '✅ Sí' : '❌ No'}</p>
+                    <p>{userData.ispremium ? 'Sí' : 'No'}</p>
                 </div>
                 
                 <div className="profile-field">
                     <label>Verificado:</label>
-                    <p>{userData.email_verified ? '✅ Verificado' : '⚠️ No verificado'}</p>
+                    <p>{userData.email_verified ? 'Verificado' : 'No verificado'}</p>
                 </div>
             </div>
             
@@ -334,29 +343,6 @@ function Profile(){
                                 {validationStates.phone_number === true && (
                                     <span className="cartel-validator-success-profile">
                                         {cartels[3].success}
-                                    </span>
-                                )}
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="email">Email:</label>
-                                <input 
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    defaultValue={userData.email || ''}
-                                    onChange={validateField}
-                                    placeholder=" "
-                                    required
-                                />
-                                {validationStates.email === false && (
-                                    <span className="cartel-validator-error-profile">
-                                        {cartels[4].error}
-                                    </span>
-                                )}
-                                {validationStates.email === true && (
-                                    <span className="cartel-validator-success-profile">
-                                        {cartels[4].success}
                                     </span>
                                 )}
                             </div>
