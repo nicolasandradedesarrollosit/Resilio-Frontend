@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../viewmodel/oauth/AuthContext";
 import "../../styles/profile/profile.css";
 import { jwtDecode } from "jwt-decode";
+import GoBack from '../components/others/GoBack';
 
 function Profile(){
     const { userData, loading } = useContext(AuthContext);
@@ -202,6 +203,7 @@ function Profile(){
 
     return (
         <div className="profile-container">
+            <GoBack dominio={'/main/user'}/>
             <h1>Mi Perfil</h1>
             
             <div className="profile-info">
