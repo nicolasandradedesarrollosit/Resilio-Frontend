@@ -134,7 +134,6 @@ const AuthProvider = ({ children }) => {
             setUser(null);
             setUserData(null);
             localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
         } catch (error) {
             if (import.meta.env.DEV) {
                 console.error('Error en logout:', error);

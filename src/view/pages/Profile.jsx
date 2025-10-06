@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../viewmodel/oauth/AuthContext";
 import "../../styles/profile/profile.css";
+import { jwtDecode } from "jwt-decode";
 
 function Profile(){
     const { userData, loading } = useContext(AuthContext);
@@ -148,11 +149,12 @@ function Profile(){
 
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-user`, {
+                const decodedToken = jwtDecode(token);
+                const userId = decodedToken.sub;
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-user/${userId}`, {
                     method: 'PATCH',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(updatedFields)
                 });
