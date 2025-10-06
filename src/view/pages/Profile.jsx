@@ -214,25 +214,20 @@ function Profile(){
                     <label>Email:</label>
                     <p>{userData.email}</p>
                 </div>
-                
-                <div className="profile-field">
-                    <label>Teléfono:</label>
-                    <p>{userData.phone || 'No especificado'}</p>
-                </div>
 
                 <div className="profile-field">
                     <label>Provincia:</label>
-                    <p>{userData.province == '-' ? 'No especificado' : userData.province}</p>
+                    <p>{userData.province}</p>
                 </div>
 
                 <div className="profile-field">
                     <label>Ciudad:</label>
-                    <p>{userData.city == '-' ? 'No especificado' : userData.city}</p>
+                    <p>{userData.city}</p>
                 </div>
 
                 <div className="profile-field">
                     <label>Número de teléfono:</label>
-                    <p>{userData.phone_number == '-' ? 'No especificado' : userData.phone_number}</p>
+                    <p>{userData.phone_number}</p>
                 </div>
                 
                 <div className="profile-field">
