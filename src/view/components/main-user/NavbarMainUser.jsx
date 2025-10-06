@@ -1,49 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 import logo from '../../../../public/logo-resilio-group.png';
 import Avatar from '../../components/others/Avatar';
 import '../../../styles/main-user/navbarMainUser.css';
 
 function NavbarMainUser() {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { userData, loading } = useContext(AuthContext);
   const location = useLocation();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-          console.error('No hay token');
-          setLoading(false);
-          return;
-        }
-
-        const decodedToken = jwtDecode(token);
-        
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: decodedToken.sub })
-        });
-
-        if (!response.ok) throw new Error('Error en el token');
-
-        const result = await response.json();
-        
-        if (result.ok && result.data) {
-          setUserData(result.data);
-        }
-      } catch (err) {
-        console.error('Error en la consulta', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   if (loading) {
     return <nav className='navbar-main-user'>Cargando...</nav>;

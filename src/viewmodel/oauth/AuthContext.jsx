@@ -1,16 +1,50 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import supabase from './Supabase';
 
 export const AuthContext = createContext({
     user: null,
+    userData: null,
     loginWithGoogle: async () => {},
     logOut: async () => {},
-    loading: false
+    loading: false,
+    refreshUserData: async () => {}
 });
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const fetchUserData = async () => {
+        try {
+            const token = localStorage.getItem('access_token');
+            if (!token) return null;
+
+            const decodedToken = jwtDecode(token);
+            
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: decodedToken.sub })
+            });
+
+            if (!response.ok) throw new Error('Error al obtener datos del usuario');
+
+            const result = await response.json();
+            
+            if (result.ok && result.data) {
+                setUserData(result.data);
+                return result.data;
+            }
+            return null;
+        } catch (error) {
+            if (import.meta.env.DEV) {
+                console.error('Error en fetchUserData:', error);
+            }
+            return null;
+        }
+    };
 
     useEffect(() => {
         const getSession = async () => {
@@ -26,7 +60,6 @@ const AuthProvider = ({ children }) => {
                     });
                 }
             } catch (error) {
-                // Error silencioso - solo en desarrollo usar console.error
                 if (import.meta.env.DEV) {
                     console.error('Error obteniendo sesión:', error);
                 }
@@ -36,6 +69,8 @@ const AuthProvider = ({ children }) => {
         };
 
         getSession();
+        
+        fetchUserData();
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (session?.user) {
@@ -47,8 +82,13 @@ const AuthProvider = ({ children }) => {
                 });
             } else {
                 setUser(null);
+                setUserData(null);
             }
             setLoading(false);
+            
+            if (session?.user) {
+                fetchUserData();
+            }
         });
 
         return () => {
@@ -92,6 +132,9 @@ const AuthProvider = ({ children }) => {
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
             setUser(null);
+            setUserData(null);
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
         } catch (error) {
             if (import.meta.env.DEV) {
                 console.error('Error en logout:', error);
@@ -101,7 +144,14 @@ const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loginWithGoogle, logOut, loading }}>
+        <AuthContext.Provider value={{ 
+            user, 
+            userData, 
+            loginWithGoogle, 
+            logOut, 
+            loading,
+            refreshUserData: fetchUserData 
+        }}>
             {children}
         </AuthContext.Provider>
     );
