@@ -9,6 +9,11 @@
     flex-direction: column;
     align-items: center;
     min-height: calc(100vh - 80px);
+    background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(124, 58, 237, 0.20), transparent 60%),
+        radial-gradient(1000px 900px at 110% 10%, rgba(79, 70, 229, 0.18), transparent 60%),
+        #0b1022;
+    color: hsl(280, 100%, 98%);
 }
 
 .profile-container h1 {

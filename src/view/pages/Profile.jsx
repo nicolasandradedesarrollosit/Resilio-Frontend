@@ -229,7 +229,7 @@ function Profile(){
                 
                 <div className="profile-field">
                     <label>Verificado:</label>
-                    <p>{userData.isverified ? '✅ Verificado' : '⚠️ No verificado'}</p>
+                    <p>{userData.email_verified ? '✅ Verificado' : '⚠️ No verificado'}</p>
                 </div>
             </div>
             
