@@ -82,17 +82,15 @@ function Profile(){
     const validateField = (e) => {
         setRequestErrorState('');
         const id = e.target.id;
-        const content = e.target.value;
-        let sanitizedContent;
+        const content = e.target.value.trim();
 
         validations.forEach((item) => {
-            if(item.id === id) {
-                const isValid = validate(sanitizedContent, item.regex);
-                setValidationStates(prevState => ({
-                    ...prevState,
-                    [id]: isValid
-                }));
-            }
+            const isValid = validate(content, item.regex);
+            setValidationStates(prevState => ({
+                ...prevState,
+                [id]: isValid
+            }));
+            
         });
     };
 
@@ -108,7 +106,6 @@ function Profile(){
             province: null,
             city: null,
             phone_number: null,
-            email: null
         });
         setRequestErrorState('');
     }
@@ -127,7 +124,6 @@ function Profile(){
             setIsLoading(true);
             setRequestErrorState('');
 
-            // Crear objeto solo con campos modificados
             const updatedFields = {};
             
             if (nameValue !== userData.name) {
@@ -261,7 +257,6 @@ function Profile(){
                                     defaultValue={userData.name || ''}
                                     onChange={validateField}
                                     placeholder=" "
-                                    required
                                 />
                                 {validationStates.name === false && (
                                     <span className="cartel-validator-error-profile">
@@ -282,7 +277,6 @@ function Profile(){
                                     name="province"
                                     defaultValue={userData.province || ''}
                                     onChange={validateField}
-                                    required
                                 >
                                     <option value="">Seleccione una provincia</option>
                                     {provinces.map((province) => (
@@ -310,7 +304,6 @@ function Profile(){
                                     defaultValue={userData.city || ''}
                                     onChange={validateField}
                                     placeholder=" "
-                                    required
                                 />
                                 {validationStates.city === false && (
                                     <span className="cartel-validator-error-profile">
@@ -333,7 +326,6 @@ function Profile(){
                                     defaultValue={userData.phone_number || ''}
                                     onChange={validateField}
                                     placeholder=" "
-                                    required
                                 />
                                 {validationStates.phone_number === false && (
                                     <span className="cartel-validator-error-profile">
