@@ -84,14 +84,15 @@ function Profile(){
         const id = e.target.id;
         const content = e.target.value.trim();
 
-        validations.forEach((item) => {
-            const isValid = validate(content, item.regex);
+        const validation = validations.find(item => item.id === id);
+        
+        if (validation) {
+            const isValid = validate(content, validation.regex);
             setValidationStates(prevState => ({
                 ...prevState,
                 [id]: isValid
             }));
-            
-        });
+        }
     };
 
     const validate = (content, regex) => {
@@ -219,12 +220,17 @@ function Profile(){
 
                 <div className="profile-field">
                     <label>Provincia:</label>
-                    <p>{userData.province === '-' ? 'No especificado' : userData.province}</p>
+                    <p>{userData.province == '-' ? 'No especificado' : userData.province}</p>
                 </div>
 
                 <div className="profile-field">
                     <label>Ciudad:</label>
-                    <p>{userData.city === '-' ? 'No especificado' : userData.city}</p>
+                    <p>{userData.city == '-' ? 'No especificado' : userData.city}</p>
+                </div>
+
+                <div className="profile-field">
+                    <label>Número de teléfono:</label>
+                    <p>{userData.phone_number == '-' ? 'No especificado' : userData.phone_number}</p>
                 </div>
                 
                 <div className="profile-field">
