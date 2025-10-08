@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import '../../../styles/main-user/partnerBenefits.css'
 
 function PartnerBenefits() {
@@ -63,7 +64,7 @@ function PartnerBenefits() {
 
     return(
         <div className="partner_benefits_container">
-            <h2 className="partner_benefits_title">Red de beneficios</h2>
+            <Link to={'/user/benefits'} className="benefits-title-link"><h2 className="partner-benefits-title">Red de beneficios</h2></Link>
             <p className="subtitle-benefits">Descubre los beneficios exclusivos que ofrecemos a nuestros socios.</p>
             
             {benefits.length === 0 ? (

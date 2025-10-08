@@ -9,6 +9,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    
 }
 
 .partner_benefits_container::before {
@@ -30,7 +31,7 @@
     font-size: 1.05rem;
 }
 
-.partner_benefits_title {
+.partner-benefits-title {
     font-size: 2.25rem;
     font-weight: 700;
     text-align: center;
@@ -43,7 +44,7 @@
     letter-spacing: -0.5px;
 }
 
-.partner_benefits_title::after {
+.partner_benefits-title::after {
     content: '';
     display: block;
     width: 80px;
@@ -51,6 +52,16 @@
     background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), transparent);
     margin: 1rem auto 0;
     border-radius: 2px;
+    transition: 0.4s ease;
+}
+
+.benefits-title-link{ 
+    text-decoration: none; 
+    color: inherit;
+}
+
+.benefits-title-link:hover .partner-benefits-title{
+    color: rgba(180, 140, 255, 0.95);
 }
 
 .partner_benefits_grid {
