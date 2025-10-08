@@ -4,6 +4,7 @@ import '../../../styles/main-user/eventsUser.css';
 
 function EventsUser() {
     const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
     
 
     useEffect(() => {
@@ -28,6 +29,13 @@ function EventsUser() {
         fetchEvents();
     }, []);
 
+    if (loading) {
+        return(
+            <div>
+            </div>
+        )
+    }
+
     return (
             <section className="events-container">
                 <div className="events-header">
@@ -42,7 +50,7 @@ function EventsUser() {
                             </div>
                             <div className='container-event-content'>
                                 <div className='container-event-text'>
-                                    <h3 className='event-title'>{event.title}</h3>
+                                    <h3 className='event-title'>{event.name}</h3>
                                     <p className='event-description'>{event.description}</p>
                                 </div>
                                 <div className='container-event-date'>

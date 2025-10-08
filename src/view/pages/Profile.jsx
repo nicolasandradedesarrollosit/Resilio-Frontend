@@ -267,7 +267,7 @@ function Profile(){
             <button onClick={refreshUserData} className="refresh-button">
                 Actualizar datos
             </button>
-            <button onClick={logOutSession} className="log-out-button">
+            <button onClick={logOutSession} id="log-out-button" className="refresh-button">
                 Cerrar sesión
             </button>
 

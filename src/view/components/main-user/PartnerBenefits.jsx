@@ -63,7 +63,8 @@ function PartnerBenefits() {
 
     return(
         <div className="partner_benefits_container">
-            <h2 className="partner_benefits_title">Partners adheridos</h2>
+            <h2 className="partner_benefits_title">Red de beneficios</h2>
+            <p className="subtitle-benefits">Descubre los beneficios exclusivos que ofrecemos a nuestros socios.</p>
             
             {benefits.length === 0 ? (
                 <div className="empty_state">
@@ -79,7 +80,7 @@ function PartnerBenefits() {
                                     alt={item.name || "Beneficio"} 
                                     className="benefit_image"
                                     onError={(e) => {
-                                        e.target.src = '/placeholder-image.jpg';
+                                        e.target.src = '/logo-resilio-group.png';
                                     }}
                                 />
                             </div>
