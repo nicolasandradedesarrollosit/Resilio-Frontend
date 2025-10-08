@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../../viewmodel/oauth/AuthContext";
+import { AuthContext } from "../../context/oauth/AuthContext";
 import "../../styles/profile/profile.css";
 import { jwtDecode } from "jwt-decode";
 import GoBack from '../components/others/GoBack';
@@ -185,18 +185,10 @@ function Profile(){
         }
     }
 
-    if (loading) {
+    if (loading || !userData) {
         return (
             <div className="profile-container">
                 <p>Cargando perfil...</p>
-            </div>
-        );
-    }
-
-    if (!userData) {
-        return (
-            <div className="profile-container">
-                <p>No se pudieron cargar los datos del usuario</p>
             </div>
         );
     }
