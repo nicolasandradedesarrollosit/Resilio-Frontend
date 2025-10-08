@@ -149,7 +149,7 @@
     margin: 0;
     padding: clamp(24px, 6vw, 32px);
     width: 100%;
-    height: auto !important;
+    height: clamp(60px, 12vw, 90px);
     min-height: clamp(80px, 15vw, 120px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
     background: rgba(9, 36, 63, 0.2);
@@ -157,11 +157,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Forzar tamaño del logo */
-    max-width: none !important;
-    max-height: clamp(60px, 12vw, 90px) !important;
-    min-width: clamp(60px, 12vw, 90px) !important;
-    object-fit: contain !important;
+    object-fit: contain;
   }
 
   .logo-main-user-navbar:hover {
@@ -248,8 +244,7 @@
 
   .logo-main-user-navbar {
     min-height: clamp(70px, 12vw, 100px);
-    max-height: clamp(50px, 10vw, 75px) !important;
-    min-width: clamp(50px, 10vw, 75px) !important;
+    height: clamp(50px, 10vw, 75px);
     padding: clamp(20px, 5vw, 28px);
   }
 }
@@ -262,8 +257,7 @@
   .logo-main-user-navbar {
     padding: 18px;
     min-height: clamp(60px, 10vw, 80px);
-    max-height: clamp(45px, 8vw, 60px) !important;
-    min-width: clamp(45px, 8vw, 60px) !important;
+    height: clamp(45px, 8vw, 60px);
   }
 
   .container-links-main-user {
