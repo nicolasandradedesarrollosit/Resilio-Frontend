@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../../viewmodel/oauth/AuthContext";
+import { AuthContext } from "../../context/oauth/AuthContext";
 import "../../styles/profile/profile.css";
 import { jwtDecode } from "jwt-decode";
 import GoBack from '../components/others/GoBack';

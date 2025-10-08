@@ -10,7 +10,7 @@ import ForgotPassword from '../../pages/ForgotPassword.jsx';
 import MainUser from '../../pages/MainUser.jsx';
 import NotFound from './NotFound.jsx';
 import Profile from '../../pages/Profile.jsx';
-import AuthCallback from '../../../viewmodel/oauth/AuthCallback.jsx'
+import AuthCallback from '../../../context/oauth/AuthCallback.jsx'
 
 function Layout(){
   const { pathname, hash } = useLocation();
