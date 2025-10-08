@@ -9,6 +9,14 @@
     background: transparent;
 }
 
+:root{
+    --bg: #0b0f1a;
+    --card-bg: rgba(15, 23, 42, 0.85);
+    --muted: rgba(255, 255, 255, 0.65);
+    --accent: #7c3aed;
+    --shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+}
+
 .events-header{
     width: 100%;
     max-width: 1200px;

@@ -6,11 +6,11 @@
     width: 100%;
     align-items: center;
     background:
-        radial-gradient(1400px 900px at 10% -10%, var(--violet-alpha-20), transparent 65%),
-        radial-gradient(1200px 1000px at 110% 10%, var(--violet-tertiary-alpha-20), transparent 65%),
-        radial-gradient(800px 800px at 50% 100%, var(--violet-tertiary-alpha-12), transparent 70%),
-        var(--bg-primary);
-    color: var(--text-primary);
+        radial-gradient(1400px 900px at 10% -10%, rgba(124, 58, 237, 0.22), transparent 65%),
+        radial-gradient(1200px 1000px at 110% 10%, rgba(79, 70, 229, 0.20), transparent 65%),
+        radial-gradient(800px 800px at 50% 100%, rgba(109, 40, 217, 0.12), transparent 70%),
+        #0b1022;
+    color: hsl(280, 100%, 98%);
     line-height: 1.6;
     position: relative;
     overflow-x: hidden;
@@ -34,7 +34,7 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-violet-strong), transparent);
+    background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), transparent);
     animation: slideTopBorder 4s ease-in-out infinite;
 }
 

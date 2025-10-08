@@ -143,8 +143,8 @@
 #log-out-button {
   background-color: #dc3545;
   transition: 0.4s ease;
-  border: 1px solid transparent;
-  margin: 10px 0 0 0;
+  border: 2px solid #212121;
+  margin-top: 20px;
 }
 
 #log-out-button:hover {
