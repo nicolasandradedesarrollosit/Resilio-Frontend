@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AuthContext } from '../../../context/oauth/AuthContext';
+import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 import logo from '../../../../public/logo-resilio-group.png';
 import Avatar from '../../components/others/Avatar';
 import '../../../styles/main-user/navbarMainUser.css';

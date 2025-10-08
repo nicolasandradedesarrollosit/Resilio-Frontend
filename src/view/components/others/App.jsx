@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "./Layout";
-import AuthProvider from "../../../context/oauth/AuthContext";
+import AuthProvider from "../../../viewmodel/oauth/AuthContext";
 
 function App() {
   return (

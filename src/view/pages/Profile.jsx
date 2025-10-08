@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../../context/oauth/AuthContext";
+import { AuthContext } from "../../viewmodel/oauth/AuthContext";
 import "../../styles/profile/profile.css";
 import { jwtDecode } from "jwt-decode";
 import GoBack from '../components/others/GoBack';
+import { useNavigate } from "react-router-dom";
 
 function Profile(){
     const { userData, loading } = useContext(AuthContext);
@@ -15,6 +16,7 @@ function Profile(){
     });
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const provinces = [
         "Buenos Aires",
@@ -185,6 +187,33 @@ function Profile(){
         }
     }
 
+    const logOutSession = () => {
+        useEffect(() => {
+            const logOut = async () => {
+                try{
+                    const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                        }
+                    });
+
+                    if(!logOutResponse.ok){
+                        throw new Error('Error al cerrar sesión');
+                    }
+                }
+                catch(err){
+                    throw new Error(err.message || 'Error al cerrar sesión');
+                }
+            }
+            logOut();
+        }, []);
+
+        localStorage.removeItem('access_token');
+        navigate('/log-in');
+    }
+
     if (loading || !userData) {
         return (
             <div className="profile-container">
@@ -237,6 +266,9 @@ function Profile(){
             
             <button onClick={refreshUserData} className="refresh-button">
                 Actualizar datos
+            </button>
+            <button onClick={logOutSession} className="log-out-button">
+                Cerrar sesión
             </button>
 
             {modal && 

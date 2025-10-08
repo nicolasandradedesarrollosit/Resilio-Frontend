@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { AuthContext } from '../../../context/oauth/AuthContext';
+import { AuthContext } from '../../../viewmodel/oauth/AuthContext';
 
 function FormLogIn() {
     const navigate = useNavigate();
