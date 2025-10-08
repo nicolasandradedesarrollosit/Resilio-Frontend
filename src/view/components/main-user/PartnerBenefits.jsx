@@ -76,12 +76,9 @@ function PartnerBenefits() {
                         <div key={item.id || index} className="partner_benefit_card">
                             <div className="benefit_image_wrapper">
                                 <img 
-                                    src={item.route_jpg} 
+                                    src={item.route_jpg || "/logo-resilio-group.png"} 
                                     alt={item.name || "Beneficio"} 
                                     className="benefit_image"
-                                    onError={(e) => {
-                                        e.target.src = '/logo-resilio-group.png';
-                                    }}
                                 />
                             </div>
                             <div className="benefit_content">

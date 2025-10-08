@@ -38,12 +38,6 @@ function NavbarMainUser() {
         >
           Eventos
         </Link>
-        <Link 
-          className={`link-navigate-user ${location.pathname === '/logout/user' ? 'active' : ''}`}
-          to={'/logout/user'}
-        >
-          Cerrar Sesión
-        </Link>
         
       </div>
     </nav>
