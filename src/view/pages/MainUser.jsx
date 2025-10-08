@@ -10,11 +10,13 @@ function MainUser() {
         <>
             <main className='main-container-user'>
                 <NavbarMainUser />
-                <div className='container-main-user'>
+                <div className='container-top-banner'>
                     <TopBanner />
+                </div>
+                <main className='main-content-user'>
                     <PartnerBenefits />
                     <EventsUser />
-                </div>
+                </main>
             </main>
         </>
     );

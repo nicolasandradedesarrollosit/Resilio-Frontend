@@ -45,7 +45,7 @@ function PartnerBenefits() {
         return (
             <div className="partner_benefits_container">
                 <div className="loading_state">
-                    <p>Cargando beneficios...</p>
+                    <p>Cargando datos...</p>
                 </div>
             </div>
         );
