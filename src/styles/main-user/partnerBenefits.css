@@ -29,6 +29,7 @@
     margin: 0;
     color: rgba(255, 255, 255, 0.7);
     font-size: 1.05rem;
+    text-align: center;
 }
 
 .partner-benefits-title {
@@ -42,9 +43,10 @@
     position: relative;
     z-index: 1;
     letter-spacing: -0.5px;
+    transition: 0.4s ease;
 }
 
-.partner_benefits-title::after {
+.partner-benefits-title::after {
     content: '';
     display: block;
     width: 80px;
@@ -52,7 +54,6 @@
     background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), transparent);
     margin: 1rem auto 0;
     border-radius: 2px;
-    transition: 0.4s ease;
 }
 
 .benefits-title-link{ 

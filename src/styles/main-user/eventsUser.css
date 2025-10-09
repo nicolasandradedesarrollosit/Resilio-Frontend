@@ -201,6 +201,8 @@
     justify-content: flex-start;
     align-items: center;
     margin: 0 10px 0 0;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .event-btn{
@@ -209,7 +211,6 @@
     text-decoration: none;
     text-align: center;
     color: hsl(280, 100%, 98%);
-    border: 1px solid rgba(124, 58, 237, 0.4);
     background: transparent;
     font-weight: 600;
     font-size: 0.95rem;
@@ -218,8 +219,6 @@
 }
 
 .event-btn:hover{ 
-    background: rgba(124, 58, 237, 0.15);
-    border-color: rgba(124, 58, 237, 0.6);
     transform: translateY(-2px);
 }
 
@@ -305,6 +304,7 @@
     .container-event-links{
         flex-direction: column;
         gap: 10px;
+        margin: 10px 0;
     }
     
     .event-btn{
@@ -312,7 +312,6 @@
     }
 }
 
-/* small accessibility focus state */
 .event-btn:focus, .events-title-link:focus{ 
     outline: 3px solid rgba(124, 58, 237, 0.4); 
     outline-offset: 3px;
