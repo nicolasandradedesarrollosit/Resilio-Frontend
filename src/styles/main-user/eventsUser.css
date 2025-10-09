@@ -238,6 +238,13 @@
     color: rgba(255, 255, 255, 0.7);
     font-size: 1.1rem;
     padding: 2rem;
+    text-align: center;
+}
+
+@media (max-width: 1200px) {
+    .events-title {
+        font-size: 2rem;
+    }
 }
 
 @media (max-width: 900px){
@@ -261,14 +268,17 @@
     }
 }
 
+@media (max-width: 768px) {
+    .events-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
 @media (max-width: 600px){
     .events-container{
         padding: 28px 16px;
         gap: 20px;
-    }
-    
-    .events-title{
-        font-size: 1.65rem;
     }
     
     .subtitle-events{
@@ -309,6 +319,13 @@
     
     .event-btn{
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-title {
+        font-size: 1.5rem;
+        padding: 0 1rem;
     }
 }
 
