@@ -260,14 +260,37 @@
     }
 }
 
+/* Large tablets y pequeños desktops */
 @media (max-width: 1200px) {
     .partner_benefits_grid {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 2rem;
+        width: 85%;
     }
     
     .partner-benefits-title {
         font-size: 2rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .partner_benefits_container {
+        padding: 3.5rem 1.75rem;
+    }
+    
+    .partner-benefits-title {
+        font-size: 1.9rem;
+    }
+    
+    .partner_benefits_grid {
+        width: 90%;
+    }
+}
+
+@media (max-width: 900px) {
+    .partner_benefits_grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.75rem;
     }
 }
 

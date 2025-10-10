@@ -245,6 +245,20 @@
     .events-title {
         font-size: 2rem;
     }
+    
+    .container-cards-events {
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .events-container {
+        padding: 36px 20px;
+    }
+    
+    .events-title {
+        font-size: 1.9rem;
+    }
 }
 
 @media (max-width: 900px){
@@ -272,6 +286,10 @@
     .events-title {
         font-size: 1.75rem;
         margin-bottom: 0.75rem;
+    }
+    
+    .events-container {
+        padding: 32px 18px;
     }
 }
 

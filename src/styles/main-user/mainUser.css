@@ -70,6 +70,13 @@
     width: 100%;
 }
 
+@media (max-width: 1024px) {
+    .main-content-user {
+        padding: 36px 32px 56px;
+        gap: 56px;
+    }
+}
+
 @media (max-width: 768px) {
     .main-content-user {
         padding: 30px 24px 50px;
