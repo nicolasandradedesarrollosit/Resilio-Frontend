@@ -59,10 +59,10 @@ function EventsUser() {
                                 </div>
                             </div>
                             <div className='container-event-links'>
-                                <Link className='event-btn' to={`/user/events/${event.id}`}>Ver más</Link>
                                 {event.url_passline ? (
                                     <a className='event-btn primary' href={event.url_passline} target="_blank" rel="noopener noreferrer">Comprar Ticket</a>
                                 ) : null}
+                                <Link className='event-btn' to={`/user/events/${event.id}`}>Ver más</Link>
                             </div>
                         </article>
                     ))}
