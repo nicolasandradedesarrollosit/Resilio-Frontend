@@ -1,18 +1,28 @@
 .banner-top {
     width: 100%;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(109, 40, 217, 0.18) 50%, rgba(124, 58, 237, 0.15) 100%);
+    background: linear-gradient(135deg, #c29bff 0%, #d6a5ff 100%);
     backdrop-filter: blur(12px);
     padding: 1.75rem 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 
-        0 4px 24px rgba(124, 58, 237, 0.2),
-        0 2px 8px rgba(0, 0, 0, 0.4);
-    border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+        0 4px 24px rgba(194, 155, 255, 0.18),
+        0 2px 8px rgba(0, 0, 0, 0.35);
+    border-bottom: 1px solid rgba(194, 155, 255, 0.28);
     position: relative;
     overflow: hidden;
     min-height: 60px;
+}
+
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(194, 155, 255, 0.18);
+    border-top-color: #c29bff;
+    border-right-color: #d6a5ff;
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(194, 155, 255, 0.12);
 }
 
 .banner-loading {
@@ -21,16 +31,6 @@
     align-items: center;
     z-index: 1;
     position: relative;
-}
-
-.spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid rgba(124, 58, 237, 0.15);
-    border-top-color: rgba(124, 58, 237, 0.9);
-    border-right-color: rgba(109, 40, 217, 0.7);
-    border-radius: 50%;
-    box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
 }
 
 .banner-message {
