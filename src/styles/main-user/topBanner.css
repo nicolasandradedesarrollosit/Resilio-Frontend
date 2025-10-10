@@ -1,15 +1,15 @@
 .banner-top {
     width: 100%;
-    background: linear-gradient(135deg, #c29bff 0%, #d6a5ff 100%);
-    backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, #5b2aa8 0%, #3e1f6f 100%);
+    backdrop-filter: blur(8px);
     padding: 1.75rem 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 
-        0 4px 24px rgba(194, 155, 255, 0.18),
-        0 2px 8px rgba(0, 0, 0, 0.35);
-    border-bottom: 1px solid rgba(194, 155, 255, 0.28);
+        0 4px 20px rgba(77, 31, 148, 0.28),
+        0 2px 8px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(77, 31, 148, 0.45);
     position: relative;
     overflow: hidden;
     min-height: 60px;
@@ -18,11 +18,24 @@
 .spinner {
     width: 28px;
     height: 28px;
-    border: 3px solid rgba(194, 155, 255, 0.18);
-    border-top-color: #c29bff;
-    border-right-color: #d6a5ff;
+    border: 3px solid rgba(88, 52, 170, 0.18);
+    border-top-color: #6f42c1;
+    border-right-color: #5b2aa8;
     border-radius: 50%;
-    box-shadow: 0 0 12px rgba(194, 155, 255, 0.12);
+    box-shadow: 0 0 10px rgba(88, 52, 170, 0.12);
+}
+
+.banner-message {
+    margin: 0;
+    color: #f6f5ff;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+    z-index: 1;
+    text-shadow: 0 2px 12px rgba(77, 31, 148, 0.5);
+    position: relative;
 }
 
 .banner-loading {
@@ -30,19 +43,6 @@
     justify-content: center;
     align-items: center;
     z-index: 1;
-    position: relative;
-}
-
-.banner-message {
-    margin: 0;
-    color: hsl(280, 100%, 98%);
-    font-size: 1.15rem;
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: 0.3px;
-    line-height: 1.6;
-    z-index: 1;
-    text-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
     position: relative;
 }
 
