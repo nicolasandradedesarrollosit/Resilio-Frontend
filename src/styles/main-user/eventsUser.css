@@ -41,6 +41,8 @@
     z-index: 1;
     letter-spacing: -0.5px;
     transition: 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .events-title::after {
@@ -176,6 +178,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     opacity: 0.8;
+    text-transform: capitalize;
 }
 
 .container-event-date{
@@ -191,6 +194,9 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(124, 58, 237, 0.4);
 }
 
 .container-event-links{
@@ -280,6 +286,10 @@
     .event-title{
         font-size: 1.3rem;
     }
+
+    .container-event-links{
+        margin: 10px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -330,9 +340,7 @@
     }
     
     .container-event-links{
-        flex-direction: column;
         gap: 10px;
-        margin: 10px 10px;
     }
     
     .event-btn{
