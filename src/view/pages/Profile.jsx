@@ -226,9 +226,8 @@ function Profile(){
     }
 
     return (
-        <div className="profile-container">
-            <GoBack dominio={'/main/user'}/>
             <main className='background-profile'>
+                <GoBack dominio={'/main/user'}/>
                 <h2 className='title-profile'>Mi cuenta</h2>
                 <div className='profile-container'>
                 <div className='profile-first-row'>
@@ -297,7 +296,6 @@ function Profile(){
                     </button>
                     </div>
                 </div>
-            </main>
 
             {modal && 
                 <div className="modal">
@@ -424,7 +422,7 @@ function Profile(){
                     </div>
                 </div>
             }
-        </div>
+        </main>
     )
 }
 
