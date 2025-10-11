@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Profile(){
     const { userData, loading } = useContext(AuthContext);
     const [modal, setModal] = useState(false);
+    const [logoutModal, setLogoutModal] = useState(false);
     const [validationStates, setValidationStates] = useState({
         name: null,
         province: null,
@@ -190,38 +191,61 @@ function Profile(){
         }
     }
 
-    const logOutSession = () => {
-        useEffect(() => {
-            const logOut = async () => {
-                try{
-                    const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                        }
-                    });
+    const logOutSession = async () => {
+        setIsLoading(true);
+        try{
+            const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
 
-                    if(!logOutResponse.ok){
-                        throw new Error('Error al cerrar sesión');
-                    }
-                }
-                catch(err){
-                    throw new Error(err.message || 'Error al cerrar sesión');
-                }
+            if(!logOutResponse.ok){
+                throw new Error('Error al cerrar sesión');
             }
-            logOut();
-        }, []);
-
-        localStorage.removeItem('access_token');
-        navigate('/log-in');
+            
+            localStorage.removeItem('access_token');
+            navigate('/log-in');
+        }
+        catch(err){
+            if(import.meta.env.DEV){
+                console.error('Error al cerrar sesión:', err);
+            }
+            localStorage.removeItem('access_token');
+            navigate('/log-in');
+        }
+        finally {
+            setIsLoading(false);
+            setLogoutModal(false);
+        }
     }
 
     if (loading || !userData) {
         return (
-            <div className="profile-container">
-                <p>Cargando perfil...</p>
-            </div>
+            <main className='background-profile'>
+                <div className="loading-screen">
+                    <div className="loading-spinner-container">
+                        <div className="loading-spinner">
+                            <div className="spinner-ring"></div>
+                            <div className="spinner-ring"></div>
+                            <div className="spinner-ring"></div>
+                            <svg className="spinner-icon" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24">
+                                <path fill="#8b5cf6" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8Z"/>
+                                <path fill="#a855f7" d="M12 6a6 6 0 0 1 6 6h2a8 8 0 0 0-8-8Z"/>
+                            </svg>
+                        </div>
+                        <h2 className="loading-title">Cargando perfil</h2>
+                        <p className="loading-subtitle">Estamos preparando tu información...</p>
+                        <div className="loading-dots">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </main>
         );
     }
 
@@ -290,7 +314,7 @@ function Profile(){
                         <svg className='icon-button' xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 20 20"><path fill="#FFF" d="m2.292 13.36l4.523 4.756L.5 20l1.792-6.64ZM12.705 2.412l4.522 4.755L7.266 17.64l-4.523-4.754l9.962-10.474ZM16.142.348l2.976 3.129c.807.848.086 1.613.086 1.613l-1.521 1.6l-4.524-4.757L14.68.334l.02-.019c.119-.112.776-.668 1.443.033Z"/></svg>
                         Actualizar perfil
                     </button>
-                    <button onClick={logOutSession} className='button-profile' id='log-out'>
+                    <button onClick={() => setLogoutModal(true)} className='button-profile' id='log-out'>
                         <svg className='icon-button' xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 512 512"><path fill="#FFF" d="M160 256a16 16 0 0 1 16-16h144V136c0-32-33.79-56-64-56H104a56.06 56.06 0 0 0-56 56v240a56.06 56.06 0 0 0 56 56h160a56.06 56.06 0 0 0 56-56V272H176a16 16 0 0 1-16-16Zm299.31-11.31l-80-80a16 16 0 0 0-22.62 22.62L409.37 240H320v32h89.37l-52.68 52.69a16 16 0 1 0 22.62 22.62l80-80a16 16 0 0 0 0-22.62Z"/></svg>
                         Cerrar sesión
                     </button>
@@ -419,6 +443,47 @@ function Profile(){
                                 </span>
                             )}
                         </form>
+                    </div>
+                </div>
+            }
+
+            {logoutModal && 
+                <div className="modal">
+                    <div className="modal-content logout-modal">
+                        <span className="close" onClick={() => setLogoutModal(false)}>&times;</span>
+                        <div className="logout-modal-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 512 512">
+                                <path fill="#ef4444" d="M160 256a16 16 0 0 1 16-16h144V136c0-32-33.79-56-64-56H104a56.06 56.06 0 0 0-56 56v240a56.06 56.06 0 0 0 56 56h160a56.06 56.06 0 0 0 56-56V272H176a16 16 0 0 1-16-16Zm299.31-11.31l-80-80a16 16 0 0 0-22.62 22.62L409.37 240H320v32h89.37l-52.68 52.69a16 16 0 1 0 22.62 22.62l80-80a16 16 0 0 0 0-22.62Z"/>
+                            </svg>
+                        </div>
+                        <h2>¿Cerrar sesión?</h2>
+                        <p className="logout-modal-text">¿Estás seguro de que deseas cerrar tu sesión?</p>
+                        <div className="logout-modal-buttons">
+                            <button 
+                                onClick={() => setLogoutModal(false)} 
+                                className="logout-cancel-button"
+                                disabled={isLoading}
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={logOutSession} 
+                                className="logout-confirm-button"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Cerrando sesión...' : 'Sí, cerrar sesión'}
+                            </button>
+                        </div>
+                        {isLoading && (
+                            <div className="loading-bar-container active">
+                                <div className="loading-bar">
+                                    <div className="loading-bar-fill"></div>
+                                </div>
+                                <div className="loading-text">
+                                    Cerrando sesión...
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             }

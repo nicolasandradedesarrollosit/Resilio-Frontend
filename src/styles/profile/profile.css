@@ -14,12 +14,158 @@
     color: hsl(280, 100%, 98%);
 }
 
-.profile-container > p {
-    font-size: 1.1rem;
-    color: #94a3b8;
-    text-align: center;
+.loading-screen {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2rem;
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.loading-spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 27, 75, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    box-shadow: 
+        0 20px 60px rgba(124, 58, 237, 0.3),
+        0 0 0 1px rgba(167, 139, 250, 0.2) inset;
+    border: 1px solid rgba(167, 139, 250, 0.15);
+    animation: slideUpFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.loading-spinner {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #8b5cf6;
+    animation: spinRing 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
+.spinner-ring:nth-child(2) {
+    width: 85%;
+    height: 85%;
+    border-top-color: #a855f7;
+    animation-delay: -0.5s;
+    animation-duration: 1.8s;
+}
+
+.spinner-ring:nth-child(3) {
+    width: 70%;
+    height: 70%;
+    border-top-color: #c084fc;
+    animation-delay: -1s;
+    animation-duration: 2.1s;
+}
+
+@keyframes spinRing {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner-icon {
+    position: absolute;
+    z-index: 1;
+    animation: iconFloat 2s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.4));
+}
+
+@keyframes iconFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.loading-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0;
+    text-align: center;
+    letter-spacing: -0.025em;
+    text-shadow: 0 2px 16px rgba(139, 92, 246, 0.3);
+}
+
+.loading-subtitle {
+    font-size: 1rem;
+    color: #94a3b8;
+    margin: 0;
+    text-align: center;
+    font-weight: 500;
+}
+
+.loading-dots {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    border-radius: 50%;
+    animation: dotBounce 1.4s ease-in-out infinite;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotBounce {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
 }
 
 .modal {
@@ -347,6 +493,125 @@
     50% {
         opacity: 0.5;
     }
+}
+
+.logout-modal {
+    max-width: 500px;
+    text-align: center;
+}
+
+.logout-modal-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(239, 68, 68, 0.3);
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+    }
+}
+
+.logout-modal h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 1rem;
+}
+
+.logout-modal-text {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.logout-modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.logout-cancel-button,
+.logout-confirm-button {
+    flex: 1;
+    min-width: 140px;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid;
+    position: relative;
+    overflow: hidden;
+}
+
+.logout-cancel-button {
+    background: rgba(71, 85, 105, 0.2);
+    color: #cbd5e1;
+    border-color: rgba(71, 85, 105, 0.4);
+}
+
+.logout-cancel-button:hover:not(:disabled) {
+    background: rgba(71, 85, 105, 0.3);
+    border-color: rgba(71, 85, 105, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(71, 85, 105, 0.3);
+}
+
+.logout-confirm-button {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.3) 100%);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.logout-confirm-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.4) 0%, rgba(220, 38, 38, 0.5) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.logout-confirm-button:hover:not(:disabled) {
+    border-color: rgba(239, 68, 68, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+
+.logout-confirm-button:hover:not(:disabled)::before {
+    opacity: 1;
+}
+
+.logout-cancel-button:disabled,
+.logout-confirm-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.logout-cancel-button:active:not(:disabled),
+.logout-confirm-button:active:not(:disabled) {
+    transform: translateY(0);
 }
 
 .background-profile {
@@ -775,6 +1040,46 @@
     .modal-content h2 {
         font-size: 1.75rem;
     }
+
+    .logout-modal-icon {
+        width: 90px;
+        height: 90px;
+    }
+
+    .logout-modal-icon svg {
+        width: 70px;
+        height: 70px;
+    }
+
+    .logout-modal h2 {
+        font-size: 1.75rem;
+    }
+
+    .logout-modal-text {
+        font-size: 1rem;
+    }
+
+    .loading-spinner-container {
+        padding: 2.5rem 2rem;
+    }
+
+    .loading-spinner {
+        width: 110px;
+        height: 110px;
+    }
+
+    .spinner-icon {
+        width: 55px;
+        height: 55px;
+    }
+
+    .loading-title {
+        font-size: 1.65rem;
+    }
+
+    .loading-subtitle {
+        font-size: 0.95rem;
+    }
 }
 
 @media (max-width: 580px) {
@@ -832,6 +1137,65 @@
     .cartel-validator-success-profile {
         font-size: 0.85rem;
         padding: 0.65rem 0.85rem;
+    }
+
+    .logout-modal-icon {
+        width: 85px;
+        height: 85px;
+        margin-bottom: 1.25rem;
+    }
+
+    .logout-modal-icon svg {
+        width: 65px;
+        height: 65px;
+    }
+
+    .logout-modal h2 {
+        font-size: 1.65rem;
+    }
+
+    .logout-modal-text {
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .logout-modal-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .logout-cancel-button,
+    .logout-confirm-button {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .loading-spinner-container {
+        padding: 2rem 1.75rem;
+        border-radius: 20px;
+    }
+
+    .loading-spinner {
+        width: 100px;
+        height: 100px;
+    }
+
+    .spinner-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .loading-title {
+        font-size: 1.5rem;
+    }
+
+    .loading-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .dot {
+        width: 9px;
+        height: 9px;
     }
 }
 
@@ -893,6 +1257,62 @@
     .loading-text {
         font-size: 0.85rem;
     }
+
+    .logout-modal-icon {
+        width: 75px;
+        height: 75px;
+        margin-bottom: 1rem;
+    }
+
+    .logout-modal-icon svg {
+        width: 55px;
+        height: 55px;
+    }
+
+    .logout-modal h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .logout-modal-text {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .logout-cancel-button,
+    .logout-confirm-button {
+        padding: 0.9rem 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .loading-spinner-container {
+        padding: 1.75rem 1.5rem;
+        border-radius: 18px;
+        gap: 1.5rem;
+    }
+
+    .loading-spinner {
+        width: 90px;
+        height: 90px;
+    }
+
+    .spinner-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .loading-title {
+        font-size: 1.35rem;
+    }
+
+    .loading-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 @media (max-width: 320px) {
@@ -910,6 +1330,60 @@
         padding: 0.8rem 1.25rem;
         font-size: 0.9rem;
     }
+
+    .logout-modal-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .logout-modal-icon svg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .logout-modal h2 {
+        font-size: 1.35rem;
+    }
+
+    .logout-modal-text {
+        font-size: 0.9rem;
+    }
+
+    .logout-cancel-button,
+    .logout-confirm-button {
+        padding: 0.85rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    .loading-spinner-container {
+        padding: 1.5rem 1.25rem;
+        border-radius: 16px;
+        gap: 1.25rem;
+    }
+
+    .loading-spinner {
+        width: 80px;
+        height: 80px;
+    }
+
+    .spinner-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .loading-title {
+        font-size: 1.25rem;
+    }
+
+    .loading-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .dot {
+        width: 7px;
+        height: 7px;
+        gap: 0.4rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -926,7 +1400,15 @@
     .form-group select,
     .cartel-validator-error-profile,
     .cartel-validator-success-profile,
-    .loading-bar_fill {
+    .loading-bar-fill,
+    .logout-modal-icon,
+    .logout-cancel-button,
+    .logout-confirm-button,
+    .loading-screen,
+    .loading-spinner-container,
+    .spinner-ring,
+    .spinner-icon,
+    .dot {
         transition: none;
         animation: none;
     }
