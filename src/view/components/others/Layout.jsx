@@ -11,6 +11,7 @@ import MainUser from '../../pages/MainUser.jsx';
 import NotFound from './NotFound.jsx';
 import Profile from '../../pages/Profile.jsx';
 import AuthCallback from '../../../context/oauth/AuthCallback.jsx'
+import MainAdmin from '../../pages/MainAdmin.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -32,6 +33,7 @@ function Layout(){
         <Route path='/reset-password' element={<ForgotPassword />} />
         <Route path='/main/user' element={<MainUser />} />
         <Route path='/profile/user' element={<Profile />} />
+        <Route path='/main/admin' element={<MainAdmin />} />
         <Route path='*' element={<NotFound />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
