@@ -1,7 +1,7 @@
 import React from 'react';
-import '../../styles/main-admin/main-admin.css';
 import AsideMenu from '../components/others/AsideMenu';
 import ContentMain from '../components/main-admin/ContentAdmin';
+import '../../styles/main-admin/mainAdmin.css'
 
 
 function MainAdmin() {
