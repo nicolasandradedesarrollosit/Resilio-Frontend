@@ -10,8 +10,9 @@ import ForgotPassword from '../../pages/ForgotPassword.jsx';
 import MainUser from '../../pages/MainUser.jsx';
 import NotFound from './NotFound.jsx';
 import Profile from '../../pages/Profile.jsx';
-import AuthCallback from '../../../context/oauth/AuthCallback.jsx'
+import AuthCallback from '../../../context/oauth/AuthCallback.jsx';
 import MainAdmin from '../../pages/MainAdmin.jsx';
+import ProtectedRoute from './ProtectedRoute.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -31,11 +32,37 @@ function Layout(){
         <Route path='/log-in' element={<LogIn />} />
         <Route path='/register' element={<Register />} />
         <Route path='/reset-password' element={<ForgotPassword />} />
-        <Route path='/main/user' element={<MainUser />} />
-        <Route path='/profile/user' element={<Profile />} />
-        <Route path='/main/admin' element={<MainAdmin />} />
-        <Route path='*' element={<NotFound />} />
+        
+        {/* Rutas protegidas */}
+        <Route 
+          path='/main/user' 
+          element={
+            <ProtectedRoute requiredRole="user">
+              <MainUser />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path='/profile/user' 
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path='/main/admin' 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <MainAdmin />
+            </ProtectedRoute>
+          } 
+        />
+        
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </>
   );

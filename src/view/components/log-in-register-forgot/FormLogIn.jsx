@@ -3,6 +3,7 @@ import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from '../../../context/oauth/AuthContext';
+import LoadingScreen from '../others/LoadingScreen';
 
 function FormLogIn() {
     const navigate = useNavigate();
@@ -19,6 +20,8 @@ function FormLogIn() {
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState('');
 
     const validations = [
         {
@@ -125,10 +128,19 @@ function FormLogIn() {
                     setIsLoading(false);
                     form.reset();
 
+                    // Mostrar pantalla de carga antes de redirigir
                     if (decodedToken.role === 'admin') {
-                        navigate("/main/admin");
+                        setLoadingMessage('Accediendo al panel de administración...');
+                        setShowLoadingScreen(true);
+                        setTimeout(() => {
+                            navigate("/main/admin", { state: { fromApp: true } });
+                        }, 1500);
                     } else {
-                        navigate("/main/user");
+                        setLoadingMessage('Cargando tu espacio personal...');
+                        setShowLoadingScreen(true);
+                        setTimeout(() => {
+                            navigate("/main/user", { state: { fromApp: true } });
+                        }, 1500);
                     }
                 } 
                 catch (err) {
@@ -146,6 +158,13 @@ function FormLogIn() {
 
     return (
         <>
+            {showLoadingScreen && (
+                <LoadingScreen 
+                    message={loadingMessage} 
+                    subtitle="Preparando tu experiencia"
+                />
+            )}
+            
             <div className='container-form-log-in-reg-forg'>
                 <form id="form-log-in-reg-forg" className="form-log-in-reg-forg" onSubmit={handleSubmit}>
                     <h2 className='form-title-log-in-reg-forg'>Inicio de Sesión</h2>

@@ -232,10 +232,35 @@
   line-height: 1.4;
 }
 
+/* Media Queries */
+@media (max-width: 1024px) {
+  .admin-menu {
+    width: 240px;
+    left: 15px;
+    top: 15px;
+    height: calc(100vh - 30px);
+  }
+  
+  .admin-menu a {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .menu-section {
+    padding: 16px 20px 10px;
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-menu {
     width: 100%;
-    min-height: auto;
+    height: auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    border-radius: 12px;
+    margin-bottom: 20px;
     border-right: none;
     border-bottom: 3px solid transparent;
     border-image: linear-gradient(90deg, #8f6ddf, #b794f6, #8f6ddf);
@@ -246,11 +271,71 @@
     flex-direction: row;
     overflow-x: auto;
     gap: 4px;
+    padding: 0 10px;
   }
   
   .admin-menu a {
     padding: 12px 16px;
-    font-size: 14px;
+    font-size: 13px;
     white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  
+  .admin-menu a:hover,
+  .admin-menu a.active {
+    border-left: none;
+    border-bottom-color: #8f6ddf;
+    padding-left: 16px;
+  }
+  
+  .menu-section {
+    display: none;
+  }
+  
+  .menu-divider {
+    display: none;
+  }
+  
+  .user-profile {
+    padding: 16px 20px;
   }
 }
+
+@media (max-width: 480px) {
+  .admin-menu {
+    border-radius: 10px;
+    padding: 16px 0;
+  }
+  
+  .admin-menu a {
+    padding: 10px 12px;
+    font-size: 12px;
+    gap: 8px;
+  }
+  
+  .admin-menu a .icon {
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+  }
+  
+  .user-profile {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .profile-initials {
+    font-size: 16px;
+  }
+  
+  .profile-name {
+    font-size: 13px;
+  }
+}
+

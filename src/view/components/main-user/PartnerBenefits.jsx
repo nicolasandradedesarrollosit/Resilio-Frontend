@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import '../../../styles/main-user/partnerBenefits.css'
+import LoadingScreen from '../others/LoadingScreen';
 
 function PartnerBenefits() {
     const [benefits, setBenefits] = useState([]);
@@ -43,21 +44,25 @@ function PartnerBenefits() {
     }, [])
 
     if (loading) {
-        return (
-            <div className="partner_benefits_container">
-                <div className="loading_state">
-                    <p>Cargando datos...</p>
-                </div>
-            </div>
-        );
+        return <LoadingScreen message="Cargando beneficios" subtitle="Preparando ofertas exclusivas para ti" />;
     }
 
     if (error) {
         return (
-            <div className="partner_benefits_container">
-                <div className="error_state">
-                    <p>{error}</p>
-                </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '300px',
+                flexDirection: 'column',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 100%)',
+                borderRadius: '16px',
+                padding: '2rem',
+                margin: '2rem',
+                color: '#f8fafc'
+            }}>
+                <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>Error al cargar beneficios</h3>
+                <p style={{ color: '#94a3b8', textAlign: 'center' }}>{error}</p>
             </div>
         );
     }

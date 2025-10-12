@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../../../styles/main-user/eventsUser.css';
+import LoadingScreen from '../others/LoadingScreen';
 
 function EventsUser() {
     const [events, setEvents] = useState([]);
@@ -30,10 +31,7 @@ function EventsUser() {
     }, []);
 
     if (loading) {
-        return(
-            <div>
-            </div>
-        )
+        return <LoadingScreen message="Cargando eventos" subtitle="Descubriendo las mejores experiencias para ti" />;
     }
 
     return (

@@ -43,3 +43,39 @@
     overflow-y: auto;
     background-color: #e8e6e1;
 }
+
+/* Media Queries */
+@media (max-width: 1024px) {
+    .main-admin-page {
+        margin-left: 280px;
+        width: calc(100% - 280px);
+        padding: 24px;
+        gap: 16px;
+    }
+
+    .main-content {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-admin-page {
+        margin-left: 0;
+        width: 100%;
+        padding: 16px;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-admin-page {
+        padding: 12px;
+    }
+
+    .main-content {
+        padding: 12px;
+    }
+}

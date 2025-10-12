@@ -556,14 +556,14 @@
     }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1199px) and (min-width: 1025px) {
     .container-form-log-in-reg-forg {
         max-width: 750px;
         margin: 0 1rem;
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
     .container-form-log-in-reg-forg {
         max-width: 650px;
         padding: 2.5rem;
@@ -602,7 +602,7 @@
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .navbar-log-in-reg-forg {
         padding: 0.5rem 0.75rem;
         min-height: 80px;
@@ -702,7 +702,22 @@
     }
 }
 
-@media (max-width: 575px) {
+@media (max-width: 480px) {
+    .navbar-log-in-reg-forg {
+        min-height: 70px;
+        padding: 0.4rem 0.5rem;
+    }
+    
+    .logo-log-in-reg-forg {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .container-log-in-reg-forg {
+        min-height: calc(100vh - 70px);
+        padding: 0.5rem 0;
+    }
+    
     .container-form-log-in-reg-forg {
         padding: 1.5rem;
         margin: 0 0.5rem;
@@ -745,6 +760,15 @@
         border-radius: 35px;
     }
     
+    .cartel-validator-error-log-in-reg-forg,
+    .cartel-validator-success-log-in-reg-forg {
+        font-size: 0.85rem;
+    }
+    
+    #request-error {
+        font-size: 0.9rem;
+    }
+    
     .success-message-log-in-reg-forg {
         padding: 1.5rem;
         margin: 0 0.5rem;
@@ -785,131 +809,58 @@
         height: 35px;
         font-size: 1.3rem;
     }
+
+    .google-login-btn {
+        font-size: 14px;
+        padding: 1rem;
+    }
+    
+    .auth-separator-text {
+        font-size: 13px;
+    }
+    
+    .welcome-user-email {
+        font-size: 15px;
+    }
+    
+    .link-log-in-reg-forg {
+        font-size: 0.85rem;
+    }
+    
+    .loading-text {
+        font-size: 0.85rem;
+    }
 }
 
-@media (max-width: 479px) {
-    .navbar-log-in-reg-forg {
-        min-height: 70px;
-        padding: 0.4rem 0.5rem;
-    }
-    
-    .logo-log-in-reg-forg {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .container-log-in-reg-forg {
-        min-height: calc(100vh - 70px);
-        padding: 0.5rem 0;
-    }
-    
+@media (max-width: 320px) {
     .container-form-log-in-reg-forg {
-        padding: 1.2rem;
-        margin: 0 0.3rem;
-        border-radius: 10px;
+        padding: 1rem;
+        margin: 0 0.2rem;
     }
     
     .form-title-log-in-reg-forg {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
-    
-    .field-form-log-in-reg-forg {
-        margin-bottom: 1rem;
+        font-size: 1.1rem;
     }
     
     .field-form-log-in-reg-forg input,
     .field-form-log-in-reg-forg select {
-        padding: 0.7rem;
-        font-size: 0.85rem;
-        border-radius: 8px;
-    }
-    
-    .field-form-log-in-reg-forg label {
-        top: 0.7rem;
-        left: 0.7rem;
-        font-size: 0.85rem;
-    }
-    
-    .field-form-log-in-reg-forg input:focus + label,
-    .field-form-log-in-reg-forg input:not(:placeholder-shown) + label {
-        top: -0.25rem;
-        left: 0.5rem;
-        font-size: 0.7rem;
+        padding: 0.6rem;
+        font-size: 0.8rem;
     }
     
     .submit-btn-log-in-reg-forg {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.85rem;
-        border-radius: 30px;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .google-login-btn {
+        font-size: 12px;
+        padding: 0.8rem;
     }
     
     .cartel-validator-error-log-in-reg-forg,
     .cartel-validator-success-log-in-reg-forg {
-        font-size: 0.6rem;
-    }
-    
-    #request-error{
-        font-size: 0.6rem;
-    }
-
-    .link-log-in-reg-forg {
-        font-size: 0.8rem;
-    }
-    
-    .success-message-log-in-reg-forg {
-        padding: 1.2rem;
-        margin: 0 0.3rem;
-        border-radius: 10px;
-    }
-    
-    .success-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 1.6rem;
-        margin-bottom: 1rem;
-    }
-    
-    .success-title {
-        font-size: 1.2rem;
-        margin-bottom: 0.6rem;
-    }
-    
-    .success-message {
-        font-size: 0.85rem;
-        margin-bottom: 1.2rem;
-    }
-    
-    .link-success-message,
-    .secondary-btn {
-        padding: 0.7rem 1.2rem;
-        font-size: 0.85rem;
-        border-radius: 30px;
-    }
-    
-    .close-btn-success-message-log-in-reg-forg {
-        top: 0.6rem;
-        right: 0.6rem;
-        width: 30px;
-        height: 30px;
-        font-size: 1.1rem;
-    }
-    
-    .loading-text {
-        font-size: 0.8rem;
-    }
-
-    .google-login-btn {
-        font-size: 14px;
-        padding: 10px;
-    }
-    
-    .auth-separator-text {
-        font-size: 12px;
-    }
-    
-    .welcome-user-email {
-        font-size: 14px;
+        font-size: 0.75rem;
     }
 }
 
@@ -940,27 +891,5 @@
         height: 50px;
         font-size: 1.8rem;
         margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 320px) {
-    .container-form-log-in-reg-forg {
-        padding: 1rem;
-        margin: 0 0.2rem;
-    }
-    
-    .form-title-log-in-reg-forg {
-        font-size: 1.1rem;
-    }
-    
-    .field-form-log-in-reg-forg input,
-    .field-form-log-in-reg-forg select {
-        padding: 0.6rem;
-        font-size: 0.8rem;
-    }
-    
-    .submit-btn-log-in-reg-forg {
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
     }
 }
