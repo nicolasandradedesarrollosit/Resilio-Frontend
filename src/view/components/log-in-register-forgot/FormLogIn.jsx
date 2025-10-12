@@ -123,13 +123,26 @@ function FormLogIn() {
 
                     localStorage.setItem('access_token', accessToken);
                     const decodedToken = jwtDecode(accessToken);
+                    const userId = decodedToken.sub;
+
+                    const userDataResponse = await fetch(`${API_URL}/api/user-data`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: userId })
+                    });
+
+                    if (!userDataResponse.ok) {
+                        throw new Error('Error al obtener datos del usuario');
+                    }
+
+                    const userData = await userDataResponse.json();
+                    const userRole = userData.data?.role || 'user';
 
                     setRequestErrorState('');
                     setIsLoading(false);
                     form.reset();
 
-                    // Mostrar pantalla de carga antes de redirigir
-                    if (decodedToken.role === 'admin') {
+                    if (userRole === 'admin') {
                         setLoadingMessage('Accediendo al panel de administración...');
                         setShowLoadingScreen(true);
                         setTimeout(() => {

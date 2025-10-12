@@ -6,6 +6,7 @@ import LoadingScreen from './LoadingScreen';
 function ProtectedRoute({ children, requiredRole = null }) {
     const [isChecking, setIsChecking] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(false);
+    const [userRole, setUserRole] = useState(null);
     const location = useLocation();
 
     useEffect(() => {
@@ -13,18 +14,15 @@ function ProtectedRoute({ children, requiredRole = null }) {
             try {
                 const token = localStorage.getItem('access_token');
                 
-                // Si no hay token, redirigir al login
                 if (!token) {
                     setIsAuthorized(false);
                     setIsChecking(false);
                     return;
                 }
 
-                // Verificar si el token es válido
                 const decodedToken = jwtDecode(token);
                 const currentTime = Date.now() / 1000;
 
-                // Si el token expiró, redirigir al login
                 if (decodedToken.exp < currentTime) {
                     localStorage.removeItem('access_token');
                     setIsAuthorized(false);
@@ -32,25 +30,40 @@ function ProtectedRoute({ children, requiredRole = null }) {
                     return;
                 }
 
-                // Si se requiere un rol específico, verificarlo
+                const userId = decodedToken.sub;
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: userId })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al obtener datos del usuario');
+                }
+
+                const result = await response.json();
+                
+                if (!result.ok || !result.data) {
+                    throw new Error('Datos del usuario no disponibles');
+                }
+
+                const fetchedRole = result.data.role;
+                setUserRole(fetchedRole);
+
                 if (requiredRole) {
-                    // Para admin, debe ser exactamente 'admin'
-                    // Para user, puede ser 'user' o 'influencer'
-                    if (requiredRole === 'admin' && decodedToken.role !== 'admin') {
+                    if (requiredRole === 'admin' && fetchedRole !== 'admin') {
                         setIsAuthorized(false);
                         setIsChecking(false);
                         return;
                     }
                     
-                    if (requiredRole === 'user' && decodedToken.role === 'admin') {
-                        // Si es admin intentando acceder a user, redirigir a admin
+                    if (requiredRole === 'user' && fetchedRole === 'admin') {
                         setIsAuthorized(false);
                         setIsChecking(false);
                         return;
                     }
                 }
 
-                // Si hay token válido y rol correcto, permitir acceso
                 setIsAuthorized(true);
                 setIsChecking(false);
                 
@@ -70,17 +83,8 @@ function ProtectedRoute({ children, requiredRole = null }) {
     }
 
     if (!isAuthorized) {
-        // Si es admin intentando acceder a user, redirigir a admin
-        const token = localStorage.getItem('access_token');
-        if (token) {
-            try {
-                const decodedToken = jwtDecode(token);
-                if (decodedToken.role === 'admin' && requiredRole === 'user') {
-                    return <Navigate to="/main/admin" replace />;
-                }
-            } catch (error) {
-                // Token inválido, redirigir a login
-            }
+        if (userRole === 'admin' && requiredRole === 'user') {
+            return <Navigate to="/main/admin" replace />;
         }
         
         return <Navigate to="/log-in" replace state={{ from: location.pathname }} />;

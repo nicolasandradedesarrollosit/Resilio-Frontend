@@ -1,16 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AuthContext } from '../../../context/oauth/AuthContext';
 import logo from '../../../../public/logo-resilio-group.png';
 import Avatar from '../../components/others/Avatar';
 import '../../../styles/main-user/navbarMainUser.css';
 
-function NavbarMainUser() {
-  const { userData, loading } = useContext(AuthContext);
+function NavbarMainUser({ userData }) {
   const location = useLocation();
 
-  if (loading || !userData) {
-    return <nav className='navbar-main-user'>Cargando...</nav>;
+  if (!userData) {
+    return null;
   }
 
   return (

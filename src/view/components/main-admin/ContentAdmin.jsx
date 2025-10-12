@@ -101,7 +101,6 @@ function ContentMain() {
                 throw new Error(data.message || 'Error al actualizar usuario');
             }
 
-            // Actualizar la lista de usuarios localmente
             setUsers(prevUsers => 
                 prevUsers.map(user => 
                     user.id === selectedUser.id 
@@ -141,7 +140,6 @@ function ContentMain() {
                 throw new Error(data.message || 'Error al banear usuario');
             }
 
-            // Actualizar la lista de usuarios localmente
             setUsers(prevUsers => 
                 prevUsers.map(user => 
                     user.id === selectedUser.id 
@@ -153,7 +151,6 @@ function ContentMain() {
             setShowDeleteModal(false);
             alert('Usuario baneado correctamente');
             
-            // Refrescar la lista de usuarios
             fetchUsers();
         } catch (err) {
             console.error('Error banning user:', err);

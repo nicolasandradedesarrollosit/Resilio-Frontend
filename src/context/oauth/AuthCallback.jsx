@@ -14,12 +14,10 @@ const AuthCallback = () => {
       try {
         setLoadingStep('Verificando credenciales...');
         
-        // Enviar datos del usuario y obtener el token
         await sendUserData();
         
         setLoadingStep('Obteniendo información del usuario...');
         
-        // Esperar un momento para asegurar que el token esté guardado
         await new Promise(resolve => setTimeout(resolve, 500));
         
         const token = localStorage.getItem('access_token');
@@ -27,14 +25,10 @@ const AuthCallback = () => {
           throw new Error('No se pudo obtener el token de autenticación');
         }
 
-        // Decodificar el token para obtener el rol
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.sub;
-        const userRole = decodedToken.role;
-
         setLoadingStep('Cargando datos completos del perfil...');
         
-        // Obtener todos los datos del usuario antes de redirigir
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -51,12 +45,12 @@ const AuthCallback = () => {
           throw new Error('Datos del usuario incompletos');
         }
 
+        const userRole = result.data.role;
+
         setLoadingStep('Preparando tu experiencia...');
         
-        // Esperar un momento para mostrar el mensaje final
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Redirigir según el rol
         if (userRole === 'admin') {
           navigate('/main/admin', { state: { fromApp: true }, replace: true });
         } else {

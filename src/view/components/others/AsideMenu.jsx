@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../../../context/oauth/AuthContext';
 import '../../../styles/others/asideMenu.css';
 
 function AsideMenu() {
     const [activeItem, setActiveItem] = useState('dashboard');
+    const { userData } = useContext(AuthContext);
     
-    const name = "Nicolas Andrade";
+    const name = userData?.name || 'Usuario';
     const nameSplit = name.split(" ");
-    const words = nameSplit[0].split("")[0] + nameSplit[1].split("")[0];
+    const words = nameSplit.length > 1 
+        ? nameSplit[0].split("")[0] + nameSplit[1].split("")[0]
+        : nameSplit[0].split("")[0] + (nameSplit[0].split("")[1] || '');
     const word = words.toUpperCase();
     
     const svgIcons = [

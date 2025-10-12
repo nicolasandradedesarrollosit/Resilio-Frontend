@@ -55,9 +55,6 @@ function MainUser() {
                 } else {
                     throw new Error('Datos del usuario no disponibles');
                 }
-
-                // Simular un pequeño delay para mejor UX
-                await new Promise(resolve => setTimeout(resolve, 500));
                 
                 setIsLoading(false);
             } catch (err) {
