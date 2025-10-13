@@ -46,8 +46,17 @@ const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        let timeoutId;
+        
         const getSession = async () => {
             try {
+                timeoutId = setTimeout(() => {
+                    if (import.meta.env.DEV) {
+                        console.warn('Timeout en la carga de sesión');
+                    }
+                    setLoading(false);
+                }, 10000);
+
                 const { data: { session } } = await supabase.auth.getSession();
                 
                 if (session?.user) {
@@ -57,19 +66,22 @@ const AuthProvider = ({ children }) => {
                         avatar: session.user.user_metadata?.avatar_url,
                         name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
                     });
+                    
+                    await fetchUserData();
                 }
+                
+                clearTimeout(timeoutId);
             } catch (error) {
                 if (import.meta.env.DEV) {
                     console.error('Error obteniendo sesión:', error);
                 }
+                clearTimeout(timeoutId);
             } finally {
                 setLoading(false);
             }
         };
 
         getSession();
-        
-        fetchUserData();
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             if (session?.user) {
@@ -91,6 +103,7 @@ const AuthProvider = ({ children }) => {
         });
 
         return () => {
+            if (timeoutId) clearTimeout(timeoutId);
             subscription.unsubscribe();
         };
     }, []);

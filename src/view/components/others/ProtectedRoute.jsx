@@ -1,43 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import LoadingScreen from './LoadingScreen';
-import { checkAuthStatus } from '../../../utils/tokenManager';
+import { AuthContext } from '../../../context/oauth/AuthContext';
 
 function ProtectedRoute({ children, requiredRole = null }) {
     const [isChecking, setIsChecking] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [userRole, setUserRole] = useState(null);
     const location = useLocation();
+    const { user, userData, loading: authLoading, refreshUserData } = useContext(AuthContext);
 
     useEffect(() => {
+        if (authLoading) {
+            return;
+        }
+
         const checkAuthorization = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-                    method: 'GET',
-                    credentials: 'include', 
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                if (response.status === 401) {
+                if (!user) {
                     console.log('No autenticado - redirigiendo al login');
                     setIsAuthorized(false);
                     setIsChecking(false);
                     return;
                 }
 
-                if (!response.ok) {
-                    console.error('Error en la respuesta:', response.status);
-                    throw new Error('Error al obtener datos del usuario');
-                }
-
-                const result = await response.json();
+                let currentUserData = userData;
                 
-                if (!result.ok || !result.data) {
-                    console.error('Datos del usuario no disponibles');
-                    throw new Error('Datos del usuario no disponibles');
+                if (!currentUserData) {
+                    currentUserData = await refreshUserData();
                 }
 
-                const fetchedRole = result.data.role;
+                if (!currentUserData) {
+                    console.log('No se pudieron obtener datos del usuario');
+                    setIsAuthorized(false);
+                    setIsChecking(false);
+                    return;
+                }
+
+                const fetchedRole = currentUserData.role;
                 setUserRole(fetchedRole);
 
                 if (requiredRole) {
@@ -68,13 +68,11 @@ function ProtectedRoute({ children, requiredRole = null }) {
         };
 
         checkAuthorization();
-    }, [requiredRole, location.pathname]); 
+    }, [authLoading, user, userData, requiredRole, location.pathname, refreshUserData]);
 
-    if (isChecking) {
+    if (authLoading || isChecking) {
         return <LoadingScreen message="Verificando acceso..." subtitle="Un momento por favor" />;
-    }
-
-    if (!isAuthorized) {
+    }    if (!isAuthorized) {
         if (userRole === 'admin' && requiredRole === 'user') {
             return <Navigate to="/main/admin" replace />;
         }

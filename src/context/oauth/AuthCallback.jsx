@@ -9,8 +9,16 @@ const AuthCallback = () => {
   const [loadingStep, setLoadingStep] = useState('Procesando autenticación...');
 
   useEffect(() => {
+    let timeoutId;
+    
     const handleAuthCallback = async () => {
       try {
+        timeoutId = setTimeout(() => {
+          console.error('⏱️ Timeout: Autenticación tomó demasiado tiempo');
+          setError('La autenticación está tomando más tiempo del esperado. Por favor, intenta nuevamente.');
+          setTimeout(() => navigate('/log-in', { replace: true }), 2000);
+        }, 30000);
+
         setLoadingStep('Verificando sesión...');
         
         let response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
@@ -42,7 +50,7 @@ const AuthCallback = () => {
         console.log('✅ Autenticación con Google exitosa');
         
         setLoadingStep('Estableciendo sesión segura...');
-        await new Promise(resolve => setTimeout(resolve, 1200));
+        await new Promise(resolve => setTimeout(resolve, 800));
         
         setLoadingStep('Cargando tu perfil...');
         
@@ -81,7 +89,7 @@ const AuthCallback = () => {
 
           retries++;
           if (retries < maxRetries) {
-            const waitTime = 800 * retries;
+            const waitTime = 500 * retries; // Reducido de 800ms para móviles
             console.log(`⏳ Esperando ${waitTime}ms antes del siguiente intento...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
@@ -95,7 +103,7 @@ const AuthCallback = () => {
         console.log('Rol del usuario:', userRole);
 
         setLoadingStep('Preparando tu experiencia...');
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 500)); // Reducido de 800ms
 
         if (userRole === 'admin') {
           navigate('/main/admin', { state: { fromApp: true }, replace: true });
@@ -103,14 +111,21 @@ const AuthCallback = () => {
           navigate('/main/user', { state: { fromApp: true }, replace: true });
         }
         
+        if (timeoutId) clearTimeout(timeoutId);
+        
       } catch (err) {
         console.error('❌ Error en callback:', err);
+        if (timeoutId) clearTimeout(timeoutId);
         setError(err.message || 'Error al procesar el inicio de sesión. Por favor, intenta nuevamente.');
         setTimeout(() => navigate('/log-in', { replace: true }), 3000);
       }
     };
 
     handleAuthCallback();
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [navigate]);
 
   if (error) {
