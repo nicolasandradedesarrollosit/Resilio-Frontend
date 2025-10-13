@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect } from 'react';
 import supabase from './Supabase';
 
 export const AuthContext = createContext({
-    user: null,
     userData: null,
     loginWithGoogle: async () => {},
     logOut: async () => {},
@@ -11,7 +10,6 @@ export const AuthContext = createContext({
 });
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -24,80 +22,33 @@ const AuthProvider = ({ children }) => {
             });
 
             if (!response.ok) {
-                if (response.status === 401) {
-                    // No hay sesión activa
-                    setUser(null);
-                    setUserData(null);
-                    return null;
-                }
-                throw new Error('Error al obtener datos del usuario');
+                setUserData(null);
+                return null;
             }
 
             const result = await response.json();
             
             if (result.ok && result.data) {
-                // Actualizar tanto user como userData desde el backend
-                // El backend devuelve: name, ispremium, role, email, phone_number, city, province, email_verified, q_of_redeemed, points_user
-                setUser({
-                    email: result.data.email,
-                    name: result.data.name
-                });
                 setUserData(result.data);
                 return result.data;
             }
             
-            setUser(null);
             setUserData(null);
             return null;
         } catch (error) {
-            if (import.meta.env.DEV) {
-                console.error('Error en fetchUserData:', error);
-            }
-            setUser(null);
             setUserData(null);
             return null;
         }
     };
 
     useEffect(() => {
-        let timeoutId;
-        let isMounted = true;
-        
         const initializeAuth = async () => {
-            try {
-                // Timeout de seguridad
-                timeoutId = setTimeout(() => {
-                    if (import.meta.env.DEV) {
-                        console.warn('Timeout en la carga de sesión');
-                    }
-                    if (isMounted) {
-                        setLoading(false);
-                    }
-                }, 10000);
-
-                // Primero verificar si hay sesión activa en el backend (cookies)
-                await fetchUserData();
-                
-                if (timeoutId) clearTimeout(timeoutId);
-            } catch (error) {
-                if (import.meta.env.DEV) {
-                    console.error('Error inicializando autenticación:', error);
-                }
-                if (timeoutId) clearTimeout(timeoutId);
-            } finally {
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
+            await fetchUserData();
+            setLoading(false);
         };
 
         initializeAuth();
-
-        return () => {
-            isMounted = false;
-            if (timeoutId) clearTimeout(timeoutId);
-        };
-    }, []); // Solo ejecutar una vez al montar
+    }, []); 
 
     const loginWithGoogle = async () => {
         try {
@@ -138,22 +89,15 @@ const AuthProvider = ({ children }) => {
                 headers: { 'Content-Type': 'application/json' }
             });
             
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-            
-            setUser(null);
+            await supabase.auth.signOut();
             setUserData(null);
         } catch (error) {
-            if (import.meta.env.DEV) {
-                console.error('Error en logout:', error);
-            }
-            throw error;
+            console.error('Error en logout:', error);
         }
     };
 
     return (
         <AuthContext.Provider value={{ 
-            user, 
             userData, 
             loginWithGoogle, 
             logOut, 

@@ -14,7 +14,6 @@ const AuthCallback = () => {
     const handleAuthCallback = async () => {
       try {
         timeoutId = setTimeout(() => {
-          console.error('⏱️ Timeout: Autenticación tomó demasiado tiempo');
           setError('La autenticación está tomando más tiempo del esperado. Por favor, intenta nuevamente.');
           setTimeout(() => navigate('/log-in', { replace: true }), 2000);
         }, 30000);
@@ -49,11 +48,10 @@ const AuthCallback = () => {
         
         setLoadingStep('Verificando credenciales con Google...');
         
-        const authResult = await sendUserData();
-        console.log('✅ Autenticación con Google exitosa');
+        await sendUserData();
         
         setLoadingStep('Estableciendo sesión segura...');
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
         setLoadingStep('Cargando tu perfil...');
         
@@ -63,37 +61,27 @@ const AuthCallback = () => {
 
         while (retries < maxRetries && !userData) {
           try {
-            console.log(`Intento ${retries + 1} de obtener datos del usuario...`);
-            
             response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
               method: 'GET',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' }
             });
 
-            console.log(`Response status: ${response.status}`);
-
             if (response.ok) {
               const result = await response.json();
-              console.log('Datos recibidos:', result);
               
               if (result.ok && result.data) {
                 userData = result.data;
-                console.log('✅ Datos del usuario cargados correctamente');
                 break;
               }
-            } else {
-              const errorText = await response.text();
-              console.error(`❌ Error ${response.status}:`, errorText);
             }
           } catch (fetchError) {
-            console.error(`❌ Error en intento ${retries + 1}:`, fetchError);
+            
           }
 
           retries++;
           if (retries < maxRetries) {
-            const waitTime = 500 * retries; 
-            console.log(`⏳ Esperando ${waitTime}ms antes del siguiente intento...`);
+            const waitTime = 500 * retries;
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
         }
@@ -103,7 +91,6 @@ const AuthCallback = () => {
         }
 
         const userRole = userData.role;
-        console.log('Rol del usuario:', userRole);
 
         setLoadingStep('Preparando tu experiencia...');
         
@@ -118,7 +105,6 @@ const AuthCallback = () => {
         }
         
       } catch (err) {
-        console.error('❌ Error en callback:', err);
         if (timeoutId) clearTimeout(timeoutId);
         setError(err.message || 'Error al procesar el inicio de sesión. Por favor, intenta nuevamente.');
         setTimeout(() => navigate('/log-in', { replace: true }), 3000);

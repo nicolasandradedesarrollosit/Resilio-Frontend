@@ -5,8 +5,8 @@ import logo from '../../../../public/logo-resilio-group.png';
 import { AuthContext } from '../../../context/oauth/AuthContext';
 
 function HeroSectionHome(){
-    const { user, userData, loading } = useContext(AuthContext);
-    const isAuthenticated = !!(user || userData);
+    const { userData, loading } = useContext(AuthContext);
+    const isAuthenticated = !!userData;
     const userRole = userData?.role; 
     
     return(
