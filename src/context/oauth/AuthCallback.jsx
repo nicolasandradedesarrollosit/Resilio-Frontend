@@ -57,7 +57,7 @@ const AuthCallback = () => {
         console.log('✅ Autenticación con Google exitosa');
         
         setLoadingStep('Estableciendo sesión segura...');
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         
         setLoadingStep('Cargando tu perfil...');
         
