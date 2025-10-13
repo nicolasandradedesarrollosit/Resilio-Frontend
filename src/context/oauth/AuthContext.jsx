@@ -25,6 +25,9 @@ const AuthProvider = ({ children }) => {
 
             if (!response.ok) {
                 if (response.status === 401) {
+                    // No hay sesión activa
+                    setUser(null);
+                    setUserData(null);
                     return null;
                 }
                 throw new Error('Error al obtener datos del usuario');
@@ -33,76 +36,77 @@ const AuthProvider = ({ children }) => {
             const result = await response.json();
             
             if (result.ok && result.data) {
+                // Actualizar tanto user como userData desde el backend
+                // El backend devuelve: name, ispremium, role, email, phone_number, city, province, email_verified, q_of_redeemed, points_user
+                setUser({
+                    email: result.data.email,
+                    name: result.data.name
+                });
                 setUserData(result.data);
                 return result.data;
             }
+            
+            setUser(null);
+            setUserData(null);
             return null;
         } catch (error) {
             if (import.meta.env.DEV) {
                 console.error('Error en fetchUserData:', error);
             }
+            setUser(null);
+            setUserData(null);
             return null;
         }
     };
 
     useEffect(() => {
         let timeoutId;
+        let isMounted = true;
         
-        const getSession = async () => {
+        const initializeAuth = async () => {
             try {
+                // Timeout de seguridad
                 timeoutId = setTimeout(() => {
                     if (import.meta.env.DEV) {
                         console.warn('Timeout en la carga de sesión');
                     }
-                    setLoading(false);
+                    if (isMounted) {
+                        setLoading(false);
+                    }
                 }, 10000);
 
-                const { data: { session } } = await supabase.auth.getSession();
+                // Primero verificar si hay sesión activa en el backend (cookies)
+                await fetchUserData();
                 
-                if (session?.user) {
-                    setUser({
-                        id: session.user.id,
-                        email: session.user.email,
-                        avatar: session.user.user_metadata?.avatar_url,
-                        name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
-                    });
-                    
-                    await fetchUserData();
-                }
-                
-                clearTimeout(timeoutId);
+                if (timeoutId) clearTimeout(timeoutId);
             } catch (error) {
                 if (import.meta.env.DEV) {
-                    console.error('Error obteniendo sesión:', error);
+                    console.error('Error inicializando autenticación:', error);
                 }
-                clearTimeout(timeoutId);
+                if (timeoutId) clearTimeout(timeoutId);
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
-        getSession();
+        initializeAuth();
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            if (session?.user) {
-                setUser({
-                    id: session.user.id,
-                    email: session.user.email,
-                    avatar: session.user.user_metadata?.avatar_url,
-                    name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
-                });
-            } else {
-                setUser(null);
-                setUserData(null);
+        // Escuchar cambios en la sesión de Supabase (solo para login con Google)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (import.meta.env.DEV) {
+                console.log('🔔 Auth state change:', event);
             }
-            setLoading(false);
             
-            if (session?.user) {
-                fetchUserData();
+            // Cuando hay cambio de estado, verificar en el backend
+            if (isMounted) {
+                await fetchUserData();
             }
         });
 
         return () => {
+            isMounted = false;
             if (timeoutId) clearTimeout(timeoutId);
             subscription.unsubscribe();
         };

@@ -4,32 +4,41 @@ import LoadingScreen from './LoadingScreen';
 import { AuthContext } from '../../../context/oauth/AuthContext';
 
 function ProtectedRoute({ children, requiredRole = null }) {
-    const [isChecking, setIsChecking] = useState(true);
+    const [isChecking, setIsChecking] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [userRole, setUserRole] = useState(null);
     const location = useLocation();
     const { user, userData, loading: authLoading, refreshUserData } = useContext(AuthContext);
 
     useEffect(() => {
+        // Esperar a que el AuthContext termine de cargar
         if (authLoading) {
+            setIsChecking(true);
             return;
         }
 
         const checkAuthorization = async () => {
+            setIsChecking(true);
+            
             try {
-                if (!user) {
+                // Si no hay usuario después de que el contexto cargó, no está autenticado
+                if (!user && !userData) {
                     console.log('No autenticado - redirigiendo al login');
                     setIsAuthorized(false);
                     setIsChecking(false);
                     return;
                 }
 
+                // Usar userData del contexto si está disponible
                 let currentUserData = userData;
                 
-                if (!currentUserData) {
+                // Si no hay userData pero hay user, intentar obtenerla
+                if (!currentUserData && user) {
+                    console.log('Intentando refrescar userData...');
                     currentUserData = await refreshUserData();
                 }
 
+                // Si después de intentar refrescar no hay datos, no autorizar
                 if (!currentUserData) {
                     console.log('No se pudieron obtener datos del usuario');
                     setIsAuthorized(false);
@@ -40,6 +49,7 @@ function ProtectedRoute({ children, requiredRole = null }) {
                 const fetchedRole = currentUserData.role;
                 setUserRole(fetchedRole);
 
+                // Verificar roles requeridos
                 if (requiredRole) {
                     if (requiredRole === 'admin' && fetchedRole !== 'admin') {
                         console.log('Usuario no es admin - acceso denegado');
@@ -56,7 +66,7 @@ function ProtectedRoute({ children, requiredRole = null }) {
                     }
                 }
 
-                console.log('Usuario autorizado:', fetchedRole);
+                console.log('✅ Usuario autorizado:', fetchedRole);
                 setIsAuthorized(true);
                 setIsChecking(false);
                 

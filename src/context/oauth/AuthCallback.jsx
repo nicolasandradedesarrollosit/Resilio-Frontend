@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sendUserData from './AuthSendSessionData';
 import LoadingScreen from '../../view/components/others/LoadingScreen';
+import { AuthContext } from './AuthContext';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loadingStep, setLoadingStep] = useState('Procesando autenticación...');
+  const { refreshUserData } = useContext(AuthContext);
 
   useEffect(() => {
     let timeoutId;
@@ -33,7 +35,13 @@ const AuthCallback = () => {
             const userRole = result.data.role;
             
             setLoadingStep('Redirigiendo a tu cuenta...');
+            
+            // Forzar actualización del contexto antes de redirigir
+            await refreshUserData();
+            
             await new Promise(resolve => setTimeout(resolve, 500));
+            
+            if (timeoutId) clearTimeout(timeoutId);
             
             if (userRole === 'admin') {
               navigate('/main/admin', { state: { fromApp: true }, replace: true });
@@ -103,15 +111,19 @@ const AuthCallback = () => {
         console.log('Rol del usuario:', userRole);
 
         setLoadingStep('Preparando tu experiencia...');
-        await new Promise(resolve => setTimeout(resolve, 500)); // Reducido de 800ms
+        
+        // Forzar actualización del contexto antes de redirigir
+        await refreshUserData();
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (timeoutId) clearTimeout(timeoutId);
 
         if (userRole === 'admin') {
           navigate('/main/admin', { state: { fromApp: true }, replace: true });
         } else {
           navigate('/main/user', { state: { fromApp: true }, replace: true });
         }
-        
-        if (timeoutId) clearTimeout(timeoutId);
         
       } catch (err) {
         console.error('❌ Error en callback:', err);
