@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import supabase from './Supabase';
 
 export const AuthContext = createContext({
@@ -15,7 +15,8 @@ const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const fetchUserData = async () => {
+    // Usar useCallback para que la función no se recree en cada render
+    const fetchUserData = useCallback(async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
                 method: 'GET',
@@ -57,7 +58,7 @@ const AuthProvider = ({ children }) => {
             setUserData(null);
             return null;
         }
-    };
+    }, []); // Sin dependencias porque solo usa setters de estado
 
     useEffect(() => {
         let timeoutId;
@@ -110,7 +111,7 @@ const AuthProvider = ({ children }) => {
             if (timeoutId) clearTimeout(timeoutId);
             subscription.unsubscribe();
         };
-    }, []);
+    }, [fetchUserData]); // Agregar fetchUserData como dependencia
 
     const loginWithGoogle = async () => {
         try {
