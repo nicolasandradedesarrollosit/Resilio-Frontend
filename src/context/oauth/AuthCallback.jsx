@@ -15,6 +15,13 @@ const AuthCallback = () => {
     
     const handleAuthCallback = async () => {
       try {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const initialWait = isMobile ? 5000 : 3000;
+        const maxRetries = isMobile ? 8 : 5;
+        
+        console.log('📱 Dispositivo:', isMobile ? 'Móvil' : 'Desktop');
+        console.log('⏱️ Tiempo de espera inicial:', initialWait, 'ms');
+        
         timeoutId = setTimeout(() => {
           setError('La autenticación está tomando más tiempo del esperado. Por favor, intenta nuevamente.');
           setTimeout(() => navigate('/log-in', { replace: true }), 2000);
@@ -33,6 +40,7 @@ const AuthCallback = () => {
           if (result.ok && result.data) {
             const userRole = result.data.role;
             
+            console.log('✅ Sesión ya existente, redirigiendo...');
             setLoadingStep('Redirigiendo a tu cuenta...');
             
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -48,17 +56,18 @@ const AuthCallback = () => {
           }
         }
         
+        console.log('🔄 No hay sesión existente, procesando OAuth...');
         setLoadingStep('Verificando credenciales con Google...');
         
         await sendUserData();
         
+        console.log('⏳ Esperando establecimiento de cookies...');
         setLoadingStep('Estableciendo sesión segura...');
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, initialWait));
         
         setLoadingStep('Cargando tu perfil...');
         
         let retries = 0;
-        const maxRetries = 5;
         let userData = null;
 
         while (retries < maxRetries && !userData) {
