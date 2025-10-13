@@ -7,8 +7,10 @@ const sendUserData = async() => {
     if (error) throw error;
     if (!session) throw new Error('No se encontró sesión de autenticación');
     
+    // El servidor ahora enviará las cookies automáticamente
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
-      method: 'POST', 
+      method: 'POST',
+      credentials: 'include', // Permite que el servidor envíe cookies
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         supabaseToken: session.access_token,
@@ -21,13 +23,14 @@ const sendUserData = async() => {
       throw new Error(errorData.message || 'Error al procesar la autenticación');
     }
     
-    const { accessToken } = await response.json();
+    const result = await response.json();
     
-    localStorage.setItem('access_token', accessToken);
+    // Ya no almacenamos el token en localStorage, está en cookies HTTP-only
+    // El servidor lo envió automáticamente en la respuesta
     
     await supabase.auth.signOut();
     
-    return { accessToken, user: session.user };
+    return { user: session.user };
     
   } catch (err) {
     if (import.meta.env.DEV) {

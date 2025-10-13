@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sendUserData from './AuthSendSessionData';
 import LoadingScreen from '../../view/components/others/LoadingScreen';
-import { getValidToken, getUserIdFromToken, isTokenValid, clearToken } from '../../utils/tokenManager';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -12,60 +11,48 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        let token = localStorage.getItem('access_token');
+        // Verificar si ya hay una sesión activa usando cookies
+        setLoadingStep('Verificando sesión...');
         
-        if (token && isTokenValid(token)) {
-          setLoadingStep('Sesión activa detectada...');
-          
-          const userId = getUserIdFromToken(token);
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: userId })
-          });
+        let response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+          method: 'GET',
+          credentials: 'include', // Envía las cookies automáticamente
+          headers: { 'Content-Type': 'application/json' }
+        });
 
-          if (response.ok) {
-            const result = await response.json();
-            if (result.ok && result.data) {
-              const userRole = result.data.role;
-              
-              setLoadingStep('Redirigiendo a tu cuenta...');
-              await new Promise(resolve => setTimeout(resolve, 500));
-              
-              if (userRole === 'admin') {
-                navigate('/main/admin', { state: { fromApp: true }, replace: true });
-              } else {
-                navigate('/main/user', { state: { fromApp: true }, replace: true });
-              }
-              return;
+        // Si ya hay una sesión activa, redirigir directamente
+        if (response.ok) {
+          const result = await response.json();
+          if (result.ok && result.data) {
+            const userRole = result.data.role;
+            
+            setLoadingStep('Redirigiendo a tu cuenta...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            if (userRole === 'admin') {
+              navigate('/main/admin', { state: { fromApp: true }, replace: true });
+            } else {
+              navigate('/main/user', { state: { fromApp: true }, replace: true });
             }
+            return;
           }
-        } else if (token) {
-          // Token inválido o expirado
-          clearToken();
-          token = null;
         }
         
+        // Si no hay sesión activa, procesar el callback de Google OAuth
         setLoadingStep('Verificando credenciales...');
         
         await sendUserData();
         
         setLoadingStep('Obteniendo información del usuario...');
-        
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        token = localStorage.getItem('access_token');
-        if (!token) {
-          throw new Error('No se pudo obtener el token de autenticación');
-        }
-
-        const userId = getUserIdFromToken(token);
+        // Ahora el servidor ya envió las cookies, obtener datos del usuario
         setLoadingStep('Cargando datos completos del perfil...');
         
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: userId })
+        response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+          method: 'GET',
+          credentials: 'include', // Envía las cookies automáticamente
+          headers: { 'Content-Type': 'application/json' }
         });
 
         if (!response.ok) {
@@ -81,7 +68,6 @@ const AuthCallback = () => {
         const userRole = result.data.role;
 
         setLoadingStep('Preparando tu experiencia...');
-        
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         if (userRole === 'admin') {

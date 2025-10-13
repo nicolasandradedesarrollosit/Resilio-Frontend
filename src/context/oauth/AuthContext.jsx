@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import supabase from './Supabase';
 
 export const AuthContext = createContext({
@@ -18,18 +17,20 @@ const AuthProvider = ({ children }) => {
 
     const fetchUserData = async () => {
         try {
-            const token = localStorage.getItem('access_token');
-            if (!token) return null;
-
-            const decodedToken = jwtDecode(token);
-            
+            // Usar cookies en lugar de localStorage
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: decodedToken.sub })
+                method: 'GET',
+                credentials: 'include', // Envía las cookies automáticamente
+                headers: { 'Content-Type': 'application/json' }
             });
 
-            if (!response.ok) throw new Error('Error al obtener datos del usuario');
+            if (!response.ok) {
+                if (response.status === 401) {
+                    // No autenticado
+                    return null;
+                }
+                throw new Error('Error al obtener datos del usuario');
+            }
 
             const result = await response.json();
             
@@ -129,11 +130,20 @@ const AuthProvider = ({ children }) => {
 
     const logOut = async () => {
         try {
+            // Llamar al endpoint de logout para limpiar las cookies en el servidor
+            await fetch(`${import.meta.env.VITE_API_URL}/api/log-out`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            // Cerrar sesión de Supabase
             const { error } = await supabase.auth.signOut();
             if (error) throw error;
+            
             setUser(null);
             setUserData(null);
-            localStorage.removeItem('access_token');
+            // Ya no usamos localStorage para tokens
         } catch (error) {
             if (import.meta.env.DEV) {
                 console.error('Error en logout:', error);

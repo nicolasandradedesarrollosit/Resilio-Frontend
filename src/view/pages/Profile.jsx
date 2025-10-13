@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/oauth/AuthContext";
 import "../../styles/profile/profile.css";
-import { jwtDecode } from "jwt-decode";
 import GoBack from '../components/others/GoBack';
 import { useNavigate } from "react-router-dom";
 
@@ -158,11 +157,10 @@ function Profile(){
         }
 
         try {
-            const token = localStorage.getItem('access_token');
-            const decodedToken = jwtDecode(token);
-            const userId = decodedToken.sub;
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-user/${userId}`, {
+            // Ya no necesitamos el token de localStorage, el servidor usa cookies
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-user`, {
                 method: 'PATCH',
+                credentials: 'include', // Envía las cookies automáticamente
                 headers: { 
                     'Content-Type': 'application/json'
                 },
@@ -194,11 +192,12 @@ function Profile(){
     const logOutSession = async () => {
         setIsLoading(true);
         try{
-            const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/logout`, {
+            // Llamar al endpoint de logout para limpiar las cookies en el servidor
+            const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/log-out`, {
                 method: 'POST',
+                credentials: 'include', // Envía las cookies automáticamente
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    'Content-Type': 'application/json'
                 }
             });
 
@@ -206,14 +205,14 @@ function Profile(){
                 throw new Error('Error al cerrar sesión');
             }
             
-            localStorage.removeItem('access_token');
+            // Las cookies ya están limpiadas por el servidor, solo redirigir
             navigate('/log-in');
         }
         catch(err){
             if(import.meta.env.DEV){
                 console.error('Error al cerrar sesión:', err);
             }
-            localStorage.removeItem('access_token');
+            // Aunque falle, redirigir al login
             navigate('/log-in');
         }
         finally {
@@ -474,16 +473,6 @@ function Profile(){
                                 {isLoading ? 'Cerrando sesión...' : 'Sí, cerrar sesión'}
                             </button>
                         </div>
-                        {isLoading && (
-                            <div className="loading-bar-container active">
-                                <div className="loading-bar">
-                                    <div className="loading-bar-fill"></div>
-                                </div>
-                                <div className="loading-text">
-                                    Cerrando sesión...
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </div>
             }

@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import '../../../styles/log-in-register-forgot/formLogRegForg.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from '../../../context/oauth/AuthContext';
 import LoadingScreen from '../others/LoadingScreen';
 
@@ -98,8 +97,10 @@ function FormLogIn() {
 
             setTimeout(async () => {
                 try {
+                    // Login request - el servidor enviará las cookies automáticamente
                     const response = await fetch(`${API_URL}/api/log-in`, {
                         method: 'POST',
+                        credentials: 'include', // Importante: permite que el servidor envíe cookies
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: emailValue, password: passwordValue }),
                     });
@@ -113,22 +114,12 @@ function FormLogIn() {
                         return;
                     }
 
-                    const accessToken = resp.data.accessToken;
-                    if(!accessToken){
-                        setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
-                        setIsLoading(false);
-                        form.reset();
-                        return;
-                    }
-
-                    localStorage.setItem('access_token', accessToken);
-                    const decodedToken = jwtDecode(accessToken);
-                    const userId = decodedToken.sub;
-
+                    // Ya no recibimos el accessToken en el response, ahora está en una cookie HTTP-only
+                    // Obtener datos del usuario usando la cookie
                     const userDataResponse = await fetch(`${API_URL}/api/user-data`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: userId })
+                        method: 'GET',
+                        credentials: 'include', // Envía las cookies automáticamente
+                        headers: { 'Content-Type': 'application/json' }
                     });
 
                     if (!userDataResponse.ok) {

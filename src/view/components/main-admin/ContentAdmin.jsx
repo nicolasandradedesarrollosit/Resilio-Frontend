@@ -33,6 +33,7 @@ function ContentMain() {
                 `${import.meta.env.VITE_API_URL}/api/admin/user?limit=${usersPerPage}&offset=${offset}`,
                 {
                     method: 'GET',
+                    credentials: 'include', // Envía las cookies para autenticación de admin
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -88,6 +89,7 @@ function ContentMain() {
                 `${import.meta.env.VITE_API_URL}/api/admin/user-update/${selectedUser.id}`,
                 {
                     method: 'PATCH',
+                    credentials: 'include', // Envía las cookies para autenticación de admin
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -127,6 +129,7 @@ function ContentMain() {
                 `${import.meta.env.VITE_API_URL}/api/admin/ban-user/${selectedUser.id}`,
                 {
                     method: 'PATCH',
+                    credentials: 'include', // Envía las cookies para autenticación de admin
                     headers: {
                         'Content-Type': 'application/json',
                     },

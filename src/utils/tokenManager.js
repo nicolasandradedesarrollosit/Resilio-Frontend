@@ -1,139 +1,202 @@
-import { jwtDecode } from 'jwt-decode';
+/**
+ * Utilidades para manejo de autenticación basada en cookies HTTP-only
+ * 
+ * IMPORTANTE: Los tokens ahora se almacenan en cookies HTTP-only en el servidor,
+ * lo que significa que JavaScript no puede acceder a ellos directamente.
+ * Esto mejora la seguridad al prevenir ataques XSS.
+ * 
+ * Todas las peticiones autenticadas deben incluir: credentials: 'include'
+ */
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 /**
- * Verifica si el token es válido y no ha expirado
- * @param {string} token - Token JWT
- * @returns {boolean} - True si es válido, false si no
+ * Verifica si el usuario está autenticado consultando al servidor
+ * @returns {Promise<{isAuthenticated: boolean, userId: string|null}>}
  */
-export function isTokenValid(token) {
-    if (!token) return false;
-    
+export async function checkAuthStatus() {
     try {
-        const decoded = jwtDecode(token);
-        
-        // Si no tiene exp, el token es inválido
-        if (!decoded.exp) {
-            console.warn('Token sin fecha de expiración');
-            return false;
-        }
-        
-        const currentTime = Date.now() / 1000;
-        const isValid = decoded.exp > currentTime;
-        
-        if (!isValid) {
-            console.log('Token expirado');
-        }
-        
-        return isValid;
-    } catch (error) {
-        console.error('Error al decodificar token:', error);
-        return false;
-    }
-}
-
-/**
- * Obtiene el userId del token
- * @param {string} token - Token JWT
- * @returns {string|null} - userId o null
- */
-export function getUserIdFromToken(token) {
-    if (!token) return null;
-    
-    try {
-        const decoded = jwtDecode(token);
-        return decoded.sub || null;
-    } catch (error) {
-        console.error('Error al decodificar token:', error);
-        return null;
-    }
-}
-
-/**
- * Intenta renovar el token usando el refresh token
- * @returns {Promise<string|null>} - Nuevo access token o null
- */
-export async function refreshAccessToken() {
-    try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/refresh`, {
-            method: 'POST',
-            credentials: 'include', // Importante: envía las cookies
+        const response = await fetch(`${API_URL}/api/user-data`, {
+            method: 'GET',
+            credentials: 'include', // Envía las cookies automáticamente
             headers: {
                 'Content-Type': 'application/json'
             }
         });
 
-        if (!response.ok) {
-            console.error('Error al renovar token:', response.status);
-            return null;
+        if (response.ok) {
+            const data = await response.json();
+            return {
+                isAuthenticated: true,
+                userId: data.id || null
+            };
         }
 
-        const result = await response.json();
-        
-        if (result.ok && result.data?.accessToken) {
-            const newToken = result.data.accessToken;
-            localStorage.setItem('access_token', newToken);
+        return { isAuthenticated: false, userId: null };
+    } catch (error) {
+        console.error('Error al verificar autenticación:', error);
+        return { isAuthenticated: false, userId: null };
+    }
+}
+
+/**
+ * Intenta renovar el token usando el refresh token almacenado en cookies
+ * El servidor automáticamente leerá la cookie refresh_token
+ * @returns {Promise<boolean>} - True si se renovó exitosamente
+ */
+export async function refreshAccessToken() {
+    try {
+        const response = await fetch(`${API_URL}/api/refresh`, {
+            method: 'POST',
+            credentials: 'include', // Envía las cookies (incluido refresh_token)
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
             console.log('Token renovado exitosamente');
-            return newToken;
+            return true;
         }
 
-        return null;
+        console.error('Error al renovar token:', response.status);
+        return false;
     } catch (error) {
         console.error('Error en refreshAccessToken:', error);
+        return false;
+    }
+}
+
+/**
+ * Cierra la sesión del usuario, limpiando las cookies en el servidor
+ * @returns {Promise<boolean>} - True si se cerró sesión exitosamente
+ */
+export async function logout() {
+    try {
+        const response = await fetch(`${API_URL}/api/log-out`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            console.log('Sesión cerrada exitosamente');
+            return true;
+        }
+
+        console.error('Error al cerrar sesión:', response.status);
+        return false;
+    } catch (error) {
+        console.error('Error en logout:', error);
+        return false;
+    }
+}
+
+/**
+ * Realiza una petición autenticada con manejo automático de refresh
+ * @param {string} url - URL del endpoint
+ * @param {Object} options - Opciones de fetch
+ * @returns {Promise<Response>} - Respuesta de la petición
+ */
+export async function authenticatedFetch(url, options = {}) {
+    // Asegurar que se envíen las cookies
+    const fetchOptions = {
+        ...options,
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    };
+
+    let response = await fetch(url, fetchOptions);
+
+    // Si recibimos 401 (no autorizado), intentar renovar el token
+    if (response.status === 401) {
+        console.log('Token expirado, intentando renovar...');
+        const refreshed = await refreshAccessToken();
+
+        if (refreshed) {
+            // Reintentar la petición original con el nuevo token
+            response = await fetch(url, fetchOptions);
+        }
+    }
+
+    return response;
+}
+
+/**
+ * Helper para hacer peticiones GET autenticadas
+ * @param {string} endpoint - Endpoint relativo (ej: '/api/user-data')
+ * @returns {Promise<any>} - Datos de la respuesta o null
+ */
+export async function authGet(endpoint) {
+    try {
+        const response = await authenticatedFetch(`${API_URL}${endpoint}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+
+        console.error('Error en GET:', response.status);
+        return null;
+    } catch (error) {
+        console.error('Error en authGet:', error);
         return null;
     }
 }
 
 /**
- * Obtiene un token válido, renovándolo si es necesario
- * @returns {Promise<string|null>} - Token válido o null
+ * Helper para hacer peticiones POST autenticadas
+ * @param {string} endpoint - Endpoint relativo
+ * @param {Object} body - Datos a enviar
+ * @returns {Promise<any>} - Datos de la respuesta o null
  */
-export async function getValidToken() {
-    let token = localStorage.getItem('access_token');
-    
-    // Si no hay token, intentar renovar
-    if (!token) {
-        console.log('No hay token, intentando renovar...');
-        token = await refreshAccessToken();
-        return token;
-    }
-    
-    // Si el token es válido, retornarlo
-    if (isTokenValid(token)) {
-        return token;
-    }
-    
-    // Si el token expiró o es inválido, intentar renovar
-    console.log('Token inválido o expirado, intentando renovar...');
-    token = await refreshAccessToken();
-    
-    return token;
-}
-
-/**
- * Limpia el token del localStorage
- */
-export function clearToken() {
-    localStorage.removeItem('access_token');
-}
-
-/**
- * Verifica si el token expirará pronto (en los próximos 2 minutos)
- * @param {string} token - Token JWT
- * @returns {boolean} - True si expira pronto
- */
-export function willExpireSoon(token) {
-    if (!token) return true;
-    
+export async function authPost(endpoint, body = {}) {
     try {
-        const decoded = jwtDecode(token);
-        if (!decoded.exp) return true;
-        
-        const currentTime = Date.now() / 1000;
-        const timeUntilExpiry = decoded.exp - currentTime;
-        
-        // Si expira en menos de 2 minutos (120 segundos)
-        return timeUntilExpiry < 120;
+        const response = await authenticatedFetch(`${API_URL}${endpoint}`, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+
+        console.error('Error en POST:', response.status);
+        return null;
     } catch (error) {
-        return true;
+        console.error('Error en authPost:', error);
+        return null;
     }
 }
+
+/**
+ * Helper para hacer peticiones PATCH autenticadas
+ * @param {string} endpoint - Endpoint relativo
+ * @param {Object} body - Datos a actualizar
+ * @returns {Promise<any>} - Datos de la respuesta o null
+ */
+export async function authPatch(endpoint, body = {}) {
+    try {
+        const response = await authenticatedFetch(`${API_URL}${endpoint}`, {
+            method: 'PATCH',
+            body: JSON.stringify(body)
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+
+        console.error('Error en PATCH:', response.status);
+        return null;
+    } catch (error) {
+        console.error('Error en authPatch:', error);
+        return null;
+    }
+}
+

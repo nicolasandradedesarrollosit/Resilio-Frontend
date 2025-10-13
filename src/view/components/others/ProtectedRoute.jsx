@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import LoadingScreen from './LoadingScreen';
-import { getValidToken, getUserIdFromToken, clearToken } from '../../../utils/tokenManager';
+import { checkAuthStatus } from '../../../utils/tokenManager';
 
 function ProtectedRoute({ children, requiredRole = null }) {
     const [isChecking, setIsChecking] = useState(true);
@@ -12,24 +12,19 @@ function ProtectedRoute({ children, requiredRole = null }) {
     useEffect(() => {
         const checkAuthorization = async () => {
             try {
-                // Intenta obtener un token válido (renueva si es necesario)
-                const token = await getValidToken();
-                
-                // Si no se pudo obtener un token válido, redirigir al login
-                if (!token) {
-                    clearToken();
+                // Obtener datos del usuario usando cookies
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+                    method: 'GET',
+                    credentials: 'include', // Envía las cookies automáticamente
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                // Si no está autenticado (401), redirigir al login
+                if (response.status === 401) {
                     setIsAuthorized(false);
                     setIsChecking(false);
                     return;
                 }
-
-                // Obtener el rol del usuario desde la API
-                const userId = getUserIdFromToken(token);
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: userId })
-                });
 
                 if (!response.ok) {
                     throw new Error('Error al obtener datos del usuario');
@@ -44,6 +39,7 @@ function ProtectedRoute({ children, requiredRole = null }) {
                 const fetchedRole = result.data.role;
                 setUserRole(fetchedRole);
 
+                // Verificar si el usuario tiene el rol requerido
                 if (requiredRole) {
                     if (requiredRole === 'admin' && fetchedRole !== 'admin') {
                         setIsAuthorized(false);
@@ -63,7 +59,6 @@ function ProtectedRoute({ children, requiredRole = null }) {
                 
             } catch (error) {
                 console.error('Error verificando autorización:', error);
-                clearToken();
                 setIsAuthorized(false);
                 setIsChecking(false);
             }
@@ -77,10 +72,12 @@ function ProtectedRoute({ children, requiredRole = null }) {
     }
 
     if (!isAuthorized) {
+        // Si es admin tratando de acceder a ruta de usuario, redirigir a admin
         if (userRole === 'admin' && requiredRole === 'user') {
             return <Navigate to="/main/admin" replace />;
         }
         
+        // Si no está autenticado, redirigir al login
         return <Navigate to="/log-in" replace state={{ from: location.pathname }} />;
     }
 

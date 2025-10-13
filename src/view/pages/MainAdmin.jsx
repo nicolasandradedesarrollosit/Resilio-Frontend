@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import AsideMenu from '../components/others/AsideMenu';
 import ContentMain from '../components/main-admin/ContentAdmin';
 import LoadingScreen from '../components/others/LoadingScreen';
-import { getValidToken, getUserIdFromToken } from '../../utils/tokenManager';
 import '../../styles/main-admin/mainAdmin.css'
 
 
@@ -17,22 +16,11 @@ function MainAdmin() {
         setIsLoading(true);
         setError(null);
 
-        // Obtener token válido (renueva si es necesario)
-        const token = await getValidToken();
-        if (!token) {
-          setError('No se encontró sesión activa');
-          setIsLoading(false);
-          return;
-        }
-
-        // Obtener el userId del token
-        const userId = getUserIdFromToken(token);
-
-        // Cargar datos del usuario
+        // Cargar datos del usuario usando cookies (sin localStorage)
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: userId })
+          method: 'GET',
+          credentials: 'include', // Envía las cookies automáticamente
+          headers: { 'Content-Type': 'application/json' }
         });
 
         if (!response.ok) {
