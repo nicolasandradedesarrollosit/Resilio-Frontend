@@ -42,12 +42,10 @@ const AuthCallback = () => {
         console.log('✅ Autenticación con Google exitosa');
         
         setLoadingStep('Estableciendo sesión segura...');
-        // Esperar para que el navegador procese las cookies
         await new Promise(resolve => setTimeout(resolve, 1200));
         
         setLoadingStep('Cargando tu perfil...');
         
-        // Intentar obtener datos con reintentos
         let retries = 0;
         const maxRetries = 3;
         let userData = null;

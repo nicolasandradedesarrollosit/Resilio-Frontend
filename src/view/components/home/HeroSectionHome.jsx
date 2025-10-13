@@ -9,13 +9,12 @@ function HeroSectionHome(){
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [userRole, setUserRole] = useState(null);
-    const location = useLocation(); // Detectar cambios de navegación
+    const location = useLocation();
     
     useEffect(() => {
         const verifyAuth = async () => {
             setIsLoading(true);
             try {
-                // Llamar al endpoint para obtener los datos del usuario y su rol
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
                     method: 'GET',
                     credentials: 'include',
@@ -43,7 +42,7 @@ function HeroSectionHome(){
             setIsLoading(false);
         };
         verifyAuth();
-    }, [location.pathname]); // Re-verificar cuando cambia la ruta
+    }, [location.pathname]); 
     
     return(
         <>

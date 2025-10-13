@@ -33,10 +33,8 @@ function Layout(){
         <Route path='/register' element={<Register />} />
         <Route path='/reset-password' element={<ForgotPassword />} />
         
-        {/* Ruta de callback de OAuth - No requiere protección */}
         <Route path="/auth/callback" element={<AuthCallback />} />
         
-        {/* Rutas protegidas - Usuario regular */}
         <Route 
           path='/main/user' 
           element={
@@ -55,7 +53,6 @@ function Layout(){
           } 
         />
         
-        {/* Rutas protegidas - Administrador */}
         <Route 
           path='/main/admin' 
           element={

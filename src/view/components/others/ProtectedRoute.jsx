@@ -12,14 +12,12 @@ function ProtectedRoute({ children, requiredRole = null }) {
     useEffect(() => {
         const checkAuthorization = async () => {
             try {
-                // Obtener datos del usuario usando cookies
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
                     method: 'GET',
-                    credentials: 'include', // Envía las cookies automáticamente
+                    credentials: 'include', 
                     headers: { 'Content-Type': 'application/json' }
                 });
 
-                // Si no está autenticado (401), redirigir al login
                 if (response.status === 401) {
                     console.log('No autenticado - redirigiendo al login');
                     setIsAuthorized(false);
@@ -42,7 +40,6 @@ function ProtectedRoute({ children, requiredRole = null }) {
                 const fetchedRole = result.data.role;
                 setUserRole(fetchedRole);
 
-                // Verificar si el usuario tiene el rol requerido
                 if (requiredRole) {
                     if (requiredRole === 'admin' && fetchedRole !== 'admin') {
                         console.log('Usuario no es admin - acceso denegado');
@@ -71,19 +68,17 @@ function ProtectedRoute({ children, requiredRole = null }) {
         };
 
         checkAuthorization();
-    }, [requiredRole, location.pathname]); // Re-verificar cuando cambia la ruta
+    }, [requiredRole, location.pathname]); 
 
     if (isChecking) {
         return <LoadingScreen message="Verificando acceso..." subtitle="Un momento por favor" />;
     }
 
     if (!isAuthorized) {
-        // Si es admin tratando de acceder a ruta de usuario, redirigir a admin
         if (userRole === 'admin' && requiredRole === 'user') {
             return <Navigate to="/main/admin" replace />;
         }
         
-        // Si no está autenticado, redirigir al login
         return <Navigate to="/log-in" replace state={{ from: location.pathname }} />;
     }
 

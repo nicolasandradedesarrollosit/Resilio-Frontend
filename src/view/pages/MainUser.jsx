@@ -24,10 +24,9 @@ function MainUser() {
                 setIsLoading(true);
                 setError(null);
 
-                // Cargar datos del usuario usando cookies (sin localStorage)
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
                     method: 'GET',
-                    credentials: 'include', // Envía las cookies automáticamente
+                    credentials: 'include', 
                     headers: { 'Content-Type': 'application/json' }
                 });
 

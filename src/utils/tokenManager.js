@@ -1,14 +1,13 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 /**
- * Verifica si el usuario está autenticado consultando al servidor
  * @returns {Promise<{isAuthenticated: boolean, userId: string|null}>}
  */
 export async function checkAuthStatus() {
     try {
         const response = await fetch(`${API_URL}/api/user-data`, {
             method: 'GET',
-            credentials: 'include', // Envía las cookies automáticamente
+            credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -30,15 +29,13 @@ export async function checkAuthStatus() {
 }
 
 /**
- * Intenta renovar el token usando el refresh token almacenado en cookies
- * El servidor automáticamente leerá la cookie refresh_token
- * @returns {Promise<boolean>} - True si se renovó exitosamente
+ * @returns {Promise<boolean>} 
  */
 export async function refreshAccessToken() {
     try {
         const response = await fetch(`${API_URL}/api/refresh`, {
             method: 'POST',
-            credentials: 'include', // Envía las cookies (incluido refresh_token)
+            credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -58,8 +55,7 @@ export async function refreshAccessToken() {
 }
 
 /**
- * Cierra la sesión del usuario, limpiando las cookies en el servidor
- * @returns {Promise<boolean>} - True si se cerró sesión exitosamente
+ * @returns {Promise<boolean>} 
  */
 export async function logout() {
     try {
@@ -85,13 +81,11 @@ export async function logout() {
 }
 
 /**
- * Realiza una petición autenticada con manejo automático de refresh
- * @param {string} url - URL del endpoint
- * @param {Object} options - Opciones de fetch
- * @returns {Promise<Response>} - Respuesta de la petición
+ * @param {string} url 
+ * @param {Object} options 
+ * @returns {Promise<Response>} 
  */
 export async function authenticatedFetch(url, options = {}) {
-    // Asegurar que se envíen las cookies
     const fetchOptions = {
         ...options,
         credentials: 'include',
@@ -103,13 +97,11 @@ export async function authenticatedFetch(url, options = {}) {
 
     let response = await fetch(url, fetchOptions);
 
-    // Si recibimos 401 (no autorizado), intentar renovar el token
     if (response.status === 401) {
         console.log('Token expirado, intentando renovar...');
         const refreshed = await refreshAccessToken();
 
         if (refreshed) {
-            // Reintentar la petición original con el nuevo token
             response = await fetch(url, fetchOptions);
         }
     }
@@ -118,9 +110,8 @@ export async function authenticatedFetch(url, options = {}) {
 }
 
 /**
- * Helper para hacer peticiones GET autenticadas
- * @param {string} endpoint - Endpoint relativo (ej: '/api/user-data')
- * @returns {Promise<any>} - Datos de la respuesta o null
+ * @param {string} endpoint
+ * @returns {Promise<any>} 
  */
 export async function authGet(endpoint) {
     try {
@@ -141,10 +132,9 @@ export async function authGet(endpoint) {
 }
 
 /**
- * Helper para hacer peticiones POST autenticadas
- * @param {string} endpoint - Endpoint relativo
- * @param {Object} body - Datos a enviar
- * @returns {Promise<any>} - Datos de la respuesta o null
+ * @param {string} endpoint
+ * @param {Object} body 
+ * @returns {Promise<any>} 
  */
 export async function authPost(endpoint, body = {}) {
     try {
@@ -166,11 +156,11 @@ export async function authPost(endpoint, body = {}) {
 }
 
 /**
- * Helper para hacer peticiones PATCH autenticadas
- * @param {string} endpoint - Endpoint relativo
- * @param {Object} body - Datos a actualizar
- * @returns {Promise<any>} - Datos de la respuesta o null
+ * @param {string} endpoint 
+ * @param {Object} body 
+ * @returns {Promise<any>} 
  */
+
 export async function authPatch(endpoint, body = {}) {
     try {
         const response = await authenticatedFetch(`${API_URL}${endpoint}`, {

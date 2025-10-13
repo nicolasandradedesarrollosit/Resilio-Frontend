@@ -17,11 +17,10 @@ const sendUserData = async() => {
     console.log('✅ Sesión de Supabase obtenida');
     console.log('📧 Email:', session.user.email);
     
-    // El servidor ahora enviará las cookies automáticamente
     console.log('📤 Enviando datos al backend...');
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
       method: 'POST',
-      credentials: 'include', // Permite que el servidor envíe cookies
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         supabaseToken: session.access_token,
@@ -37,9 +36,6 @@ const sendUserData = async() => {
     
     const result = await response.json();
     console.log('✅ Respuesta del backend:', result);
-    
-    // Ya no almacenamos el token en localStorage, está en cookies HTTP-only
-    // El servidor lo envió automáticamente en la respuesta
     
     console.log('🔓 Cerrando sesión de Supabase...');
     await supabase.auth.signOut();

@@ -1,11 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/oauth/AuthContext";
 import "../../styles/profile/profile.css";
 import GoBack from '../components/others/GoBack';
 import { useNavigate } from "react-router-dom";
 
 function Profile(){
-    const { userData, loading } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(false);
     const [logoutModal, setLogoutModal] = useState(false);
     const [validationStates, setValidationStates] = useState({
@@ -16,7 +18,71 @@ function Profile(){
     });
     const [requestErrorState, setRequestErrorState] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            console.log('📥 Profile: Cargando datos del usuario...');
+            setLoading(true);
+            
+            let retries = 0;
+            const maxRetries = 3;
+            let data = null;
+
+            while (retries < maxRetries && !data) {
+                try {
+                    console.log(`Intento ${retries + 1} de cargar perfil...`);
+                    
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    console.log(`Response status: ${response.status}`);
+
+                    if (response.status === 401) {
+                        console.log('❌ No autenticado, redirigiendo al login...');
+                        navigate('/log-in', { replace: true });
+                        return;
+                    }
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('Datos recibidos:', result);
+                        
+                        if (result.ok && result.data) {
+                            data = result.data;
+                            console.log('✅ Datos del perfil cargados correctamente');
+                            break;
+                        }
+                    } else {
+                        const errorText = await response.text();
+                        console.error(`❌ Error ${response.status}:`, errorText);
+                    }
+                } catch (error) {
+                    console.error(`❌ Error en intento ${retries + 1}:`, error);
+                }
+
+                retries++;
+                if (retries < maxRetries) {
+                    const waitTime = 500 * retries;
+                    console.log(`⏳ Esperando ${waitTime}ms antes del siguiente intento...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                }
+            }
+
+            if (!data) {
+                console.error('❌ No se pudieron cargar los datos después de ' + maxRetries + ' intentos');
+                navigate('/log-in', { replace: true });
+                return;
+            }
+
+            setUserData(data);
+            setLoading(false);
+        };
+
+        fetchUserData();
+    }, [navigate]);
 
     const provinces = [
         "Buenos Aires",
