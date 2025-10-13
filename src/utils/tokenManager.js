@@ -1,13 +1,3 @@
-/**
- * Utilidades para manejo de autenticación basada en cookies HTTP-only
- * 
- * IMPORTANTE: Los tokens ahora se almacenan en cookies HTTP-only en el servidor,
- * lo que significa que JavaScript no puede acceder a ellos directamente.
- * Esto mejora la seguridad al prevenir ataques XSS.
- * 
- * Todas las peticiones autenticadas deben incluir: credentials: 'include'
- */
-
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 /**
