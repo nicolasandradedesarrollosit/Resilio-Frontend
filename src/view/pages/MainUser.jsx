@@ -5,7 +5,7 @@ import TopBanner from '../components/main-user/TopBanner';
 import EventsUser from '../components/main-user/EventsUser';
 import PartnerBenefits from '../components/main-user/PartnerBenefits';
 import LoadingScreen from '../components/others/LoadingScreen';
-import { jwtDecode } from 'jwt-decode';
+import { getValidToken, getUserIdFromToken } from '../../utils/tokenManager';
 
 function MainUser() {
     const [isLoading, setIsLoading] = useState(true);
@@ -25,8 +25,8 @@ function MainUser() {
                 setIsLoading(true);
                 setError(null);
 
-                // Verificar que existe el token
-                const token = localStorage.getItem('access_token');
+                // Obtener token válido (renueva si es necesario)
+                const token = await getValidToken();
                 if (!token) {
                     setError('No se encontró sesión activa');
                     setIsLoading(false);
@@ -34,8 +34,7 @@ function MainUser() {
                 }
 
                 // Obtener el userId del token
-                const decodedToken = jwtDecode(token);
-                const userId = decodedToken.sub;
+                const userId = getUserIdFromToken(token);
 
                 // Cargar datos del usuario
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {

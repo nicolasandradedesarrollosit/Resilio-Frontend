@@ -3,7 +3,7 @@
 }
 
 .admin-users-container {
-    width: 60%;
+    width: 70%;
     height: auto;
 }
 
@@ -511,6 +511,70 @@
     }
 }
 
+@media (max-width: 320px) {
+    .admin-users-first-row {
+        padding: 0 10px;
+        margin: 16px auto 0;
+    }
+
+    .admin-users-title-section {
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-users-second-row {
+        padding: 0.875rem;
+        gap: 12px;
+    }
+
+    .admin-users-title-second-row {
+        font-size: 1.1rem;
+    }
+
+    .admin-users-searcher {
+        padding: 8px 16px;
+    }
+
+    .admin-users-input-search {
+        width: 120px;
+        font-size: 0.875rem;
+    }
+
+    .admin-users-input-search:focus {
+        width: 160px;
+    }
+
+    .admin-users-table {
+        min-width: 550px;
+    }
+
+    .admin-users-table th,
+    .admin-users-table td {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+
+    .admin-users-badge {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .admin-users-pagination {
+        padding: 1rem 12px;
+    }
+
+    .admin-users-btn-action,
+    .admin-users-btn-page {
+        width: 28px;
+        height: 28px;
+    }
+
+    .admin-users-btn-page svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
 /* Modal Styles */
 .admin-users-modal-overlay {
     position: fixed;
@@ -742,6 +806,10 @@
     .admin-users-modal-content {
         max-width: 480px;
     }
+    
+    .admin-users-modal-header h2 {
+        font-size: 22px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -798,6 +866,66 @@
     .admin-users-btn-delete-confirm {
         width: 100%;
         padding: 10px 20px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 320px) {
+    .admin-users-modal-content {
+        width: 98%;
+        max-height: 98vh;
+    }
+
+    .admin-users-modal-header {
+        padding: 14px;
+    }
+
+    .admin-users-modal-header h2 {
+        font-size: 16px;
+    }
+
+    .admin-users-modal-close svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .admin-users-modal-form,
+    .admin-users-modal-body {
+        padding: 14px;
+    }
+    
+    .admin-users-form-group {
+        margin-bottom: 16px;
+    }
+
+    .admin-users-form-group label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .admin-users-form-group input,
+    .admin-users-form-group select {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .admin-users-modal-actions {
+        padding: 10px 14px 14px;
+        gap: 8px;
+    }
+    
+    .admin-users-btn-cancel,
+    .admin-users-btn-save,
+    .admin-users-btn-delete-confirm {
+        padding: 9px 18px;
+        font-size: 12px;
+    }
+
+    .admin-users-delete-message {
+        font-size: 14px;
+    }
+
+    .admin-users-delete-warning {
         font-size: 13px;
     }
 }

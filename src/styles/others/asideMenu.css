@@ -233,9 +233,28 @@
 }
 
 /* Media Queries */
+@media (max-width: 1200px) {
+  .admin-menu {
+    width: 260px;
+    left: 15px;
+    top: 15px;
+    height: calc(100vh - 30px);
+  }
+  
+  .admin-menu a {
+    padding: 13px 22px;
+    font-size: 14px;
+  }
+  
+  .menu-section {
+    padding: 18px 22px 11px;
+    font-size: 11.5px;
+  }
+}
+
 @media (max-width: 1024px) {
   .admin-menu {
-    width: 240px;
+    width: 260px;
     left: 15px;
     top: 15px;
     height: calc(100vh - 30px);
@@ -305,7 +324,7 @@
 @media (max-width: 480px) {
   .admin-menu {
     border-radius: 10px;
-    padding: 16px 0;
+    padding: 14px 0;
   }
   
   .admin-menu a {
@@ -336,6 +355,43 @@
   
   .profile-name {
     font-size: 13px;
+  }
+}
+
+@media (max-width: 320px) {
+  .admin-menu {
+    border-radius: 8px;
+    padding: 12px 0;
+  }
+  
+  .admin-menu a {
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 6px;
+  }
+  
+  .admin-menu a .icon {
+    width: 16px;
+    height: 16px;
+    font-size: 14px;
+  }
+  
+  .user-profile {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+  
+  .profile-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .profile-initials {
+    font-size: 14px;
+  }
+  
+  .profile-name {
+    font-size: 12px;
   }
 }
 

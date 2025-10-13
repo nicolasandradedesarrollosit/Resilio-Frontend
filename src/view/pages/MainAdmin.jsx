@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AsideMenu from '../components/others/AsideMenu';
 import ContentMain from '../components/main-admin/ContentAdmin';
 import LoadingScreen from '../components/others/LoadingScreen';
-import { jwtDecode } from 'jwt-decode';
+import { getValidToken, getUserIdFromToken } from '../../utils/tokenManager';
 import '../../styles/main-admin/mainAdmin.css'
 
 
@@ -17,8 +17,8 @@ function MainAdmin() {
         setIsLoading(true);
         setError(null);
 
-        // Verificar que existe el token
-        const token = localStorage.getItem('access_token');
+        // Obtener token válido (renueva si es necesario)
+        const token = await getValidToken();
         if (!token) {
           setError('No se encontró sesión activa');
           setIsLoading(false);
@@ -26,8 +26,7 @@ function MainAdmin() {
         }
 
         // Obtener el userId del token
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.sub;
+        const userId = getUserIdFromToken(token);
 
         // Cargar datos del usuario
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
