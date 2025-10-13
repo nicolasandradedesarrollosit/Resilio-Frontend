@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../utils/tokenManager';
 import '../../../styles/others/asideMenu.css';
 
 function AsideMenu({ userData }) {
+    const navigate = useNavigate();
     const [activeItem, setActiveItem] = useState('dashboard');
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     
     const name = userData?.name || 'Usuario';
     const nameSplit = name.split(" ");
@@ -24,6 +28,25 @@ function AsideMenu({ userData }) {
         { id: 'beneficios', label: 'Beneficios', icon: svgIcons[2] },
         { id: 'analytics', label: 'Estadísticas', icon: svgIcons[3] },
     ];
+
+    const handleLogout = async () => {
+        if (isLoggingOut) return;
+        
+        try {
+            setIsLoggingOut(true);
+            const success = await logout();
+            
+            if (success) {
+                navigate('/log-in', { replace: true });
+            } else {
+                console.error('Error al cerrar sesión, pero redirigiendo...');
+                navigate('/log-in', { replace: true });
+            }
+        } catch (error) {
+            console.error('Error en logout:', error);
+            navigate('/log-in', { replace: true });
+        }
+    };
 
     return (
         <aside className="admin-menu">
@@ -54,7 +77,34 @@ function AsideMenu({ userData }) {
                 <div className='profile-avatar'>
                     <span className='profile-initials'>{word}</span>
                 </div>
-                <p className='profile-name'>{name}</p>
+                <div className='profile-info'>
+                    <p className='profile-name'>{name}</p>
+                    <button 
+                        className='logout-button' 
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        title="Cerrar sesión"
+                    >
+                        {isLoggingOut ? (
+                            <span className='logout-loading'>
+                                <svg className="logout-spinner" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.25"/>
+                                    <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                                </svg>
+                                Saliendo...
+                            </span>
+                        ) : (
+                            <>
+                                <svg className="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                    <polyline points="16 17 21 12 16 7"/>
+                                    <line x1="21" y1="12" x2="9" y2="12"/>
+                                </svg>
+                                Cerrar sesión
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
         </aside>
     );
