@@ -1,48 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import '../../../styles/home/heroSection.css';
-import { Link, useLocation } from 'react-router-dom';
-import { HashLink } from 'react-router-hash-link';
+import { Link } from 'react-router-dom';
 import logo from '../../../../public/logo-resilio-group.png';
-import { checkAuthStatus } from '../../../utils/tokenManager';
+import { AuthContext } from '../../../context/oauth/AuthContext';
 
 function HeroSectionHome(){
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [userRole, setUserRole] = useState(null);
-    const location = useLocation();
-    
-    useEffect(() => {
-        const verifyAuth = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.ok && result.data) {
-                        setIsAuthenticated(true);
-                        setUserRole(result.data.role);
-                    } else {
-                        setIsAuthenticated(false);
-                        setUserRole(null);
-                    }
-                } else {
-                    setIsAuthenticated(false);
-                    setUserRole(null);
-                }
-            } catch (error) {
-                console.error('Error verificando autenticación:', error);
-                setIsAuthenticated(false);
-                setUserRole(null);
-            }
-            setIsLoading(false);
-        };
-        verifyAuth();
-    }, [location.pathname]); 
+    const { user, userData, loading } = useContext(AuthContext);
+    const isAuthenticated = !!(user || userData);
+    const userRole = userData?.role; 
     
     return(
         <>
@@ -61,19 +26,19 @@ function HeroSectionHome(){
                     </span>
                     <div className='container-buttons-content-hero-section'>
                         <Link className='item-button' id='button-1' to={'/contact'}>Contactarse</Link>
-                        {!isLoading && isAuthenticated && userRole === 'admin' && (
+                        {!loading && isAuthenticated && userRole === 'admin' && (
                             <Link className='item-button' 
                             id='button-2' to={'/main/admin'}
                             >Ir al panel Admin
                             </Link>
                         )}
-                        {!isLoading && isAuthenticated && userRole !== 'admin' && (
+                        {!loading && isAuthenticated && userRole !== 'admin' && (
                             <Link className='item-button' 
                             id='button-2' to={'/main/user'}
                             >Ir a tu cuenta
                             </Link>
                         )}
-                        {!isLoading && !isAuthenticated && (
+                        {!loading && !isAuthenticated && (
                             <Link className='item-button' 
                             id='button-2' to={'/log-in'}
                             >Inicie Sesión

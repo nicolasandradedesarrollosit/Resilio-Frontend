@@ -11,7 +11,6 @@ function ProtectedRoute({ children, requiredRole = null }) {
     const { user, userData, loading: authLoading, refreshUserData } = useContext(AuthContext);
 
     useEffect(() => {
-        // Esperar a que el AuthContext termine de cargar
         if (authLoading) {
             setIsChecking(true);
             return;
@@ -21,7 +20,6 @@ function ProtectedRoute({ children, requiredRole = null }) {
             setIsChecking(true);
             
             try {
-                // Si no hay usuario después de que el contexto cargó, no está autenticado
                 if (!user && !userData) {
                     console.log('No autenticado - redirigiendo al login');
                     setIsAuthorized(false);
@@ -29,16 +27,13 @@ function ProtectedRoute({ children, requiredRole = null }) {
                     return;
                 }
 
-                // Usar userData del contexto si está disponible
                 let currentUserData = userData;
                 
-                // Si no hay userData pero hay user, intentar obtenerla
                 if (!currentUserData && user) {
                     console.log('Intentando refrescar userData...');
                     currentUserData = await refreshUserData();
                 }
 
-                // Si después de intentar refrescar no hay datos, no autorizar
                 if (!currentUserData) {
                     console.log('No se pudieron obtener datos del usuario');
                     setIsAuthorized(false);
@@ -49,7 +44,6 @@ function ProtectedRoute({ children, requiredRole = null }) {
                 const fetchedRole = currentUserData.role;
                 setUserRole(fetchedRole);
 
-                // Verificar roles requeridos
                 if (requiredRole) {
                     if (requiredRole === 'admin' && fetchedRole !== 'admin') {
                         console.log('Usuario no es admin - acceso denegado');
