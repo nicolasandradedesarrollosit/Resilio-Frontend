@@ -51,12 +51,12 @@ const AuthCallback = () => {
         await sendUserData();
         
         setLoadingStep('Estableciendo sesión segura...');
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
         
         setLoadingStep('Cargando tu perfil...');
         
         let retries = 0;
-        const maxRetries = 3;
+        const maxRetries = 5;
         let userData = null;
 
         while (retries < maxRetries && !userData) {
@@ -81,7 +81,7 @@ const AuthCallback = () => {
 
           retries++;
           if (retries < maxRetries) {
-            const waitTime = 500 * retries;
+            const waitTime = 1000 * retries;
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
         }
