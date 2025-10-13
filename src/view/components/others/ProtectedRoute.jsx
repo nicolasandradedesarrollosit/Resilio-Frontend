@@ -4,67 +4,58 @@ import LoadingScreen from './LoadingScreen';
 import { AuthContext } from '../../../context/oauth/AuthContext';
 
 function ProtectedRoute({ children, requiredRole = null }) {
-    const [isChecking, setIsChecking] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [userRole, setUserRole] = useState(null);
     const location = useLocation();
-    const { user, userData, loading: authLoading } = useContext(AuthContext);
+    const { userData, loading: authLoading } = useContext(AuthContext);
 
     useEffect(() => {
-        // Esperar a que el AuthContext termine de cargar
+        // Solo verificar cuando el contexto haya terminado de cargar
         if (authLoading) {
-            setIsChecking(true);
             return;
         }
 
-        // Verificar autorización una vez que el contexto ha cargado
-        const checkAuth = () => {
-            try {
-                // Si no hay userData después de que el contexto cargó, no está autenticado
-                if (!userData) {
-                    console.log('❌ No autenticado - redirigiendo al login');
-                    setIsAuthorized(false);
-                    setIsChecking(false);
-                    return;
-                }
+        // Verificar autorización
+        if (!userData) {
+            console.log('❌ No autenticado - redirigiendo al login');
+            setIsAuthorized(false);
+            return;
+        }
 
-                const fetchedRole = userData.role;
-                setUserRole(fetchedRole);
+        const fetchedRole = userData.role;
+        setUserRole(fetchedRole);
 
-                // Verificar roles requeridos
-                if (requiredRole) {
-                    if (requiredRole === 'admin' && fetchedRole !== 'admin') {
-                        console.log('❌ Usuario no es admin - acceso denegado');
-                        setIsAuthorized(false);
-                        setIsChecking(false);
-                        return;
-                    }
-                    
-                    if (requiredRole === 'user' && fetchedRole === 'admin') {
-                        console.log('⚠️ Admin intentando acceder a ruta de usuario - redirigiendo a admin');
-                        setIsAuthorized(false);
-                        setIsChecking(false);
-                        return;
-                    }
-                }
-
-                console.log('✅ Usuario autorizado:', fetchedRole);
-                setIsAuthorized(true);
-                setIsChecking(false);
-                
-            } catch (error) {
-                console.error('Error verificando autorización:', error);
+        // Verificar roles requeridos
+        if (requiredRole) {
+            if (requiredRole === 'admin' && fetchedRole !== 'admin') {
+                console.log('❌ Usuario no es admin - acceso denegado');
                 setIsAuthorized(false);
-                setIsChecking(false);
+                return;
             }
-        };
+            
+            if (requiredRole === 'user' && fetchedRole === 'admin') {
+                console.log('⚠️ Admin intentando acceder a ruta de usuario - redirigiendo a admin');
+                setIsAuthorized(false);
+                return;
+            }
+        }
 
-        checkAuth();
-    }, [authLoading, userData, requiredRole]); // Remover refreshUserData y user de las dependencias
+        console.log('✅ Usuario autorizado:', fetchedRole);
+        setIsAuthorized(true);
+    }, [authLoading, userData, requiredRole]);
 
-    if (authLoading || isChecking) {
+    // Mostrar loading mientras el contexto está cargando
+    if (authLoading) {
         return <LoadingScreen message="Verificando acceso..." subtitle="Un momento por favor" />;
-    }    if (!isAuthorized) {
+    }
+
+    // Si el contexto terminó de cargar pero no hay userData, redirigir a login
+    if (!userData) {
+        return <Navigate to="/log-in" replace state={{ from: location.pathname }} />;
+    }
+
+    // Si no está autorizado (problema de roles), redirigir según corresponda
+    if (!isAuthorized) {
         if (userRole === 'admin' && requiredRole === 'user') {
             return <Navigate to="/main/admin" replace />;
         }

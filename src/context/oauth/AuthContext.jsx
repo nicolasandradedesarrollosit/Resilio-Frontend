@@ -94,24 +94,11 @@ const AuthProvider = ({ children }) => {
 
         initializeAuth();
 
-        // Escuchar cambios en la sesión de Supabase (solo para login con Google)
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (import.meta.env.DEV) {
-                console.log('🔔 Auth state change:', event);
-            }
-            
-            // Cuando hay cambio de estado, verificar en el backend
-            if (isMounted) {
-                await fetchUserData();
-            }
-        });
-
         return () => {
             isMounted = false;
             if (timeoutId) clearTimeout(timeoutId);
-            subscription.unsubscribe();
         };
-    }, [fetchUserData]); // Agregar fetchUserData como dependencia
+    }, [fetchUserData]);
 
     const loginWithGoogle = async () => {
         try {
