@@ -36,7 +36,6 @@ const AuthCallback = () => {
             
             setLoadingStep('Redirigiendo a tu cuenta...');
             
-            // Forzar actualización del contexto antes de redirigir
             await refreshUserData();
             
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -97,7 +96,7 @@ const AuthCallback = () => {
 
           retries++;
           if (retries < maxRetries) {
-            const waitTime = 500 * retries; // Reducido de 800ms para móviles
+            const waitTime = 500 * retries; 
             console.log(`⏳ Esperando ${waitTime}ms antes del siguiente intento...`);
             await new Promise(resolve => setTimeout(resolve, waitTime));
           }
@@ -112,7 +111,6 @@ const AuthCallback = () => {
 
         setLoadingStep('Preparando tu experiencia...');
         
-        // Forzar actualización del contexto antes de redirigir
         await refreshUserData();
         
         await new Promise(resolve => setTimeout(resolve, 500));
