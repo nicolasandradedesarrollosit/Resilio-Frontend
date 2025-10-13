@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import sendUserData from './AuthSendSessionData';
 import LoadingScreen from '../../view/components/others/LoadingScreen';
+import { AuthContext } from './AuthContext';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loadingStep, setLoadingStep] = useState('Procesando autenticación...');
+  const { refreshUserData } = useContext(AuthContext);
 
   useEffect(() => {
     let timeoutId;
@@ -94,6 +96,8 @@ const AuthCallback = () => {
 
         setLoadingStep('Preparando tu experiencia...');
         
+        await refreshUserData();
+        
         await new Promise(resolve => setTimeout(resolve, 500));
 
         if (timeoutId) clearTimeout(timeoutId);
@@ -116,7 +120,7 @@ const AuthCallback = () => {
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [navigate]);
+  }, [navigate, refreshUserData]);
 
   if (error) {
     return (
