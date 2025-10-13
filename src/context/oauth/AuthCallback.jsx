@@ -12,6 +12,57 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        // Primero verificar si ya hay un token válido
+        let token = localStorage.getItem('access_token');
+        
+        // Si hay token, verificar si es válido
+        if (token) {
+          try {
+            const decodedToken = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            
+            // Si el token es válido y no ha expirado
+            if (decodedToken.exp > currentTime) {
+              setLoadingStep('Sesión activa detectada...');
+              
+              // Obtener el rol del usuario
+              const userId = decodedToken.sub;
+              const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: userId })
+              });
+
+              if (response.ok) {
+                const result = await response.json();
+                if (result.ok && result.data) {
+                  const userRole = result.data.role;
+                  
+                  setLoadingStep('Redirigiendo a tu cuenta...');
+                  await new Promise(resolve => setTimeout(resolve, 500));
+                  
+                  if (userRole === 'admin') {
+                    navigate('/main/admin', { state: { fromApp: true }, replace: true });
+                  } else {
+                    navigate('/main/user', { state: { fromApp: true }, replace: true });
+                  }
+                  return;
+                }
+              }
+            } else {
+              // Token expirado, eliminarlo
+              localStorage.removeItem('access_token');
+              token = null;
+            }
+          } catch (decodeError) {
+            // Token inválido, eliminarlo
+            console.error('Token inválido:', decodeError);
+            localStorage.removeItem('access_token');
+            token = null;
+          }
+        }
+        
+        // Si no hay token válido, procesar el callback de Google
         setLoadingStep('Verificando credenciales...');
         
         await sendUserData();
@@ -20,7 +71,7 @@ const AuthCallback = () => {
         
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        const token = localStorage.getItem('access_token');
+        token = localStorage.getItem('access_token');
         if (!token) {
           throw new Error('No se pudo obtener el token de autenticación');
         }

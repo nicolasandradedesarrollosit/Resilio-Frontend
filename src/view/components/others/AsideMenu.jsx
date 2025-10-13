@@ -1,10 +1,8 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../../../context/oauth/AuthContext';
+import React, { useState } from 'react';
 import '../../../styles/others/asideMenu.css';
 
-function AsideMenu() {
+function AsideMenu({ userData }) {
     const [activeItem, setActiveItem] = useState('dashboard');
-    const { userData } = useContext(AuthContext);
     
     const name = userData?.name || 'Usuario';
     const nameSplit = name.split(" ");
