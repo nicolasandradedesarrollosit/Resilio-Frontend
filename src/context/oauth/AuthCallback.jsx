@@ -11,16 +11,14 @@ const AuthCallback = () => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Verificar si ya hay una sesión activa usando cookies
         setLoadingStep('Verificando sesión...');
         
         let response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
           method: 'GET',
-          credentials: 'include', // Envía las cookies automáticamente
+          credentials: 'include', 
           headers: { 'Content-Type': 'application/json' }
         });
 
-        // Si ya hay una sesión activa, redirigir directamente
         if (response.ok) {
           const result = await response.json();
           if (result.ok && result.data) {
@@ -38,37 +36,68 @@ const AuthCallback = () => {
           }
         }
         
-        // Si no hay sesión activa, procesar el callback de Google OAuth
-        setLoadingStep('Verificando credenciales...');
+        setLoadingStep('Verificando credenciales con Google...');
         
-        await sendUserData();
+        const authResult = await sendUserData();
+        console.log('✅ Autenticación con Google exitosa');
         
-        setLoadingStep('Obteniendo información del usuario...');
-        await new Promise(resolve => setTimeout(resolve, 500));
+        setLoadingStep('Estableciendo sesión segura...');
+        // Esperar para que el navegador procese las cookies
+        await new Promise(resolve => setTimeout(resolve, 1200));
         
-        // Ahora el servidor ya envió las cookies, obtener datos del usuario
-        setLoadingStep('Cargando datos completos del perfil...');
+        setLoadingStep('Cargando tu perfil...');
         
-        response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-          method: 'GET',
-          credentials: 'include', // Envía las cookies automáticamente
-          headers: { 'Content-Type': 'application/json' }
-        });
+        // Intentar obtener datos con reintentos
+        let retries = 0;
+        const maxRetries = 3;
+        let userData = null;
 
-        if (!response.ok) {
-          throw new Error('Error al cargar los datos del usuario');
+        while (retries < maxRetries && !userData) {
+          try {
+            console.log(`Intento ${retries + 1} de obtener datos del usuario...`);
+            
+            response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+              method: 'GET',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' }
+            });
+
+            console.log(`Response status: ${response.status}`);
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log('Datos recibidos:', result);
+              
+              if (result.ok && result.data) {
+                userData = result.data;
+                console.log('✅ Datos del usuario cargados correctamente');
+                break;
+              }
+            } else {
+              const errorText = await response.text();
+              console.error(`❌ Error ${response.status}:`, errorText);
+            }
+          } catch (fetchError) {
+            console.error(`❌ Error en intento ${retries + 1}:`, fetchError);
+          }
+
+          retries++;
+          if (retries < maxRetries) {
+            const waitTime = 800 * retries;
+            console.log(`⏳ Esperando ${waitTime}ms antes del siguiente intento...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
         }
 
-        const result = await response.json();
-        
-        if (!result.ok || !result.data) {
-          throw new Error('Datos del usuario incompletos');
+        if (!userData) {
+          throw new Error('No se pudieron cargar los datos del usuario después de ' + maxRetries + ' intentos');
         }
 
-        const userRole = result.data.role;
+        const userRole = userData.role;
+        console.log('Rol del usuario:', userRole);
 
         setLoadingStep('Preparando tu experiencia...');
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 800));
 
         if (userRole === 'admin') {
           navigate('/main/admin', { state: { fromApp: true }, replace: true });
@@ -77,8 +106,8 @@ const AuthCallback = () => {
         }
         
       } catch (err) {
-        console.error('Error en callback:', err);
-        setError('Error al procesar el inicio de sesión. Por favor, intenta nuevamente.');
+        console.error('❌ Error en callback:', err);
+        setError(err.message || 'Error al procesar el inicio de sesión. Por favor, intenta nuevamente.');
         setTimeout(() => navigate('/log-in', { replace: true }), 3000);
       }
     };

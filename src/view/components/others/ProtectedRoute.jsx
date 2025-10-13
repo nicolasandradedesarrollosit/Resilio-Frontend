@@ -21,18 +21,21 @@ function ProtectedRoute({ children, requiredRole = null }) {
 
                 // Si no está autenticado (401), redirigir al login
                 if (response.status === 401) {
+                    console.log('No autenticado - redirigiendo al login');
                     setIsAuthorized(false);
                     setIsChecking(false);
                     return;
                 }
 
                 if (!response.ok) {
+                    console.error('Error en la respuesta:', response.status);
                     throw new Error('Error al obtener datos del usuario');
                 }
 
                 const result = await response.json();
                 
                 if (!result.ok || !result.data) {
+                    console.error('Datos del usuario no disponibles');
                     throw new Error('Datos del usuario no disponibles');
                 }
 
@@ -42,18 +45,21 @@ function ProtectedRoute({ children, requiredRole = null }) {
                 // Verificar si el usuario tiene el rol requerido
                 if (requiredRole) {
                     if (requiredRole === 'admin' && fetchedRole !== 'admin') {
+                        console.log('Usuario no es admin - acceso denegado');
                         setIsAuthorized(false);
                         setIsChecking(false);
                         return;
                     }
                     
                     if (requiredRole === 'user' && fetchedRole === 'admin') {
+                        console.log('Admin intentando acceder a ruta de usuario - redirigiendo a admin');
                         setIsAuthorized(false);
                         setIsChecking(false);
                         return;
                     }
                 }
 
+                console.log('Usuario autorizado:', fetchedRole);
                 setIsAuthorized(true);
                 setIsChecking(false);
                 
@@ -65,7 +71,7 @@ function ProtectedRoute({ children, requiredRole = null }) {
         };
 
         checkAuthorization();
-    }, [requiredRole, location]);
+    }, [requiredRole, location.pathname]); // Re-verificar cuando cambia la ruta
 
     if (isChecking) {
         return <LoadingScreen message="Verificando acceso..." subtitle="Un momento por favor" />;
