@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { logout } from '../../../utils/tokenManager';
 import '../../../styles/others/asideMenu.css';
 
@@ -24,10 +24,10 @@ function AsideMenu({ userData }) {
     ];
 
     const menuItems = [
-        { id: 'dashboard', label: 'Inicio', icon: svgIcons[0] },
-        { id: 'products', label: 'Eventos', icon: svgIcons[1] },
-        { id: 'beneficios', label: 'Beneficios', icon: svgIcons[2] },
-        { id: 'analytics', label: 'Estadísticas', icon: svgIcons[3] },
+        { id: 'dashboard', label: 'Inicio', icon: svgIcons[0], url: '/main/admin' },
+        { id: 'products', label: 'Eventos', icon: svgIcons[1], url: '/events/admin' },
+        { id: 'beneficios', label: 'Beneficios', icon: svgIcons[2], url: '/benefits/admin' },
+        { id: 'analytics', label: 'Estadísticas', icon: svgIcons[3], url: '/analytics/admin' },
     ];
 
     const handleLogout = async () => {
@@ -81,8 +81,8 @@ function AsideMenu({ userData }) {
                 <ul>
                     {menuItems.map((item) => (
                         <li key={item.id}>
-                            <a
-                                href={`#${item.id}`}
+                            <Link 
+                                to={item.url}
                                 className={activeItem === item.id ? 'active' : ''}
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -94,7 +94,7 @@ function AsideMenu({ userData }) {
                             >
                                 <span className="icon">{item.icon}</span>
                                 {item.label}
-                            </a>
+                            </Link>
                         </li>
                     ))}
                 </ul>

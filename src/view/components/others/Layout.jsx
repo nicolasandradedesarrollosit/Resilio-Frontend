@@ -61,6 +61,15 @@ function Layout(){
             </ProtectedRoute>
           } 
         />
+
+        <Route 
+          path='/events/admin' 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <MainAdmin />
+            </ProtectedRoute>
+          } 
+        />
         
         <Route path='*' element={<NotFound />} />
       </Routes>

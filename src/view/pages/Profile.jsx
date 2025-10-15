@@ -223,10 +223,9 @@ function Profile(){
         }
 
         try {
-            // Ya no necesitamos el token de localStorage, el servidor usa cookies
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-user`, {
                 method: 'PATCH',
-                credentials: 'include', // Envía las cookies automáticamente
+                credentials: 'include',
                 headers: { 
                     'Content-Type': 'application/json'
                 },
@@ -258,10 +257,9 @@ function Profile(){
     const logOutSession = async () => {
         setIsLoading(true);
         try{
-            // Llamar al endpoint de logout para limpiar las cookies en el servidor
             const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/log-out`, {
                 method: 'POST',
-                credentials: 'include', // Envía las cookies automáticamente
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -270,8 +268,7 @@ function Profile(){
             if(!logOutResponse.ok){
                 throw new Error('Error al cerrar sesión');
             }
-            
-            // Las cookies ya están limpiadas por el servidor, solo redirigir
+            window.location.reload();
             navigate('/log-in');
         }
         catch(err){
