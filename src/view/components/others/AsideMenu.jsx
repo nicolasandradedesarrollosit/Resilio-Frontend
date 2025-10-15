@@ -84,8 +84,7 @@ function AsideMenu({ userData }) {
                             <Link 
                                 to={item.url}
                                 className={activeItem === item.id ? 'active' : ''}
-                                onClick={(e) => {
-                                    e.preventDefault();
+                                onClick={() => {
                                     setActiveItem(item.id);
                                     if (window.innerWidth <= 768) {
                                         setIsMenuOpen(false);
