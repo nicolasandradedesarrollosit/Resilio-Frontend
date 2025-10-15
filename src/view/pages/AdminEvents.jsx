@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AsideMenu from '../components/others/AsideMenu.jsx';
 import { getAdminData } from '../../context/oauth/context-admin/adminData.js';
 import LoadingScreen from '../components/others/LoadingScreen';
 
 function AdminEvents() {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [userData, setUserData] = useState(null);
@@ -14,6 +16,12 @@ function AdminEvents() {
             const data = await getAdminData();
             setUserData(data);
           } catch (err) {
+            console.error('Error loading admin data:', err);
+            if (err.message?.includes('401') || err.message?.includes('403') || err.message?.includes('no disponibles')) {
+              // Si no está autenticado, redirigir al login
+              navigate('/log-in', { replace: true });
+              return;
+            }
             setError(err.message || 'Error al cargar los datos');
           } finally {
             setIsLoading(false);
@@ -21,7 +29,7 @@ function AdminEvents() {
         };
     
         loadUserData();
-      }, []);
+      }, [navigate]);
 
       if (isLoading) {
     return (
@@ -46,29 +54,45 @@ function AdminEvents() {
         }}>
             <h2 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>Error al cargar</h2>
             <p style={{ color: '#666', textAlign: 'center' }}>{error}</p>
-            <button 
-            onClick={() => window.location.reload()} 
-            style={{
-                marginTop: '2rem',
-                padding: '0.75rem 2rem',
-                background: 'linear-gradient(135deg, #8f6ddf, #b794f6)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: '1rem',
-                fontWeight: '600'
-            }}
-            >
-            Reintentar
-            </button>
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+              <button 
+                onClick={() => navigate('/log-in', { replace: true })} 
+                style={{
+                  padding: '0.75rem 2rem',
+                  background: 'linear-gradient(135deg, #8f6ddf, #b794f6)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '600'
+                }}
+              >
+                Ir al Login
+              </button>
+              <button 
+                onClick={() => window.location.reload()} 
+                style={{
+                  padding: '0.75rem 2rem',
+                  background: '#f5f5f5',
+                  color: '#333',
+                  border: '2px solid #ddd',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '600'
+                }}
+              >
+                Reintentar
+              </button>
+            </div>
         </div>
         );
     }
 
     return (
         <>
-            <AsideMenu userData={userData} />
+            <AsideMenu userData={userData} activeItem={'events'}/>
         </>
     )
 }

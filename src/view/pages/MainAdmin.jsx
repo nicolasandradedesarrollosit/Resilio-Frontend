@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AsideMenu from '../components/others/AsideMenu';
 import ContentMain from '../components/main-admin/ContentAdmin';
 import LoadingScreen from '../components/others/LoadingScreen';
@@ -6,6 +7,7 @@ import '../../styles/main-admin/mainAdmin.css'
 
 
 function MainAdmin() {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -23,6 +25,10 @@ function MainAdmin() {
         });
 
         if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            navigate('/log-in', { replace: true });
+            return;
+          }
           throw new Error('Error al cargar los datos del usuario');
         }
 
@@ -43,7 +49,7 @@ function MainAdmin() {
     };
 
     loadUserData();
-  }, []);
+  }, [navigate]);
 
   if (isLoading) {
     return (
@@ -68,22 +74,38 @@ function MainAdmin() {
       }}>
         <h2 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>Error al cargar</h2>
         <p style={{ color: '#666', textAlign: 'center' }}>{error}</p>
-        <button 
-          onClick={() => window.location.reload()} 
-          style={{
-            marginTop: '2rem',
-            padding: '0.75rem 2rem',
-            background: 'linear-gradient(135deg, #8f6ddf, #b794f6)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-            fontWeight: '600'
-          }}
-        >
-          Reintentar
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <button 
+            onClick={() => navigate('/log-in', { replace: true })} 
+            style={{
+              padding: '0.75rem 2rem',
+              background: 'linear-gradient(135deg, #8f6ddf, #b794f6)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600'
+            }}
+          >
+            Ir al Login
+          </button>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{
+              padding: '0.75rem 2rem',
+              background: '#f5f5f5',
+              color: '#333',
+              border: '2px solid #ddd',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600'
+            }}
+          >
+            Reintentar
+          </button>
+        </div>
       </div>
     );
   }
@@ -91,7 +113,7 @@ function MainAdmin() {
   return (
   <>
     <div className='container-admin-page'>
-      <AsideMenu userData={userData} />
+      <AsideMenu userData={userData} activeItem={'dashboard'} />
       <main className='main-admin-page'>
         <ContentMain />
       </main>

@@ -3,9 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { logout } from '../../../utils/tokenManager';
 import '../../../styles/others/asideMenu.css';
 
-function AsideMenu({ userData }) {
+function AsideMenu({ userData, activeItem }) {
     const navigate = useNavigate();
-    const [activeItem, setActiveItem] = useState('dashboard');
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
@@ -25,8 +24,8 @@ function AsideMenu({ userData }) {
 
     const menuItems = [
         { id: 'dashboard', label: 'Inicio', icon: svgIcons[0], url: '/main/admin' },
-        { id: 'products', label: 'Eventos', icon: svgIcons[1], url: '/events/admin' },
-        { id: 'beneficios', label: 'Beneficios', icon: svgIcons[2], url: '/benefits/admin' },
+        { id: 'events', label: 'Eventos', icon: svgIcons[1], url: '/events/admin' },
+        { id: 'benefits', label: 'Beneficios', icon: svgIcons[2], url: '/benefits/admin' },
         { id: 'analytics', label: 'Estadísticas', icon: svgIcons[3], url: '/analytics/admin' },
     ];
 
@@ -85,7 +84,6 @@ function AsideMenu({ userData }) {
                                 to={item.url}
                                 className={activeItem === item.id ? 'active' : ''}
                                 onClick={() => {
-                                    setActiveItem(item.id);
                                     if (window.innerWidth <= 768) {
                                         setIsMenuOpen(false);
                                     }
