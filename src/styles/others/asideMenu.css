@@ -1,9 +1,8 @@
-/* Menu Toggle Button (Hamburger) - Hidden on desktop, visible on mobile */
 .menu-toggle-btn {
   display: none;
   position: fixed;
   top: 20px;
-  left: 20px;
+  right: 20px; 
   width: 50px;
   height: 50px;
   background: linear-gradient(135deg, #8f6ddf, #b794f6);
@@ -28,7 +27,6 @@
   color: #ffffff;
 }
 
-/* Menu Overlay for mobile */
 .menu-overlay {
   display: none;
   position: fixed;
@@ -535,7 +533,7 @@
     width: 45px;
     height: 45px;
     top: 15px;
-    left: 15px;
+    right: 15px; /* Derecha */
   }
   
   .menu-toggle-btn svg {
@@ -544,7 +542,7 @@
   }
   
   .admin-menu {
-    width: 260px;
+    width: 240px; /* Más angosto para que no tape todo */
   }
   
   .admin-menu a {
@@ -601,7 +599,7 @@
     width: 42px;
     height: 42px;
     top: 12px;
-    left: 12px;
+    right: 12px; /* Derecha */
   }
   
   .menu-toggle-btn svg {
@@ -610,7 +608,7 @@
   }
   
   .admin-menu {
-    width: 240px;
+    width: 220px; /* Aún más angosto */
   }
   
   .admin-menu a {
