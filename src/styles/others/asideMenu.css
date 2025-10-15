@@ -437,24 +437,20 @@
   }
 }
 
-/* Mobile: 768px and below */
 @media (max-width: 768px) {
-  /* Show hamburger button */
   .menu-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  /* Show overlay when menu is open */
   .menu-overlay {
     display: block;
   }
   
-  /* Hide menu by default on mobile */
   .admin-menu {
     width: 280px;
-    height: 100vh;
+    height: calc(100vh);
     top: 0;
     left: 0;
     border-radius: 0;
@@ -466,7 +462,6 @@
     border-bottom: none;
   }
   
-  /* Show menu when open */
   .admin-menu.menu-open {
     transform: translateX(0);
     box-shadow: 
@@ -496,6 +491,7 @@
   }
   
   .user-profile {
+    margin: 0 0 100px 0;
     padding: 16px 20px;
     gap: 10px;
   }
@@ -526,13 +522,12 @@
   }
 }
 
-/* Small Mobile: 480px and below */
 @media (max-width: 480px) {
   .menu-toggle-btn {
     width: 45px;
     height: 45px;
     top: 15px;
-    right: 15px; /* Derecha */
+    right: 15px; 
   }
   
   .menu-toggle-btn svg {
@@ -541,7 +536,7 @@
   }
   
   .admin-menu {
-    width: 240px; /* Más angosto para que no tape todo */
+    width: 240px; 
   }
   
   .admin-menu a {
@@ -592,13 +587,12 @@
   }
 }
 
-/* Extra Small Mobile: 320px and below */
 @media (max-width: 320px) {
   .menu-toggle-btn {
     width: 42px;
     height: 42px;
     top: 12px;
-    right: 12px; /* Derecha */
+    right: 12px; 
   }
   
   .menu-toggle-btn svg {
@@ -607,7 +601,7 @@
   }
   
   .admin-menu {
-    width: 220px; /* Aún más angosto */
+    width: 220px;
   }
   
   .admin-menu a {
