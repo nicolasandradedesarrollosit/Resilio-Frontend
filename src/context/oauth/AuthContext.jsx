@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import supabase from './Supabase';
+import { authenticatedFetch } from '../../utils/tokenManager';
 
 export const AuthContext = createContext({
     userData: null,
@@ -15,10 +16,8 @@ const AuthProvider = ({ children }) => {
 
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
-                method: 'GET',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' }
+            const response = await authenticatedFetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
+                method: 'GET'
             });
 
             if (!response.ok) {
@@ -36,6 +35,7 @@ const AuthProvider = ({ children }) => {
             setUserData(null);
             return null;
         } catch (error) {
+            console.error('Error fetching user data:', error);
             setUserData(null);
             return null;
         }
