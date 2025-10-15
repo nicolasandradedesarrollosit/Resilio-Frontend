@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import '../components/others/AsideMenu.jsx';
+import React, { useState, useEffect } from 'react';
+import AsideMenu from '../components/others/AsideMenu.jsx';
 import { getAdminData } from '../../context/oauth/context-admin/adminData.js';
+import LoadingScreen from '../components/others/LoadingScreen';
 
 function AdminEvents() {
     const [isLoading, setIsLoading] = useState(true);
@@ -21,6 +22,15 @@ function AdminEvents() {
     
         loadUserData();
       }, []);
+
+      if (isLoading) {
+    return (
+      <LoadingScreen 
+        message="Cargando panel de administración" 
+        subtitle="Preparando herramientas y estadísticas..."
+      />
+    );
+  }
 
       if (error) {
         return (
