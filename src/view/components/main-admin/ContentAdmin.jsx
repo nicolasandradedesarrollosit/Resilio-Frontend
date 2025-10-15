@@ -377,14 +377,12 @@ function ContentMain() {
                                 />
                             </div>
                             <div className='admin-users-form-group'>
-                                <label htmlFor='role'>Rol (no editable)</label>
-                                <input 
-                                    type='text'
-                                    id='role'
-                                    value={selectedUser?.role || 'user'}
-                                    disabled
-                                    className='admin-users-input-disabled'
-                                />
+                                <label htmlFor='role'>Rol</label>
+                                <select name="role" id="role" value={editFormData.role} onChange={handleInputChange} >
+                                    <option value="admin">Administrador</option>
+                                    <option value="user">Usuario</option>
+                                    <option value="influencer">Influencer</option>
+                                </select>
                             </div>
                             <div className='admin-users-form-group'>
                                 <label htmlFor='city'>Ciudad</label>
