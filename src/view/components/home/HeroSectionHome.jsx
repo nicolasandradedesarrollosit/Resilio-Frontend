@@ -7,7 +7,8 @@ import { AuthContext } from '../../../context/oauth/AuthContext';
 function HeroSectionHome(){
     const { userData, loading } = useContext(AuthContext);
     const isAuthenticated = !!userData;
-    const userRole = userData?.role; 
+    const userRole = userData?.role;
+
     
     return(
         <>
@@ -26,19 +27,17 @@ function HeroSectionHome(){
                     </span>
                     <div className='container-buttons-content-hero-section'>
                         <Link className='item-button' id='button-1' to={'/contact'}>Contactarse</Link>
-                        {!loading && isAuthenticated && userRole === 'admin' && (
+                        {!loading && isAuthenticated && userRole === 'admin' ? (
                             <Link className='item-button' 
                             id='button-2' to={'/main/admin'}
                             >Ir al panel Admin
                             </Link>
-                        )}
-                        {!loading && isAuthenticated && userRole !== 'admin' && (
+                        ) : !loading && isAuthenticated && userRole !== 'admin' ? (
                             <Link className='item-button' 
                             id='button-2' to={'/main/user'}
                             >Ir a tu cuenta
                             </Link>
-                        )}
-                        {!loading && !isAuthenticated && (
+                        ) : (
                             <Link className='item-button' 
                             id='button-2' to={'/log-in'}
                             >Inicie Sesión
