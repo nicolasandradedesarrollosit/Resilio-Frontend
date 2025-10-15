@@ -13,6 +13,7 @@ import Profile from '../../pages/Profile.jsx';
 import AuthCallback from '../../../context/oauth/AuthCallback.jsx';
 import MainAdmin from '../../pages/MainAdmin.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import AdminEvents from '../../pages/AdminEvents.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -66,7 +67,7 @@ function Layout(){
           path='/events/admin' 
           element={
             <ProtectedRoute requiredRole="admin">
-              <MainAdmin />
+              <AdminEvents />
             </ProtectedRoute>
           } 
         />
