@@ -301,6 +301,15 @@
     color: #ffffff;
 }
 
+.admin-users-btn-unban {
+    color: #48bb78;
+}
+
+.admin-users-btn-unban:hover {
+    background-color: #48bb78;
+    color: #ffffff;
+}
+
 .admin-users-no-results {
     padding: 60px 20px;
     text-align: center;

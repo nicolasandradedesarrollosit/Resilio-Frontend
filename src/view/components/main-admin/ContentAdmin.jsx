@@ -11,7 +11,7 @@ function ContentMain() {
     const [usersPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showBanModal, setShowBanModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [editFormData, setEditFormData] = useState({
         name: '',
@@ -75,9 +75,32 @@ function ContentMain() {
         setShowEditModal(true);
     };
 
-    const handleDeleteClick = (user) => {
+    const handleBanClick = (user) => {
         setSelectedUser(user);
-        setShowDeleteModal(true);
+        setShowBanModal(true);
+    };
+
+    const handleUnbanClick = async (user) => {
+        if (!window.confirm(`¿Estás seguro que deseas desbanear a ${user.name}?`)) {
+            return;
+        }
+
+        try {
+            await fetch(
+                `${import.meta.env.VITE_API_URL}/api/admin/ban-user/${user.id}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+
+            fetchUsers();
+        } catch (err) {
+            console.error('Error unbanning user:', err);
+        }
     };
 
     const handleEditSubmit = async (e) => {
@@ -85,7 +108,7 @@ function ContentMain() {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch(
+            await fetch(
                 `${import.meta.env.VITE_API_URL}/api/admin/user-update/${selectedUser.id}`,
                 {
                     method: 'PATCH',
@@ -97,35 +120,20 @@ function ContentMain() {
                 }
             );
 
-            const data = await response.json();
-
-            if (!response.ok || !data.ok) {
-                throw new Error(data.message || 'Error al actualizar usuario');
-            }
-
-            setUsers(prevUsers => 
-                prevUsers.map(user => 
-                    user.id === selectedUser.id 
-                        ? { ...user, ...data.data }
-                        : user
-                )
-            );
-
             setShowEditModal(false);
-            alert('Usuario actualizado correctamente');
+            fetchUsers();
         } catch (err) {
             console.error('Error updating user:', err);
-            alert(err.message || 'Error al actualizar el usuario');
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleDeleteConfirm = async () => {
+    const handleBanConfirm = async () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch(
+            await fetch(
                 `${import.meta.env.VITE_API_URL}/api/admin/ban-user/${selectedUser.id}`,
                 {
                     method: 'PATCH',
@@ -136,27 +144,10 @@ function ContentMain() {
                 }
             );
 
-            const data = await response.json();
-
-            if (!response.ok || !data.ok) {
-                throw new Error(data.message || 'Error al banear usuario');
-            }
-
-            setUsers(prevUsers => 
-                prevUsers.map(user => 
-                    user.id === selectedUser.id 
-                        ? { ...user, is_banned: true }
-                        : user
-                )
-            );
-
-            setShowDeleteModal(false);
-            alert('Usuario baneado correctamente');
-            
+            setShowBanModal(false);
             fetchUsers();
         } catch (err) {
             console.error('Error banning user:', err);
-            alert(err.message || 'Error al banear el usuario');
         } finally {
             setIsSubmitting(false);
         }
@@ -287,14 +278,25 @@ function ContentMain() {
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/></svg>
                                         </button>
-                                        <button 
+                                        {user.is_banned ? (
+                                            <button 
+                                            className='admin-users-btn-action admin-users-btn-unban' 
+                                            title='Desbanear' 
+                                            onClick={() => handleUnbanClick(user)}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41z"/></svg>
+                                            </button>
+                                        ) : (
+                                            <button 
                                             className='admin-users-btn-action admin-users-btn-delete' 
                                             title='Banear' 
-                                            onClick={() => handleDeleteClick(user)}
-                                            disabled={user.is_banned}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8c0-1.85.63-3.55 1.69-4.9L16.9 18.31A7.902 7.902 0 0 1 12 20zm6.31-3.1L7.1 5.69A7.902 7.902 0 0 1 12 4c4.42 0 8 3.58 8 8c0 1.85-.63 3.55-1.69 4.9z"/></svg>
-                                        </button>
+                                            onClick={() => handleBanClick(user)}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8c0-1.85.63-3.55 1.69-4.9L16.9 18.31A7.902 7.902 0 0 1 12 20zm6.31-3.1L7.1 5.69A7.902 7.902 0 0 1 12 4c4.42 0 8 3.58 8 8c0 1.85-.63 3.55-1.69 4.9z"/></svg>
+                                            </button>
+                                        )}
+                                        
+                                        
                                     </td>
                                 </tr>
                             ))}
@@ -436,14 +438,14 @@ function ContentMain() {
                 document.body
             )}
 
-            {showDeleteModal && createPortal(
-                <div className='admin-users-modal-overlay' onClick={() => !isSubmitting && setShowDeleteModal(false)}>
+            {showBanModal && createPortal(
+                <div className='admin-users-modal-overlay' onClick={() => !isSubmitting && setShowBanModal(false)}>
                     <div className='admin-users-modal-content admin-users-modal-delete' onClick={(e) => e.stopPropagation()}>
                         <div className='admin-users-modal-header'>
                             <h2>Banear Usuario</h2>
                             <button 
                                 className='admin-users-modal-close' 
-                                onClick={() => setShowDeleteModal(false)}
+                                onClick={() => setShowBanModal(false)}
                                 disabled={isSubmitting}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/></svg>
@@ -464,7 +466,7 @@ function ContentMain() {
                             <button 
                                 type='button' 
                                 className='admin-users-btn-cancel' 
-                                onClick={() => setShowDeleteModal(false)}
+                                onClick={() => setShowBanModal(false)}
                                 disabled={isSubmitting}
                             >
                                 Cancelar
@@ -472,7 +474,7 @@ function ContentMain() {
                             <button 
                                 type='button' 
                                 className='admin-users-btn-delete-confirm' 
-                                onClick={handleDeleteConfirm}
+                                onClick={handleBanConfirm}
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Baneando...' : 'Banear Usuario'}

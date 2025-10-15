@@ -39,9 +39,9 @@ function AsideMenu({ userData }) {
             
             if (success) {
                 window.location.reload();
-                navigate('/');
+                navigate('/log-in');
             } else {
-                window.location.reload();
+                setIsLoggingOut(false);
             }
         } catch (error) {
             window.location.reload();
