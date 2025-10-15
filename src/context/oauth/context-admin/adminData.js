@@ -21,7 +21,7 @@ async function refreshAccessToken() {
 
 export async function getAdminData() {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin-data`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
             method: 'GET',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }
@@ -34,7 +34,7 @@ export async function getAdminData() {
             
             if (refreshed) {
                 // Reintentar la petición con el nuevo token
-                const retryResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/admin-data`, {
+                const retryResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' }

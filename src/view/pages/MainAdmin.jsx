@@ -45,13 +45,11 @@ function MainAdmin() {
           headers: { 'Content-Type': 'application/json' }
         });
 
-        // Si el token expiró, intentar renovarlo
         if (response.status === 401) {
           console.log('🔄 Token expirado, intentando renovar...');
           const refreshed = await refreshAccessToken();
           
           if (refreshed) {
-            // Reintentar la petición con el nuevo token
             const retryResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/user-data`, {
               method: 'GET',
               credentials: 'include',

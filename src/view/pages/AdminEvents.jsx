@@ -18,7 +18,6 @@ function AdminEvents() {
           } catch (err) {
             console.error('Error loading admin data:', err);
             if (err.message?.includes('401') || err.message?.includes('403') || err.message?.includes('no disponibles')) {
-              // Si no está autenticado, redirigir al login
               navigate('/log-in', { replace: true });
               return;
             }
