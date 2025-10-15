@@ -19,9 +19,9 @@
 }
 
 .admin-users-title-section {
-    font-size: 2rem;
+    font-size: clamp(1.25rem, 3vw, 2rem);
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: clamp(0.5px, 0.3vw, 2px);
     text-transform: uppercase;
     color: #212121;
 }
@@ -41,9 +41,9 @@
 }
 
 .admin-users-title-second-row {
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: clamp(0.3px, 0.2vw, 0.5px);
     text-transform: capitalize;
     color: #212121;
 }
@@ -70,14 +70,14 @@
     border: none;
     background: transparent;
     outline: none;
-    font-size: 1rem;
+    font-size: clamp(0.75rem, 2vw, 1rem);
     color: #212121;
-    width: 200px;
+    width: clamp(120px, 25vw, 200px);
     transition: all 0.3s ease;
 }
 
 .admin-users-input-search:focus {
-    width: 300px;
+    width: clamp(180px, 35vw, 300px);
 }
 
 .admin-users-icon-search {
@@ -91,61 +91,87 @@
     max-width: 1600px;
     margin: 20px auto;
     border-radius: 12px;
-    overflow: visible;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
+    overflow: hidden;
 }
 
-.admin-users-table-container > div:first-child {
-    overflow: visible;
-    border-radius: 12px 12px 0 0;
+.admin-users-table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+.admin-users-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.admin-users-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0 0 12px 12px;
+}
+
+.admin-users-table-wrapper::-webkit-scrollbar-thumb {
+    background: #8f6ddf;
+    border-radius: 4px;
+}
+
+.admin-users-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #7a5ac9;
 }
 
 .admin-users-table {
     width: 100%;
     border-collapse: collapse;
     background-color: #ffffff;
-    table-layout: fixed;
+    min-width: 800px;
 }
 
 .admin-users-table th:nth-child(1),
 .admin-users-table td:nth-child(1) {
-    width: clamp(40px, 6%, 60px);
+    width: 60px;
+    min-width: 50px;
 }
 
 .admin-users-table th:nth-child(2),
 .admin-users-table td:nth-child(2) {
-    width: clamp(80px, 15%, 150px);
+    width: 140px;
+    min-width: 120px;
 }
 
 .admin-users-table th:nth-child(3),
 .admin-users-table td:nth-child(3) {
-    width: clamp(100px, 18%, 180px);
+    width: 180px;
+    min-width: 150px;
 }
 
 .admin-users-table th:nth-child(4),
 .admin-users-table td:nth-child(4) {
-    width: clamp(70px, 12%, 100px);
+    width: 100px;
+    min-width: 90px;
 }
 
 .admin-users-table th:nth-child(5),
 .admin-users-table td:nth-child(5) {
-    width: clamp(70px, 12%, 120px);
+    width: 110px;
+    min-width: 100px;
 }
 
 .admin-users-table th:nth-child(6),
 .admin-users-table td:nth-child(6) {
-    width: clamp(70px, 12%, 120px);
+    width: 110px;
+    min-width: 100px;
 }
 
 .admin-users-table th:nth-child(7),
 .admin-users-table td:nth-child(7) {
-    width: clamp(70px, 11%, 100px);
+    width: 90px;
+    min-width: 80px;
 }
 
 .admin-users-table th:nth-child(8),
 .admin-users-table td:nth-child(8) {
-    width: clamp(80px, 14%, 120px);
+    width: 110px;
+    min-width: 100px;
 }
 
 .admin-users-table thead {
@@ -153,12 +179,12 @@
 }
 
 .admin-users-table th {
-    padding: clamp(8px, 2vw, 16px) clamp(8px, 2.5vw, 20px);
+    padding: 12px 16px;
     text-align: left;
     font-weight: 600;
-    font-size: clamp(10px, 1.5vw, 14px);
+    font-size: clamp(11px, 1.8vw, 13px);
     text-transform: uppercase;
-    letter-spacing: clamp(0.3px, 0.1vw, 1px);
+    letter-spacing: 0.5px;
     border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     color: #ffffff !important;
     white-space: nowrap;
@@ -180,35 +206,32 @@
 }
 
 .admin-users-table td {
-    padding: clamp(8px, 2vw, 16px) clamp(8px, 2.5vw, 20px);
-    font-size: clamp(10px, 1.5vw, 14px);
+    padding: 12px 16px;
+    font-size: clamp(11px, 1.8vw, 13px);
     color: #333 !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
 }
 
 .admin-users-name {
     font-weight: 600;
     color: #1a1a1a !important;
-    max-width: clamp(80px, 15vw, 150px);
 }
 
 .admin-users-email {
     color: #666 !important;
-    font-size: clamp(9px, 1.3vw, 13px);
-    max-width: clamp(100px, 20vw, 200px);
+    font-size: clamp(10px, 1.5vw, 12px);
 }
 
 .admin-users-badge {
     display: inline-block;
-    padding: clamp(4px, 0.8vw, 6px) clamp(8px, 1.5vw, 12px);
-    border-radius: clamp(12px, 2vw, 20px);
-    font-size: clamp(9px, 1.3vw, 12px);
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: clamp(10px, 1.5vw, 11px);
     font-weight: 600;
     text-transform: capitalize;
-    letter-spacing: clamp(0.3px, 0.08vw, 0.5px);
+    letter-spacing: 0.3px;
     white-space: nowrap;
 }
 
@@ -232,28 +255,27 @@
 
 .admin-users-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     justify-content: flex-start;
 }
 
 .admin-users-btn-action {
-    width: clamp(28px, 4vw, 36px);
-    height: clamp(28px, 4vw, 36px);
-    min-width: 28px;
-    min-height: 28px;
+    width: 32px;
+    height: 32px;
     border: none;
-    border-radius: clamp(6px, 1vw, 8px);
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     background-color: #f5f5f5;
+    flex-shrink: 0;
 }
 
 .admin-users-btn-action svg {
-    width: clamp(12px, 1.8vw, 16px);
-    height: clamp(12px, 1.8vw, 16px);
+    width: 14px;
+    height: 14px;
 }
 
 .admin-users-btn-action:hover {
@@ -310,17 +332,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem 30px;
+    padding: 1.5rem clamp(16px, 3vw, 30px);
     background-color: #fafafa;
     border-top: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .admin-users-info {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     color: #666 !important;
+    flex-shrink: 0;
 }
 
 .admin-users-info span {
@@ -338,29 +363,32 @@
 .admin-users-page-buttons {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .admin-users-page-number {
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     font-weight: 600;
     color: #1a1a1a !important;
     background-color: #f0f0f0;
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 8px;
     min-width: 40px;
     text-align: center;
+    white-space: nowrap;
 }
 
 .admin-users-space-users {
-    font-size: 13px;
+    font-size: clamp(11px, 1.8vw, 13px);
     color: #666 !important;
-    padding: 0 8px;
+    padding: 0 4px;
+    white-space: nowrap;
 }
 
 .admin-users-btn-page {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border: 2px solid #e0e0e0;
     background-color: #ffffff;
     border-radius: 8px;
@@ -369,11 +397,12 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .admin-users-btn-page svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     opacity: 0.6;
     transition: all 0.3s ease;
 }
@@ -481,21 +510,6 @@
     .admin-users-second-row {
         padding: 1.5rem;
     }
-
-    .admin-users-title-section {
-        font-size: 1.75rem;
-    }
-
-    .admin-users-table th,
-    .admin-users-table td {
-        padding: 12px 16px;
-        font-size: 13px;
-    }
-    
-    .admin-users-badge {
-        padding: 5px 10px;
-        font-size: 11px;
-    }
 }
 
 /* Mobile: 768px and below */
@@ -505,43 +519,28 @@
     }
 
     .admin-users-first-row {
-        padding: 0 16px;
+        padding: 0 12px;
         margin: 25px auto 0;
-    }
-
-    .admin-users-title-section {
-        font-size: 1.5rem;
-        letter-spacing: 1.5px;
     }
 
     .admin-users-second-row {
         flex-direction: column;
-        gap: 20px;
+        gap: 16px;
         align-items: flex-start;
-        padding: 1.25rem;
-    }
-    
-    .admin-users-title-second-row {
-        font-size: 1.35rem;
-    }
-
-    .admin-users-input-search {
-        width: 180px;
-    }
-
-    .admin-users-input-search:focus {
-        width: 250px;
+        padding: 1rem;
     }
 
     .admin-users-pagination {
-        flex-direction: column;
-        gap: 16px;
-        padding: 1.5rem 20px;
+        justify-content: center;
+        padding: 1.25rem 12px;
     }
     
-    .admin-users-info,
+    .admin-users-info {
+        order: 2;
+    }
+    
     .admin-users-page-buttons {
-        width: 100%;
+        order: 1;
         justify-content: center;
     }
 
@@ -552,42 +551,41 @@
 
 @media (max-width: 480px) {
     .admin-users-first-row {
-        padding: 0 12px;
+        padding: 0 10px;
         margin: 20px auto 0;
     }
 
-    .admin-users-title-section {
-        font-size: 1.25rem;
-        letter-spacing: 1px;
-    }
-
     .admin-users-second-row {
-        padding: 1rem;
-        gap: 16px;
+        padding: 0.875rem;
+        gap: 12px;
     }
 
-    .admin-users-title-second-row {
-        font-size: 1.25rem;
-    }
-
-    .admin-users-input-search {
-        width: 150px;
-    }
-
-    .admin-users-input-search:focus {
-        width: 200px;
+    .admin-users-searcher {
+        width: 100%;
+        max-width: 100%;
     }
 
     .admin-users-table-container {
-        width: 99%;
+        width: 100%;
     }
 
     .admin-users-pagination {
-        padding: 1.25rem 16px;
+        padding: 1rem 10px;
+        gap: 12px;
     }
 
     .admin-users-actions {
         gap: 4px;
+    }
+    
+    .admin-users-btn-action {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .admin-users-btn-action svg {
+        width: 13px;
+        height: 13px;
     }
 }
 
@@ -597,49 +595,53 @@
         margin: 16px auto 0;
     }
 
-    .admin-users-title-section {
-        font-size: 1.1rem;
-        letter-spacing: 0.5px;
-    }
-
     .admin-users-second-row {
-        padding: 0.875rem;
-        gap: 12px;
-    }
-
-    .admin-users-title-second-row {
-        font-size: 1.1rem;
+        padding: 0.75rem;
+        gap: 10px;
     }
 
     .admin-users-searcher {
-        padding: 8px 16px;
-    }
-
-    .admin-users-input-search {
-        width: 120px;
-        font-size: 0.875rem;
-    }
-
-    .admin-users-input-search:focus {
-        width: 160px;
+        padding: 8px 12px;
+        width: 100%;
     }
 
     .admin-users-table-container {
         width: 100%;
-        margin: 20px auto;
+        margin: 15px auto;
     }
 
     .admin-users-pagination {
-        padding: 1rem 8px;
+        padding: 0.875rem 8px;
+        gap: 10px;
     }
 
     .admin-users-actions {
-        gap: 2px;
+        gap: 3px;
+    }
+    
+    .admin-users-btn-action {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .admin-users-btn-action svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .admin-users-btn-page {
+        width: 28px;
+        height: 28px;
     }
 
     .admin-users-btn-page svg {
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
+    }
+    
+    .admin-users-page-number,
+    .admin-users-space-users {
+        font-size: 11px;
     }
 }
 

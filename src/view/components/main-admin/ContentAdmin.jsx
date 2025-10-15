@@ -244,66 +244,68 @@ function ContentMain() {
                 </div>
             </div>
             <div className='admin-users-table-container'>
-                <table className='admin-users-table'>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Rol</th>
-                            <th>Ciudad</th>
-                            <th>Provincia</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredUsers.map((user) => (
-                            <tr key={user.id} className={user.is_banned ? 'admin-users-banned-row' : ''}>
-                                <td>{user.id}</td>
-                                <td className='admin-users-name'>{user.name || 'No especificado'}</td>
-                                <td className='admin-users-email'>{user.email || 'No especificado'}</td>
-                                <td>
-                                    <span className={`admin-users-badge admin-users-badge-${(user.role || 'user').toLowerCase()}`}>
-                                        {user.role || 'user'}
-                                    </span>
-                                </td>
-                                <td>{user.city || 'No especificado'}</td>
-                                <td>{user.province || 'No especificado'}</td>
-                                <td>
-                                    {user.is_banned ? (
-                                        <span className='admin-users-badge admin-users-badge-banned'>Baneado</span>
-                                    ) : (
-                                        <span className='admin-users-badge admin-users-badge-active'>Activo</span>
-                                    )}
-                                </td>
-                                <td className='admin-users-actions'>
-                                    <button 
-                                        className='admin-users-btn-action admin-users-btn-edit' 
-                                        title='Editar' 
-                                        onClick={() => handleEditClick(user)}
-                                        disabled={user.is_banned}
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/></svg>
-                                    </button>
-                                    <button 
-                                        className='admin-users-btn-action admin-users-btn-delete' 
-                                        title='Banear' 
-                                        onClick={() => handleDeleteClick(user)}
-                                        disabled={user.is_banned}
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8c0-1.85.63-3.55 1.69-4.9L16.9 18.31A7.902 7.902 0 0 1 12 20zm6.31-3.1L7.1 5.69A7.902 7.902 0 0 1 12 4c4.42 0 8 3.58 8 8c0 1.85-.63 3.55-1.69 4.9z"/></svg>
-                                    </button>
-                                </td>
+                <div className='admin-users-table-wrapper'>
+                    <table className='admin-users-table'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Ciudad</th>
+                                <th>Provincia</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {filteredUsers.length === 0 && (
-                    <div className='admin-users-no-results'>
-                        <p>No se encontraron usuarios</p>
-                    </div>
-                )}
+                        </thead>
+                        <tbody>
+                            {filteredUsers.map((user) => (
+                                <tr key={user.id} className={user.is_banned ? 'admin-users-banned-row' : ''}>
+                                    <td>{user.id}</td>
+                                    <td className='admin-users-name'>{user.name || 'No especificado'}</td>
+                                    <td className='admin-users-email'>{user.email || 'No especificado'}</td>
+                                    <td>
+                                        <span className={`admin-users-badge admin-users-badge-${(user.role || 'user').toLowerCase()}`}>
+                                            {user.role || 'user'}
+                                        </span>
+                                    </td>
+                                    <td>{user.city || 'No especificado'}</td>
+                                    <td>{user.province || 'No especificado'}</td>
+                                    <td>
+                                        {user.is_banned ? (
+                                            <span className='admin-users-badge admin-users-badge-banned'>Baneado</span>
+                                        ) : (
+                                            <span className='admin-users-badge admin-users-badge-active'>Activo</span>
+                                        )}
+                                    </td>
+                                    <td className='admin-users-actions'>
+                                        <button 
+                                            className='admin-users-btn-action admin-users-btn-edit' 
+                                            title='Editar' 
+                                            onClick={() => handleEditClick(user)}
+                                            disabled={user.is_banned}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/></svg>
+                                        </button>
+                                        <button 
+                                            className='admin-users-btn-action admin-users-btn-delete' 
+                                            title='Banear' 
+                                            onClick={() => handleDeleteClick(user)}
+                                            disabled={user.is_banned}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8c0-1.85.63-3.55 1.69-4.9L16.9 18.31A7.902 7.902 0 0 1 12 20zm6.31-3.1L7.1 5.69A7.902 7.902 0 0 1 12 4c4.42 0 8 3.58 8 8c0 1.85-.63 3.55-1.69 4.9z"/></svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    {filteredUsers.length === 0 && (
+                        <div className='admin-users-no-results'>
+                            <p>No se encontraron usuarios</p>
+                        </div>
+                    )}
+                </div>
                 <div className='admin-users-pagination'>
                     <div className='admin-users-info'>
                         <span>Usuarios por página: </span><span>{usersPerPage}</span>
