@@ -38,13 +38,14 @@ function AsideMenu({ userData }) {
             const success = await logout();
             
             if (success) {
-                window.location.reload();
                 navigate('/log-in');
             } else {
+                throw new Error('Logout failed');
                 setIsLoggingOut(false);
             }
         } catch (error) {
-            window.location.reload();
+                console.error('Error during logout:', error);
+                setIsLoggingOut(false);
         }
     };
 

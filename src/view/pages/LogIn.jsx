@@ -10,6 +10,7 @@ function LogIn() {
         const contenedor = document.getElementById("top");
         if (contenedor) {
             contenedor.scrollIntoView({ behavior: "instant" });
+            window.location.reload();
         }
     }, []);
     

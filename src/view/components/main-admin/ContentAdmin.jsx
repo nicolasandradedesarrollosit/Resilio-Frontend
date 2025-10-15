@@ -12,6 +12,7 @@ function ContentMain() {
     const [searchTerm, setSearchTerm] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
     const [showBanModal, setShowBanModal] = useState(false);
+    const [showUnbanModal, setShowUnbanModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [editFormData, setEditFormData] = useState({
         name: '',
@@ -80,14 +81,17 @@ function ContentMain() {
         setShowBanModal(true);
     };
 
-    const handleUnbanClick = async (user) => {
-        if (!window.confirm(`¿Estás seguro que deseas desbanear a ${user.name}?`)) {
-            return;
-        }
+    const handleUnbanClick = (user) => {
+        setSelectedUser(user);
+        setShowUnbanModal(true);
+    };
+
+    const handleUnbanConfirm = async () => {
+        setIsSubmitting(true);
 
         try {
             await fetch(
-                `${import.meta.env.VITE_API_URL}/api/admin/ban-user/${user.id}`,
+                `${import.meta.env.VITE_API_URL}/api/admin/ban-user/${selectedUser.id}`,
                 {
                     method: 'PATCH',
                     credentials: 'include',
@@ -97,9 +101,12 @@ function ContentMain() {
                 }
             );
 
+            setShowUnbanModal(false);
             fetchUsers();
         } catch (err) {
             console.error('Error unbanning user:', err);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -478,6 +485,53 @@ function ContentMain() {
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Baneando...' : 'Banear Usuario'}
+                            </button>
+                        </div>
+                    </div>
+                </div>,
+                document.body
+            )}
+
+            {showUnbanModal && createPortal(
+                <div className='admin-users-modal-overlay' onClick={() => !isSubmitting && setShowUnbanModal(false)}>
+                    <div className='admin-users-modal-content admin-users-modal-unban' onClick={(e) => e.stopPropagation()}>
+                        <div className='admin-users-modal-header'>
+                            <h2>Desbanear Usuario</h2>
+                            <button 
+                                className='admin-users-modal-close' 
+                                onClick={() => setShowUnbanModal(false)}
+                                disabled={isSubmitting}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/></svg>
+                            </button>
+                        </div>
+                        <div className='admin-users-modal-body'>
+                            <div className='admin-users-success-icon'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </div>
+                            <p className='admin-users-unban-message'>
+                                ¿Estás seguro que deseas desbanear al usuario <strong>{selectedUser?.name}</strong>?
+                            </p>
+                            <p className='admin-users-unban-info'>
+                                Esta acción permitirá que el usuario vuelva a acceder al sistema.
+                            </p>
+                        </div>
+                        <div className='admin-users-modal-actions'>
+                            <button 
+                                type='button' 
+                                className='admin-users-btn-cancel' 
+                                onClick={() => setShowUnbanModal(false)}
+                                disabled={isSubmitting}
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                type='button' 
+                                className='admin-users-btn-unban-confirm' 
+                                onClick={handleUnbanConfirm}
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Desbaneando...' : 'Desbanear Usuario'}
                             </button>
                         </div>
                     </div>

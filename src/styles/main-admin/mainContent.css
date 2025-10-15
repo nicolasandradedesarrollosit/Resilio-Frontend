@@ -768,7 +768,8 @@
 
 .admin-users-btn-cancel,
 .admin-users-btn-save,
-.admin-users-btn-delete-confirm {
+.admin-users-btn-delete-confirm,
+.admin-users-btn-unban-confirm {
     padding: 12px 24px;
     border: none;
     border-radius: 8px;
@@ -816,6 +817,18 @@
     box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
 }
 
+.admin-users-btn-unban-confirm {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.admin-users-btn-unban-confirm:hover {
+    background: linear-gradient(135deg, #38a169, #48bb78);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(72, 187, 120, 0.4);
+}
+
 .admin-users-modal-body {
     padding: 30px;
     text-align: center;
@@ -832,6 +845,17 @@
     animation: adminUsersPulse 2s infinite;
 }
 
+.admin-users-success-icon {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-users-success-icon svg {
+    color: #48bb78;
+    animation: adminUsersPulse 2s infinite;
+}
+
 .admin-users-delete-message {
     font-size: 16px;
     color: #333 !important;
@@ -845,6 +869,24 @@
 }
 
 .admin-users-delete-warning {
+    font-size: 14px;
+    color: #666 !important;
+    line-height: 1.5;
+}
+
+.admin-users-unban-message {
+    font-size: 16px;
+    color: #333 !important;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.admin-users-unban-message strong {
+    color: #48bb78 !important;
+    font-weight: 700;
+}
+
+.admin-users-unban-info {
     font-size: 14px;
     color: #666 !important;
     line-height: 1.5;
@@ -1046,6 +1088,7 @@
 
 .admin-users-btn-save:disabled,
 .admin-users-btn-delete-confirm:disabled,
+.admin-users-btn-unban-confirm:disabled,
 .admin-users-btn-cancel:disabled {
     opacity: 0.6;
     cursor: not-allowed;
