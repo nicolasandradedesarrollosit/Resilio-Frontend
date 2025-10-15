@@ -38,14 +38,13 @@ function AsideMenu({ userData }) {
             const success = await logout();
             
             if (success) {
-                navigate('/log-in', { replace: true });
+                window.location.reload();
+                navigate('/');
             } else {
-                console.error('Error al cerrar sesión, pero redirigiendo...');
-                navigate('/log-in', { replace: true });
+                window.location.reload();
             }
         } catch (error) {
-            console.error('Error en logout:', error);
-            navigate('/log-in', { replace: true });
+            window.location.reload();
         }
     };
 
