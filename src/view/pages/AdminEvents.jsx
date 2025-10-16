@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import AsideMenu from '../components/others/AsideMenu.jsx';
 import { getAdminData } from '../../context/oauth/context-admin/adminData.js';
 import LoadingScreen from '../components/others/LoadingScreen';
+import ContentEvents from '../components/admin-events/contentEvents.jsx';
+import '../../styles/main-admin/adminEvents.css';
+
 
 function AdminEvents() {
     const navigate = useNavigate();
@@ -92,6 +95,7 @@ function AdminEvents() {
     return (
         <>
             <AsideMenu userData={userData} activeItem={'events'}/>
+
         </>
     )
 }
