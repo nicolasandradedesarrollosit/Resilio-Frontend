@@ -269,33 +269,57 @@ function ContentEvents() {
         setUploadingImage(true);
 
         try {
-            const formData = new FormData();
-            formData.append('image', selectedFile);
+            // Convertir archivo a base64
+            const reader = new FileReader();
+            reader.readAsDataURL(selectedFile);
+            
+            reader.onload = async () => {
+                try {
+                    const base64Image = reader.result;
+                    
+                    const response = await fetch(
+                        `${import.meta.env.VITE_API_URL}/api/admin/events/upload-image`,
+                        {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                image: base64Image,
+                                fileName: selectedFile.name,
+                                mimeType: selectedFile.type
+                            })
+                        }
+                    );
 
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/api/admin/events/upload-image`,
-                {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: formData
+                    if (response.ok) {
+                        const data = await response.json();
+                        setCreateFormData(prev => ({
+                            ...prev,
+                            url_image: data.url
+                        }));
+                        alert('Imagen subida exitosamente');
+                    } else {
+                        const error = await response.json();
+                        alert(error.error || 'Error al subir la imagen');
+                    }
+                } catch (err) {
+                    console.error('Error uploading image:', err);
+                    alert('Error al subir la imagen');
+                } finally {
+                    setUploadingImage(false);
                 }
-            );
+            };
 
-            if (response.ok) {
-                const data = await response.json();
-                setCreateFormData(prev => ({
-                    ...prev,
-                    url_image: data.url
-                }));
-                alert('Imagen subida exitosamente');
-            } else {
-                const error = await response.json();
-                alert(error.error || 'Error al subir la imagen');
-            }
+            reader.onerror = () => {
+                console.error('Error reading file');
+                alert('Error al leer el archivo');
+                setUploadingImage(false);
+            };
         } catch (err) {
             console.error('Error uploading image:', err);
             alert('Error al subir la imagen');
-        } finally {
             setUploadingImage(false);
         }
     };
@@ -345,33 +369,57 @@ function ContentEvents() {
         setUploadingEditImage(true);
 
         try {
-            const formData = new FormData();
-            formData.append('image', editSelectedFile);
+            // Convertir archivo a base64
+            const reader = new FileReader();
+            reader.readAsDataURL(editSelectedFile);
+            
+            reader.onload = async () => {
+                try {
+                    const base64Image = reader.result;
+                    
+                    const response = await fetch(
+                        `${import.meta.env.VITE_API_URL}/api/admin/events/upload-image`,
+                        {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                image: base64Image,
+                                fileName: editSelectedFile.name,
+                                mimeType: editSelectedFile.type
+                            })
+                        }
+                    );
 
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/api/admin/events/upload-image`,
-                {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: formData
+                    if (response.ok) {
+                        const data = await response.json();
+                        setEditFormData(prev => ({
+                            ...prev,
+                            url_image: data.url
+                        }));
+                        alert('Imagen subida exitosamente');
+                    } else {
+                        const error = await response.json();
+                        alert(error.error || 'Error al subir la imagen');
+                    }
+                } catch (err) {
+                    console.error('Error uploading image:', err);
+                    alert('Error al subir la imagen');
+                } finally {
+                    setUploadingEditImage(false);
                 }
-            );
+            };
 
-            if (response.ok) {
-                const data = await response.json();
-                setEditFormData(prev => ({
-                    ...prev,
-                    url_image: data.url
-                }));
-                alert('Imagen subida exitosamente');
-            } else {
-                const error = await response.json();
-                alert(error.error || 'Error al subir la imagen');
-            }
+            reader.onerror = () => {
+                console.error('Error reading file');
+                alert('Error al leer el archivo');
+                setUploadingEditImage(false);
+            };
         } catch (err) {
             console.error('Error uploading image:', err);
             alert('Error al subir la imagen');
-        } finally {
             setUploadingEditImage(false);
         }
     };
