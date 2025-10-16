@@ -4,7 +4,7 @@ import AsideMenu from '../components/others/AsideMenu.jsx';
 import { getAdminData } from '../../context/oauth/context-admin/adminData.js';
 import LoadingScreen from '../components/others/LoadingScreen';
 import ContentEvents from '../components/admin-events/contentEvents.jsx';
-import '../../styles/main-admin/adminEvents.css';
+import '../../styles/main-admin/mainAdmin.css';
 
 
 function AdminEvents() {
@@ -94,7 +94,12 @@ function AdminEvents() {
 
     return (
         <>
-            <AsideMenu userData={userData} activeItem={'events'}/>
+            <div className='container-admin-page'>
+              <AsideMenu userData={userData} activeItem={'events'} />
+              <main className='main-admin-page'>
+                <ContentEvents />
+              </main>
+            </div>
 
         </>
     )
