@@ -162,6 +162,7 @@ function ContentEvents() {
             console.error('Error creating event:', err);
         } finally {
             setIsSubmitting(false);
+            window.location.reload();
         }
     };
 
@@ -269,7 +270,6 @@ function ContentEvents() {
         setUploadingImage(true);
 
         try {
-            // Convertir archivo a base64
             const reader = new FileReader();
             reader.readAsDataURL(selectedFile);
             
@@ -351,7 +351,6 @@ function ContentEvents() {
 
             setEditSelectedFile(file);
             
-            // Crear preview
             const reader = new FileReader();
             reader.onloadend = () => {
                 setEditImagePreview(reader.result);
@@ -369,7 +368,6 @@ function ContentEvents() {
         setUploadingEditImage(true);
 
         try {
-            // Convertir archivo a base64
             const reader = new FileReader();
             reader.readAsDataURL(editSelectedFile);
             

@@ -100,7 +100,6 @@ function AdminEvents() {
                 <ContentEvents />
               </main>
             </div>
-
         </>
     )
 }
