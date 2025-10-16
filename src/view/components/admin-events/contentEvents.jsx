@@ -559,9 +559,9 @@ function ContentEvents() {
                                         )}
                                     </td>
                                     <td>
-                                        {event.url_image ? (
+                                        {event.url_image_event ? (
                                             <img 
-                                                src={event.url_image} 
+                                                src={event.url_image_event} 
                                                 alt={event.name} 
                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
                                             />
