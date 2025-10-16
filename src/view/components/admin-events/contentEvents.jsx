@@ -62,7 +62,6 @@ function ContentEvents() {
             }
 
             const data = await response.json();
-            // El backend devuelve directamente el array de eventos
             setEvents(Array.isArray(data) ? data : []);
         } catch (err) {
             setError(err.message);
@@ -81,11 +80,10 @@ function ContentEvents() {
     const handleEditClick = (event) => {
         setSelectedEvent(event);
         
-        // Formatear la fecha para el input datetime-local
         let formattedDate = '';
         if (event.date) {
             const date = new Date(event.date);
-            formattedDate = date.toISOString().slice(0, 16); // Formato: YYYY-MM-DDTHH:mm
+            formattedDate = date.toISOString().slice(0, 16);
         }
         
         setEditFormData({
@@ -97,7 +95,6 @@ function ContentEvents() {
             url_image: event.url_image || ''
         });
         
-        // Limpiar estados de imagen
         setEditSelectedFile(null);
         setEditImagePreview(null);
         
@@ -158,7 +155,6 @@ function ContentEvents() {
                 setShowCreateModal(false);
                 setCurrentPage(1);
                 fetchEvents();
-                // Limpiar estados
                 setSelectedFile(null);
                 setImagePreview(null);
             }
@@ -177,7 +173,7 @@ function ContentEvents() {
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/api/admin/events/${selectedEvent.id}`,
                 {
-                    method: 'PUT',
+                    method: 'PATCH',
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
@@ -242,7 +238,6 @@ function ContentEvents() {
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Validar tipo de archivo
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/webp'];
             if (!allowedTypes.includes(file.type)) {
                 alert('Solo se permiten archivos JPG, JPEG y WEBP');
@@ -250,7 +245,6 @@ function ContentEvents() {
                 return;
             }
 
-            // Validar tamaño (5MB máximo)
             if (file.size > 5 * 1024 * 1024) {
                 alert('El archivo no debe superar los 5MB');
                 e.target.value = '';
@@ -259,7 +253,6 @@ function ContentEvents() {
 
             setSelectedFile(file);
             
-            // Crear preview
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
@@ -270,7 +263,6 @@ function ContentEvents() {
 
     const handleUploadImage = async () => {
         if (!selectedFile) {
-            alert('Por favor selecciona una imagen');
             return;
         }
 
@@ -291,7 +283,6 @@ function ContentEvents() {
 
             if (response.ok) {
                 const data = await response.json();
-                // Actualizar el campo url_image con la URL retornada
                 setCreateFormData(prev => ({
                     ...prev,
                     url_image: data.url
@@ -321,7 +312,6 @@ function ContentEvents() {
     const handleEditFileSelect = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Validar tipo de archivo
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/webp'];
             if (!allowedTypes.includes(file.type)) {
                 alert('Solo se permiten archivos JPG, JPEG y WEBP');
@@ -329,7 +319,6 @@ function ContentEvents() {
                 return;
             }
 
-            // Validar tamaño (5MB máximo)
             if (file.size > 5 * 1024 * 1024) {
                 alert('El archivo no debe superar los 5MB');
                 e.target.value = '';
@@ -370,7 +359,6 @@ function ContentEvents() {
 
             if (response.ok) {
                 const data = await response.json();
-                // Actualizar el campo url_image con la URL retornada
                 setEditFormData(prev => ({
                     ...prev,
                     url_image: data.url
@@ -471,7 +459,8 @@ function ContentEvents() {
                         transition: 'all 0.3s ease',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem'
+                        gap: '0.5rem',
+                        margin: '0 0 0 auto'
                     }}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -662,7 +651,6 @@ function ContentEvents() {
                             <div className='admin-users-form-group'>
                                 <label>Imagen del Evento</label>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                    {/* Mostrar imagen actual */}
                                     {editFormData.url_image && !editImagePreview && (
                                         <div style={{ position: 'relative', width: '200px', height: '200px' }}>
                                             <img 
@@ -700,7 +688,6 @@ function ContentEvents() {
                                         </div>
                                     )}
                                     
-                                    {/* Mostrar preview de nueva imagen */}
                                     {editImagePreview && (
                                         <div style={{ position: 'relative', width: '200px', height: '200px' }}>
                                             <img 
@@ -738,7 +725,6 @@ function ContentEvents() {
                                         </div>
                                     )}
                                     
-                                    {/* Input de archivo si no hay imagen */}
                                     {!editFormData.url_image && !editImagePreview && (
                                         <div>
                                             <input 
@@ -755,7 +741,6 @@ function ContentEvents() {
                                         </div>
                                     )}
                                     
-                                    {/* Botón para cambiar imagen */}
                                     {(editFormData.url_image || editImagePreview) && !editSelectedFile && (
                                         <div>
                                             <input 
@@ -772,7 +757,6 @@ function ContentEvents() {
                                         </div>
                                     )}
                                     
-                                    {/* Botón de subir nueva imagen */}
                                     {editSelectedFile && (
                                         <button
                                             type='button'
