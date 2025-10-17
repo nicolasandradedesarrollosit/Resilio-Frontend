@@ -162,7 +162,6 @@ function ContentEvents() {
             console.error('Error creating event:', err);
         } finally {
             setIsSubmitting(false);
-            window.location.reload();
         }
     };
 
@@ -1079,7 +1078,7 @@ function ContentEvents() {
                             </button>
                             <button 
                                 type='button' 
-                                className='admin-users-btn-ban'
+                                className='admin-users-btn-delete-confirm'
                                 onClick={handleDeleteConfirm}
                                 disabled={isSubmitting}
                             >
