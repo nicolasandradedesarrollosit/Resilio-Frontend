@@ -92,7 +92,7 @@ function ContentEvents() {
             location: event.location || '',
             date: formattedDate,
             url_passline: event.url_passline || '',
-            url_image: event.url_image || ''
+            url_image_event: event.url_image_event || ''
         });
         
         setEditSelectedFile(null);
