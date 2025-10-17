@@ -696,10 +696,10 @@ function ContentEvents() {
                             <div className='admin-users-form-group'>
                                 <label>Imagen del Evento</label>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                    {editFormData.url_image && !editImagePreview && (
+                                    {editFormData.url_image_event && !editImagePreview && (
                                         <div style={{ position: 'relative', width: '200px', height: '200px' }}>
                                             <img 
-                                                src={editFormData.url_image} 
+                                                src={editFormData.url_image_event} 
                                                 alt="Imagen actual" 
                                                 style={{ 
                                                     width: '100%', 

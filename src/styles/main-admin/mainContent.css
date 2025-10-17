@@ -1077,7 +1077,6 @@
     }
 }
 
-/* Estilos para input file personalizado */
 .admin-users-file-input-wrapper {
     position: relative;
     display: inline-block;
@@ -1207,4 +1206,15 @@
 .admin-users-modal-close:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+input [type="file"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    transition: all .3s ease;
+    background-color: #fafafa;
 }
