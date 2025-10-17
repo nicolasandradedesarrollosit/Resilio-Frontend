@@ -14,6 +14,7 @@ import AuthCallback from '../../../context/oauth/AuthCallback.jsx';
 import MainAdmin from '../../pages/MainAdmin.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
 import AdminEvents from '../../pages/AdminEvents.jsx';
+import AdminBenefits from '../../pages/AdminBenefits.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -71,7 +72,16 @@ function Layout(){
             </ProtectedRoute>
           } 
         />
-        
+
+        <Route 
+          path='/benefits/admin' 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminBenefits />
+            </ProtectedRoute>
+          } 
+        />
+
         <Route path='*' element={<NotFound />} />
       </Routes>
     </>

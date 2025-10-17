@@ -92,7 +92,7 @@ function ContentEvents() {
             location: event.location || '',
             date: formattedDate,
             url_passline: event.url_passline || '',
-            url_image_event: event.url_image_event || ''
+            url_image: event.url_image_event || ''
         });
         
         setEditSelectedFile(null);
@@ -696,10 +696,10 @@ function ContentEvents() {
                             <div className='admin-users-form-group'>
                                 <label>Imagen del Evento</label>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                    {editFormData.url_image_event && !editImagePreview && (
+                                    {editFormData.url_image && !editImagePreview && (
                                         <div style={{ position: 'relative', width: '200px', height: '200px' }}>
                                             <img 
-                                                src={editFormData.url_image_event} 
+                                                src={editFormData.url_image} 
                                                 alt="Imagen actual" 
                                                 style={{ 
                                                     width: '100%', 
