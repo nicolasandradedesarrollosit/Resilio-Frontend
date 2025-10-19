@@ -14,8 +14,8 @@ function LoadingScreen({ message = "Cargando...", subtitle = null }) {
                         alt="Resilio Logo" 
                         className="spinner-icon"
                         style={{
-                            width: '60px',
-                            height: '60px',
+                            width: '40px',
+                            height: '40px',
                             objectFit: 'contain'
                         }}
                     />

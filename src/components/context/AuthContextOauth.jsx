@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { loginWithGoogle, logOut } from '../../helpers/authGoogleFunction';
+import { loginWithGoogle, logOut } from '../../services/authService';
 import { fetchUserData } from '../../helpers/userFunctions';
 
 export const AuthContext = createContext({
@@ -13,7 +13,7 @@ export const AuthContext = createContext({
 const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const loadUserData = async () => {
         try {
@@ -45,10 +45,13 @@ const AuthProvider = ({ children }) => {
 
     const handleLogOut = async () => {
         try {
+            setIsLoggingOut(true);
             await logOut();
             setUserData(null);
+            setIsLoggingOut(false);
         } catch (error) {
             setUserData(null);
+            setIsLoggingOut(false);
             throw error;
         }
     };
@@ -57,7 +60,8 @@ const AuthProvider = ({ children }) => {
         userData,
         loginWithGoogle: handleLoginWithGoogle,
         logOut: handleLogOut,
-        loading,
+        loading: loading && !isLoggingOut,
+        isLoggingOut,
         refreshUserData: loadUserData
     };
 

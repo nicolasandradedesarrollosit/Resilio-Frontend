@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { authGet, authPost, authPatch, authDelete } from '../services/api/apiClient';
 
 /**
  * Obtiene todos los eventos
@@ -6,18 +6,8 @@ const API_URL = import.meta.env.VITE_API_URL;
  */
 export async function getEvents() {
     try {
-        const response = await fetch(`${API_URL}/api/events`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al cargar los eventos');
-        }
-
-        const data = await response.json(); 
-        return data;
+        const data = await authGet('/api/events');
+        return data || [];
     } catch (err) {
         console.error('Error fetching events:', err);
         throw err;
@@ -32,20 +22,7 @@ export async function getEvents() {
  */
 export async function getAdminEvents(limit = 10, offset = 0) {
     try {
-        const response = await fetch(
-            `${API_URL}/api/admin/events?limit=${limit}&offset=${offset}`,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error('Error al obtener eventos');
-        }
-
-        const data = await response.json();
+        const data = await authGet(`/api/admin/events?limit=${limit}&offset=${offset}`);
         return Array.isArray(data) ? data : [];
     } catch (err) {
         console.error('Error fetching admin events:', err);
@@ -60,20 +37,7 @@ export async function getAdminEvents(limit = 10, offset = 0) {
  */
 export async function createEvent(eventData) {
     try {
-        const response = await fetch(`${API_URL}/api/admin/events`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(eventData)
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al crear el evento');
-        }
-
-        const data = await response.json();
+        const data = await authPost('/api/admin/events', eventData);
         return data;
     } catch (err) {
         console.error('Error creating event:', err);
@@ -95,28 +59,16 @@ export async function uploadEventImage(imageFile) {
                 try {
                     const base64Image = reader.result;
                     
-                    const response = await fetch(
-                        `${API_URL}/api/admin/events/upload-image`,
-                        {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                image: base64Image,
-                                fileName: imageFile.name,
-                                mimeType: imageFile.type
-                            })
-                        }
-                    );
+                    const data = await authPost('/api/admin/events/upload-image', {
+                        image: base64Image,
+                        fileName: imageFile.name,
+                        mimeType: imageFile.type
+                    });
 
-                    if (!response.ok) {
-                        const error = await response.json();
-                        throw new Error(error.error || 'Error al subir la imagen');
+                    if (!data) {
+                        throw new Error('Error al subir la imagen');
                     }
 
-                    const data = await response.json();
                     resolve(data);
                 } catch (err) {
                     reject(err);
@@ -143,20 +95,7 @@ export async function uploadEventImage(imageFile) {
  */
 export async function updateEvent(eventId, updatedData) {
     try {
-        const response = await fetch(`${API_URL}/api/admin/events/${eventId}`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedData)
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al actualizar el evento');
-        }
-
-        const data = await response.json();
+        const data = await authPatch(`/api/admin/events/${eventId}`, updatedData);
         return data;
     } catch (err) {
         console.error('Error updating event:', err);
@@ -171,15 +110,7 @@ export async function updateEvent(eventId, updatedData) {
  */
 export async function deleteEvent(eventId) {
     try {
-        const response = await fetch(`${API_URL}/api/admin/events/${eventId}`, {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al eliminar el evento');
-        }
+        await authDelete(`/api/admin/events/${eventId}`);
     } catch (err) {
         console.error('Error deleting event:', err);
         throw err;

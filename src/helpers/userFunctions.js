@@ -1,24 +1,14 @@
-import { authenticatedFetch } from './tokenManager';
+import { authGet } from '../services/api/apiClient';
 import { extractUserData, handleAuthError } from './authHelpers';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 /**
+ * Obtiene los datos del usuario autenticado
  * @returns {Promise<Object|null>} 
  */
 export async function fetchUserData() {
     try {
-        const response = await authenticatedFetch(`${API_URL}/api/user-data`, {
-            method: 'GET'
-        });
-
-        if (!response.ok) {
-            return null;
-        }
-
-        const result = await response.json();
+        const result = await authGet('/api/user-data');
         return extractUserData(result);
-        
     } catch (error) {
         handleAuthError(error, 'fetchUserData');
         return null;
@@ -26,31 +16,25 @@ export async function fetchUserData() {
 }
 
 /**
+ * Obtiene los datos del usuario (alias para compatibilidad)
  * @returns {Promise<Object>} 
  * @throws {Error} 
  */
 export async function getUserData() {
     try {
-        const response = await fetch(`${API_URL}/api/user-data`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (!response.ok) {
+        const result = await authGet('/api/user-data');
+        if (!result) {
             throw new Error('Error al obtener los datos del usuario');
         }
-
-        const data = await response.json();
-        return data;
-    }
-    catch(err) {
+        return result;
+    } catch (err) {
         console.error('Error fetching user data:', err);
         throw err;
     }
 }
 
 /**
+ * Verifica si hay una sesión activa
  * @returns {Promise<boolean>}
  */
 export async function hasActiveSession() {

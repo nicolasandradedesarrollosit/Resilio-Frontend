@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import sendUserData from '../../helpers/AuthSendSessionData';
+import { sendUserDataToBackend } from '../../services/authService';
 import LoadingScreen from '../others/LoadingScreen';
 import { AuthContext } from '../context/AuthContextOauth';
 import { fetchUserData, getUserData } from '../../helpers/userFunctions';
@@ -140,7 +140,7 @@ const AuthCallback = () => {
         console.log('🔄 No hay sesión existente, procesando OAuth...');
         setLoadingStep('Verificando credenciales con Google...');
         
-        await sendUserData();
+        await sendUserDataToBackend();
         
         console.log('⏳ Esperando establecimiento de cookies...');
         setLoadingStep('Estableciendo sesión segura...');

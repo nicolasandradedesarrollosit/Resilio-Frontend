@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { logout } from '../../helpers/tokenManager';
+import { useAuth } from '../../hooks';
 import '../../styles/others/asideMenu.css';
 
 function AsideMenu({ userData, activeItem }) {
     const navigate = useNavigate();
+    const { logOut } = useAuth();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
@@ -34,18 +35,13 @@ function AsideMenu({ userData, activeItem }) {
         
         try {
             setIsLoggingOut(true);
-            const success = await logout();
-            
-            if (success) {
-                window.location.reload();
-                navigate('/log-in');
-            } else {
-                setIsLoggingOut(false);
-                throw new Error('Logout failed');
-            }
+            await logOut();
+            navigate('/log-in', { replace: true });
         } catch (error) {
-                console.error('Error during logout:', error);
-                setIsLoggingOut(false);
+            console.error('Error during logout:', error);
+            setIsLoggingOut(false);
+            // Intentar redirigir de todos modos en caso de error
+            navigate('/log-in', { replace: true });
         }
     };
 

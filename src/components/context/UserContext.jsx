@@ -41,7 +41,17 @@ export default function UserProvider({ children }) {
             // Procesar eventos
             if (eventsResult.status === 'fulfilled') {
                 const eventsData = eventsResult.value;
-                setEvents(eventsData.ok && eventsData.data ? eventsData.data : []);
+                console.log('📅 Eventos recibidos:', eventsData);
+                // Verificar si la respuesta tiene estructura {ok, data} o es directamente un array
+                if (Array.isArray(eventsData)) {
+                    setEvents(eventsData);
+                } else if (eventsData?.ok && Array.isArray(eventsData.data)) {
+                    setEvents(eventsData.data);
+                } else if (eventsData?.data && Array.isArray(eventsData.data)) {
+                    setEvents(eventsData.data);
+                } else {
+                    setEvents([]);
+                }
             } else {
                 console.error('Error cargando eventos:', eventsResult.reason);
                 setEvents([]);
@@ -50,7 +60,17 @@ export default function UserProvider({ children }) {
             // Procesar beneficios
             if (benefitsResult.status === 'fulfilled') {
                 const benefitsData = benefitsResult.value;
-                setBenefits(benefitsData.ok && benefitsData.data ? benefitsData.data : []);
+                console.log('🎁 Beneficios recibidos:', benefitsData);
+                // Verificar si la respuesta tiene estructura {ok, data} o es directamente un array
+                if (Array.isArray(benefitsData)) {
+                    setBenefits(benefitsData);
+                } else if (benefitsData?.ok && Array.isArray(benefitsData.data)) {
+                    setBenefits(benefitsData.data);
+                } else if (benefitsData?.data && Array.isArray(benefitsData.data)) {
+                    setBenefits(benefitsData.data);
+                } else {
+                    setBenefits([]);
+                }
             } else {
                 console.error('Error cargando beneficios:', benefitsResult.reason);
                 setBenefits([]);
@@ -59,7 +79,18 @@ export default function UserProvider({ children }) {
             // Procesar banner
             if (bannerResult.status === 'fulfilled') {
                 const bannerData = bannerResult.value;
-                setBanner(bannerData.ok && bannerData.data ? bannerData.data : null);
+                console.log('🎪 Banner recibido:', bannerData);
+                // Verificar si la respuesta tiene estructura {ok, data} o es un objeto directo
+                if (bannerData?.ok && bannerData.data) {
+                    setBanner(bannerData.data);
+                } else if (bannerData?.data) {
+                    setBanner(bannerData.data);
+                } else if (bannerData && !bannerData.ok) {
+                    // Si es un objeto directo sin .ok ni .data
+                    setBanner(bannerData);
+                } else {
+                    setBanner(null);
+                }
             } else {
                 console.error('Error cargando banner:', bannerResult.reason);
                 setBanner(null);
@@ -79,7 +110,13 @@ export default function UserProvider({ children }) {
     const refreshEvents = useCallback(async () => {
         try {
             const eventsData = await getEvents();
-            setEvents(eventsData.ok && eventsData.data ? eventsData.data : []);
+            if (eventsData?.data && Array.isArray(eventsData.data)) {
+                setEvents(eventsData.data);
+            } else if (Array.isArray(eventsData)) {
+                setEvents(eventsData);
+            } else {
+                setEvents([]);
+            }
         } catch (err) {
             console.error('Error refrescando eventos:', err);
         }
@@ -91,7 +128,13 @@ export default function UserProvider({ children }) {
     const refreshBenefits = useCallback(async () => {
         try {
             const benefitsData = await getBenefits();
-            setBenefits(benefitsData.ok && benefitsData.data ? benefitsData.data : []);
+            if (benefitsData?.data && Array.isArray(benefitsData.data)) {
+                setBenefits(benefitsData.data);
+            } else if (Array.isArray(benefitsData)) {
+                setBenefits(benefitsData);
+            } else {
+                setBenefits([]);
+            }
         } catch (err) {
             console.error('Error refrescando beneficios:', err);
         }
@@ -103,7 +146,13 @@ export default function UserProvider({ children }) {
     const refreshBanner = useCallback(async () => {
         try {
             const bannerData = await getBannerData();
-            setBanner(bannerData.ok && bannerData.data ? bannerData.data : null);
+            if (bannerData?.data) {
+                setBanner(bannerData.data);
+            } else if (bannerData && typeof bannerData === 'object') {
+                setBanner(bannerData);
+            } else {
+                setBanner(null);
+            }
         } catch (err) {
             console.error('Error refrescando banner:', err);
         }

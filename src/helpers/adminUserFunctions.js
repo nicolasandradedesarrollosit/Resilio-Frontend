@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { authGet, authPatch } from '../services/api/apiClient';
 
 /**
  * Obtiene todos los usuarios (paginado)
@@ -8,23 +8,8 @@ const API_URL = import.meta.env.VITE_API_URL;
  */
 export async function getUsers(limit = 10, offset = 0) {
     try {
-        const response = await fetch(
-            `${API_URL}/api/admin/user?limit=${limit}&offset=${offset}`,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error('Error al obtener usuarios');
-        }
-
-        const data = await response.json();
-        return data;
+        const data = await authGet(`/api/admin/user?limit=${limit}&offset=${offset}`);
+        return data || { users: [] };
     } catch (error) {
         console.error('Error fetching users:', error);
         throw error;
@@ -37,23 +22,8 @@ export async function getUsers(limit = 10, offset = 0) {
  */
 export async function getAllUsers() {
     try {
-        const response = await fetch(
-            `${API_URL}/api/admin/user?limit=10000&offset=0`,
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error('Error al obtener todos los usuarios');
-        }
-
-        const data = await response.json();
-        return data.users || [];
+        const data = await authGet('/api/admin/user?limit=10000&offset=0');
+        return data?.users || [];
     } catch (error) {
         console.error('Error fetching all users:', error);
         return [];
@@ -67,22 +37,7 @@ export async function getAllUsers() {
  */
 export async function toggleBanUser(userId) {
     try {
-        const response = await fetch(
-            `${API_URL}/api/admin/ban-user/${userId}`,
-            {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error('Error al cambiar estado de ban del usuario');
-        }
-
-        const data = await response.json();
+        const data = await authPatch(`/api/admin/ban-user/${userId}`, {});
         return data;
     } catch (error) {
         console.error('Error toggling ban user:', error);
@@ -98,23 +53,7 @@ export async function toggleBanUser(userId) {
  */
 export async function updateUser(userId, userData) {
     try {
-        const response = await fetch(
-            `${API_URL}/api/admin/user-update/${userId}`,
-            {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData)
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error('Error al actualizar usuario');
-        }
-
-        const data = await response.json();
+        const data = await authPatch(`/api/admin/user-update/${userId}`, userData);
         return data;
     } catch (error) {
         console.error('Error updating user:', error);
