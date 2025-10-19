@@ -9,7 +9,7 @@
 
 .admin-users-first-row {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin: 50px auto 0;
     padding: 0 50px;
@@ -24,6 +24,113 @@
     letter-spacing: clamp(0.5px, 0.3vw, 2px);
     text-transform: uppercase;
     color: #212121;
+}
+
+.admin-users-btn-create {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.admin-users-btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.admin-users-btn-create:active {
+    transform: translateY(0);
+}
+
+/* Image Upload Styles */
+.admin-image-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.admin-image-preview {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.admin-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+}
+
+.admin-image-remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.admin-image-remove-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+.admin-image-upload-btn {
+    padding: 0.5rem 1rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-image-upload-btn:hover {
+    background: #2563eb;
+}
+
+.admin-image-upload-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.admin-image-hint {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.admin-image-success {
+    font-size: 0.85rem;
+    color: #10b981;
+    font-weight: 600;
+    margin: 0;
+}
+
+.admin-event-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
 .admin-users-second-row {

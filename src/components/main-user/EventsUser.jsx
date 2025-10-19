@@ -1,15 +1,11 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/main-user/eventsUser.css';
-import LoadingScreen from '../others/LoadingScreen';
+import EmptyState from '../others/EmptyState';
 import { UserContext } from '../context/UserContext';
 
 function EventsUser() {
-    const { events, loading } = useContext(UserContext);
-
-    if (loading) {
-        return <LoadingScreen message="Cargando eventos" subtitle="Descubriendo las mejores experiencias para ti" />;
-    }
+    const { events } = useContext(UserContext);
 
     return (
             <section className="events-container">
@@ -17,6 +13,13 @@ function EventsUser() {
                     <Link to={'/user/events'} className="events-title-link"><h2 className="events-title">Eventos destacados</h2></Link>
                     <p className='subtitle-events'>Explora los eventos más relevantes para ti</p>
                 </div>
+                {events.length === 0 ? (
+                    <EmptyState 
+                        icon="calendar"
+                        title="No hay eventos disponibles"
+                        message="En este momento no hay eventos programados. Te notificaremos cuando haya nuevos eventos."
+                    />
+                ) : (
                 <div className='container-cards-events'>
                     {events.map(( event, index ) => (
                         <article key={event.id ?? index} className={`event-card`}>
@@ -42,6 +45,7 @@ function EventsUser() {
                         </article>
                     ))}
                 </div>
+                )}
             </section>
     );
 }

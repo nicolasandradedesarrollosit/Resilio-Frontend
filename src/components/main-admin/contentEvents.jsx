@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import '../../styles/main-admin/mainContent.css';
-import LoadingScreen from '../others/LoadingScreen';
+import ErrorState from '../others/ErrorState';
+import EmptyState from '../others/EmptyState';
 import { 
     getAdminEvents, 
     filterEvents, 
@@ -191,44 +192,8 @@ function ContentEvents() {
         filteredEvents.length
     );
 
-    if (loading && events.length === 0) {
-        return <LoadingScreen message={MESSAGES.LOADING_EVENTS} subtitle="Obteniendo información del sistema" />;
-    }
-
     if (error) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100%',
-                minHeight: '400px',
-                flexDirection: 'column',
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 100%)',
-                borderRadius: '20px',
-                padding: '3rem',
-                color: '#f8fafc'
-            }}>
-                <h2 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>{MESSAGES.ERROR_LOADING_EVENTS}</h2>
-                <p style={{ color: '#94a3b8', marginBottom: '2rem', textAlign: 'center' }}>{error}</p>
-                <button 
-                    onClick={loadEvents}
-                    style={{
-                        padding: '0.75rem 2rem',
-                        background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontSize: '1rem',
-                        fontWeight: '600',
-                        transition: 'all 0.3s ease'
-                    }}
-                >
-                    Reintentar
-                </button>
-            </div>
-        );
+        return <ErrorState title={MESSAGES.ERROR_LOADING_EVENTS} message={error} onRetry={loadEvents} />;
     }
 
     return (
@@ -238,21 +203,6 @@ function ContentEvents() {
                 <button 
                     className='admin-users-btn-create' 
                     onClick={handleCreateClick}
-                    style={{
-                        padding: '0.75rem 1.5rem',
-                        background: 'linear-gradient(135deg, #10b981, #059669)',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontSize: '0.95rem',
-                        fontWeight: '600',
-                        transition: 'all 0.3s ease',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        margin: '0 0 0 auto'
-                    }}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -308,7 +258,7 @@ function ContentEvents() {
                                             <img 
                                                 src={event.url_image_event} 
                                                 alt={event.name} 
-                                                style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                                                className="admin-event-thumbnail"
                                             />
                                         ) : (
                                             'Sin imagen'
@@ -335,9 +285,11 @@ function ContentEvents() {
                         </tbody>
                     </table>
                     {filteredEvents.length === 0 && (
-                        <div className='admin-users-no-results'>
-                            <p>{MESSAGES.NO_EVENTS_FOUND}</p>
-                        </div>
+                        <EmptyState 
+                            icon="calendar"
+                            title={MESSAGES.NO_EVENTS_FOUND}
+                            message="Crea un nuevo evento usando el botón superior."
+                        />
                     )}
                 </div>
                 <div className='admin-users-pagination'>

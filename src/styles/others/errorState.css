@@ -1,0 +1,107 @@
+/* Error State Component Styles */
+
+.error-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #1a1a1a;
+}
+
+.error-state-inline {
+    min-height: 300px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem;
+    color: #f8fafc;
+}
+
+.error-state-fullscreen {
+    height: 100vh;
+    background: #e8e6e1;
+    padding: 2rem;
+}
+
+.error-state-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 500px;
+}
+
+.error-state-fullscreen .error-state-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.error-state-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fecaca, #ef4444);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-state-inline .error-state-icon {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.error-state-icon svg {
+    color: white;
+}
+
+.error-state-title {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.error-state-inline .error-state-title {
+    color: #f8fafc;
+    font-size: 1.25rem;
+}
+
+.error-state-fullscreen .error-state-title {
+    color: #1a1a1a;
+}
+
+.error-state-message {
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.error-state-inline .error-state-message {
+    color: #94a3b8;
+}
+
+.error-state-fullscreen .error-state-message {
+    color: #666;
+}
+
+.error-state-button {
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.error-state-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.error-state-button:active {
+    transform: scale(0.98);
+}

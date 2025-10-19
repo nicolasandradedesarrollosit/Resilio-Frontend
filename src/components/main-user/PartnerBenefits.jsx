@@ -1,37 +1,17 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import '../../styles/main-user/partnerBenefits.css'
-import LoadingScreen from '../others/LoadingScreen';
+import ErrorState from '../others/ErrorState';
+import EmptyState from '../others/EmptyState';
 import { UserContext } from '../context/UserContext';
 
 function PartnerBenefits() {
-    const { benefits, loading, error } = useContext(UserContext);
-
-    if (loading) {
-        return <LoadingScreen message="Cargando beneficios" subtitle="Preparando ofertas exclusivas para ti" />;
-    }
+    const { benefits, error } = useContext(UserContext);
 
     if (error) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '300px',
-                flexDirection: 'column',
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 100%)',
-                borderRadius: '16px',
-                padding: '2rem',
-                margin: '2rem',
-                color: '#f8fafc'
-            }}>
-                <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>Error al cargar beneficios</h3>
-                <p style={{ color: '#94a3b8', textAlign: 'center' }}>{error}</p>
-            </div>
-        );
+        return <ErrorState title="Error al cargar beneficios" message={error} />;
     }
     
-    // Formatear datos de beneficios
     const formattedBenefits = benefits.map(item => ({
         ...item,
         q_of_codes: item.q_of_codes === null ? "ilimitados" : item.q_of_codes
@@ -43,9 +23,11 @@ function PartnerBenefits() {
             <p className="subtitle-benefits">Descubre los beneficios exclusivos que ofrecemos a nuestros socios.</p>
             
             {formattedBenefits.length === 0 ? (
-                <div className="empty_state">
-                    <p>No hay beneficios disponibles en este momento.</p>
-                </div>
+                <EmptyState 
+                    icon="gift"
+                    title="No hay beneficios disponibles"
+                    message="En este momento no tenemos beneficios para mostrar. Vuelve pronto para descubrir nuevas ofertas."
+                />
             ) : (
                 <div className="partner_benefits_grid">
                     {formattedBenefits.map((item, index) => (

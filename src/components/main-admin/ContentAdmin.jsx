@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import '../../styles/main-admin/mainContent.css';
-import LoadingScreen from '../others/LoadingScreen';
+import ErrorState from '../others/ErrorState';
+import EmptyState from '../others/EmptyState';
 import { getUsers, filterUsers, updateUser, toggleBanUser } from '../../helpers/adminUserFunctions';
 import { handleFormInputChange } from '../../helpers/formHelpers';
 import { calculatePageRange, canGoPrevious, canGoNext } from '../../helpers/paginationHelpers';
@@ -127,44 +128,8 @@ function ContentMain() {
         filteredUsers.length
     );
 
-    if (loading && users.length === 0) {
-        return <LoadingScreen message={MESSAGES.LOADING_USERS} subtitle="Obteniendo información del sistema" />;
-    }
-
     if (error) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100%',
-                minHeight: '400px',
-                flexDirection: 'column',
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.85) 100%)',
-                borderRadius: '20px',
-                padding: '3rem',
-                color: '#f8fafc'
-            }}>
-                <h2 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>{MESSAGES.ERROR_LOADING_USERS}</h2>
-                <p style={{ color: '#94a3b8', marginBottom: '2rem', textAlign: 'center' }}>{error}</p>
-                <button 
-                    onClick={loadUsers}
-                    style={{
-                        padding: '0.75rem 2rem',
-                        background: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontSize: '1rem',
-                        fontWeight: '600',
-                        transition: 'all 0.3s ease'
-                    }}
-                >
-                    Reintentar
-                </button>
-            </div>
-        );
+        return <ErrorState title={MESSAGES.ERROR_LOADING_USERS} message={error} onRetry={loadUsers} />;
     }
 
     return (
@@ -254,9 +219,11 @@ function ContentMain() {
                         </tbody>
                     </table>
                     {filteredUsers.length === 0 && (
-                        <div className='admin-users-no-results'>
-                            <p>{MESSAGES.NO_USERS_FOUND}</p>
-                        </div>
+                        <EmptyState 
+                            icon="search"
+                            title={MESSAGES.NO_USERS_FOUND}
+                            message="Intenta ajustar tus filtros de búsqueda."
+                        />
                     )}
                 </div>
                 <div className='admin-users-pagination'>

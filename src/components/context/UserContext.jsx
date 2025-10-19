@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useCallback, useContext } fr
 import { AuthContext } from './AuthContextOauth';
 import { getEvents } from '../../helpers/eventsFunctions';
 import { getBenefits } from '../../helpers/benefitFunctions';
+import { getBannerData } from '../../helpers/bannerData';
 
 export const UserContext = createContext();
 
@@ -13,6 +14,7 @@ export default function UserProvider({ children }) {
     const { userData } = useContext(AuthContext);
     const [events, setEvents] = useState([]);
     const [benefits, setBenefits] = useState([]);
+    const [banner, setBanner] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -29,10 +31,11 @@ export default function UserProvider({ children }) {
         setError(null);
 
         try {
-            // Cargar eventos y beneficios en paralelo
-            const [eventsResult, benefitsResult] = await Promise.allSettled([
+            // Cargar eventos, beneficios y banner en paralelo
+            const [eventsResult, benefitsResult, bannerResult] = await Promise.allSettled([
                 getEvents(),
-                getBenefits()
+                getBenefits(),
+                getBannerData()
             ]);
 
             // Procesar eventos
@@ -51,6 +54,15 @@ export default function UserProvider({ children }) {
             } else {
                 console.error('Error cargando beneficios:', benefitsResult.reason);
                 setBenefits([]);
+            }
+
+            // Procesar banner
+            if (bannerResult.status === 'fulfilled') {
+                const bannerData = bannerResult.value;
+                setBanner(bannerData.ok && bannerData.data ? bannerData.data : null);
+            } else {
+                console.error('Error cargando banner:', bannerResult.reason);
+                setBanner(null);
             }
 
         } catch (err) {
@@ -86,6 +98,18 @@ export default function UserProvider({ children }) {
     }, []);
 
     /**
+     * Refresca el banner
+     */
+    const refreshBanner = useCallback(async () => {
+        try {
+            const bannerData = await getBannerData();
+            setBanner(bannerData.ok && bannerData.data ? bannerData.data : null);
+        } catch (err) {
+            console.error('Error refrescando banner:', err);
+        }
+    }, []);
+
+    /**
      * Refresca todos los datos
      */
     const refreshAllData = useCallback(async () => {
@@ -106,17 +130,20 @@ export default function UserProvider({ children }) {
         // Datos cargados
         events,
         benefits,
+        banner,
         loading,
         error,
 
         // Funciones de refresco
         refreshEvents,
         refreshBenefits,
+        refreshBanner,
         refreshAllData,
 
         // Setters directos (para actualizaciones optimistas)
         setEvents,
-        setBenefits
+        setBenefits,
+        setBanner
     };
 
     return (
