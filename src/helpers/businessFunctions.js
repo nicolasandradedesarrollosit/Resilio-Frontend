@@ -11,7 +11,7 @@ const API_URL = getApiUrl();
  */
 export async function getAdminBusiness(limit = 10, offset = 0) {
     try {
-        const data = await authGet(`/api/business?limit=${limit}&offset=${offset}`);
+        const data = await authGet(`/api/admin/business?limit=${limit}&offset=${offset}`);
         return data || [];
     } catch (err) {
         console.error('Error fetching business data:', err);
@@ -25,7 +25,7 @@ export async function getAdminBusiness(limit = 10, offset = 0) {
  */
 export async function getBusiness() {
     try {
-        const data = await authGet('/api/business');
+        const data = await authGet('/api/admin/business');
         return data || [];
     } catch (err) {
         console.error('Error fetching business data:', err);
@@ -57,7 +57,7 @@ export function filterBusiness(businesses, searchTerm) {
  */
 export async function createBusiness(businessData) {
     try {
-        const data = await authPost('/api/business', businessData);
+        const data = await authPost('/api/admin/business', businessData);
         return data;
     } catch (err) {
         console.error('Error creating business data:', err);
@@ -75,7 +75,7 @@ export async function uploadBusinessImage(imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
 
-        const response = await fetch(`${API_URL}/api/business/image`, {
+        const response = await fetch(`${API_URL}/api/admin/business/upload-image`, {
             method: 'POST',
             credentials: 'include',
             body: formData
@@ -101,7 +101,7 @@ export async function uploadBusinessImage(imageFile) {
  */
 export async function updateBusiness(businessId, businessData) {
     try {
-        const data = await authPatch(`/api/business/${businessId}`, businessData);
+        const data = await authPatch(`/api/admin/business/${businessId}`, businessData);
         return data;
     } catch (err) {
         console.error('Error updating business data:', err);
@@ -116,7 +116,7 @@ export async function updateBusiness(businessId, businessData) {
  */
 export async function deleteBusiness(businessId) {
     try {
-        const data = await authDelete(`/api/business/${businessId}`);
+        const data = await authDelete(`/api/admin/business/${businessId}`);
         return data;
     } catch (err) {
         console.error('Error deleting business data:', err);
