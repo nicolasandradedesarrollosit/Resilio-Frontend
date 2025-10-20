@@ -94,7 +94,7 @@ function BenefitsContent() {
             name: benefit.name || '',
             discount: benefit.discount || '',
             q_of_codes: benefit.q_of_codes || '',
-            id_business: benefit.id_business || ''
+            id_business_discount: benefit.id_business_discount || ''
         });
         setShowEditModal(true);
     };
@@ -164,10 +164,8 @@ function BenefitsContent() {
         setSelectedBusiness(business);
         setEditBusinessFormData({
             name: business.name || '',
-            description: business.description || '',
             location: business.location || '',
-            phone: business.phone || '',
-            url_image: business.url_image || ''
+            url_image_business: business.url_image_business || ''
         });
         setShowEditBusinessModal(true);
     };
@@ -329,7 +327,7 @@ function BenefitsContent() {
                                         <td className='admin-users-name'>{benefit.name || 'No especificado'}</td>
                                         <td>{benefit.discount || 'No especificado'}</td>
                                         <td>{benefit.q_of_codes || 'No especificado'}</td>
-                                        <td>{benefit.id_business || 'No especificado'}</td>
+                                        <td>{benefit.id_business_discount || 'No especificado'}</td>
                                         <td className='admin-users-actions'>
                                             <button 
                                                 className='admin-users-btn-action admin-users-btn-edit' 
@@ -435,9 +433,9 @@ function BenefitsContent() {
                                     <label htmlFor='id_business'>ID Negocio</label>
                                     <input 
                                         type='text' 
-                                        id='id_business'
-                                        name='id_business'
-                                        value={editFormData.id_business}
+                                        id='id_business_discount'
+                                        name='id_business_discount'
+                                        value={editFormData.id_business_discount}
                                         onChange={handleInputChange}
                                         disabled={isSubmitting}
                                     />
@@ -517,9 +515,9 @@ function BenefitsContent() {
                                     <label htmlFor='create-id_business'>ID Negocio</label>
                                     <input 
                                         type='text' 
-                                        id='create-id_business'
-                                        name='id_business'
-                                        value={createFormData.id_business}
+                                        id='create-id_business_discount'
+                                        name='id_business_discount'
+                                        value={createFormData.id_business_discount}
                                         onChange={handleCreateInputChange}
                                         disabled={isSubmitting}
                                     />
@@ -636,9 +634,8 @@ function BenefitsContent() {
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>Descripción</th>
                                 <th>Ubicación</th>
-                                <th>Teléfono</th>
+                                <th>Imagen</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -647,9 +644,8 @@ function BenefitsContent() {
                                 <tr key={business.id}>
                                     <td>{business.id}</td>
                                     <td className='admin-users-name'>{business.name || 'No especificado'}</td>
-                                    <td>{business.description || 'No especificado'}</td>
                                     <td>{business.location || 'No especificado'}</td>
-                                    <td>{business.phone || 'No especificado'}</td>
+                                    <td>{business.url_image_business ? 'Sí' : 'No'}</td>
                                     <td className='admin-users-actions'>
                                         <button 
                                             className='admin-users-btn-action admin-users-btn-edit' 
@@ -730,16 +726,6 @@ function BenefitsContent() {
                                 />
                             </div>
                             <div className='admin-users-form-group'>
-                                <label htmlFor='business-description'>Descripción</label>
-                                <textarea 
-                                    id='business-description'
-                                    name='description'
-                                    value={editBusinessFormData.description}
-                                    onChange={handleBusinessInputChange}
-                                    disabled={isSubmittingBusiness}
-                                />
-                            </div>
-                            <div className='admin-users-form-group'>
                                 <label htmlFor='business-location'>Ubicación</label>
                                 <input 
                                     type='text' 
@@ -751,29 +737,18 @@ function BenefitsContent() {
                                 />
                             </div>
                             <div className='admin-users-form-group'>
-                                <label htmlFor='business-phone'>Teléfono</label>
-                                <input 
-                                    type='text' 
-                                    id='business-phone'
-                                    name='phone'
-                                    value={editBusinessFormData.phone}
-                                    onChange={handleBusinessInputChange}
-                                    disabled={isSubmittingBusiness}
-                                />
-                            </div>
-                            <div className='admin-users-form-group'>
                                 <label>Imagen del negocio</label>
-                                {editBusinessFormData.url_image && (
+                                {editBusinessFormData.url_image_business && (
                                     <div className='admin-users-image-preview-container'>
                                         <img 
-                                            src={editBusinessFormData.url_image} 
+                                            src={editBusinessFormData.url_image_business} 
                                             alt="Preview" 
                                             className='admin-users-image-preview' 
                                         />
                                         <button 
                                             type='button' 
                                             className='admin-users-btn-remove-image' 
-                                            onClick={() => setEditBusinessFormData(prev => ({ ...prev, url_image: '' }))}
+                                            onClick={() => setEditBusinessFormData(prev => ({ ...prev, url_image_business: '' }))}
                                             disabled={isSubmittingBusiness}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/></svg>
@@ -782,10 +757,10 @@ function BenefitsContent() {
                                 )}
                                 <input 
                                     type='text' 
-                                    id='business-url_image'
-                                    name='url_image'
+                                    id='business-url_image_business'
+                                    name='url_image_business'
                                     placeholder='URL de la imagen'
-                                    value={editBusinessFormData.url_image}
+                                    value={editBusinessFormData.url_image_business}
                                     onChange={handleBusinessInputChange}
                                     disabled={isSubmittingBusiness}
                                 />
@@ -840,16 +815,6 @@ function BenefitsContent() {
                                 />
                             </div>
                             <div className='admin-users-form-group'>
-                                <label htmlFor='create-business-description'>Descripción</label>
-                                <textarea 
-                                    id='create-business-description'
-                                    name='description'
-                                    value={createBusinessFormData.description}
-                                    onChange={handleCreateBusinessInputChange}
-                                    disabled={isSubmittingBusiness}
-                                />
-                            </div>
-                            <div className='admin-users-form-group'>
                                 <label htmlFor='create-business-location'>Ubicación</label>
                                 <input 
                                     type='text' 
@@ -861,29 +826,18 @@ function BenefitsContent() {
                                 />
                             </div>
                             <div className='admin-users-form-group'>
-                                <label htmlFor='create-business-phone'>Teléfono</label>
-                                <input 
-                                    type='text' 
-                                    id='create-business-phone'
-                                    name='phone'
-                                    value={createBusinessFormData.phone}
-                                    onChange={handleCreateBusinessInputChange}
-                                    disabled={isSubmittingBusiness}
-                                />
-                            </div>
-                            <div className='admin-users-form-group'>
                                 <label>Imagen del negocio</label>
-                                {createBusinessFormData.url_image && (
+                                {createBusinessFormData.url_image_business && (
                                     <div className='admin-users-image-preview-container'>
                                         <img 
-                                            src={createBusinessFormData.url_image} 
+                                            src={createBusinessFormData.url_image_business} 
                                             alt="Preview" 
                                             className='admin-users-image-preview' 
                                         />
                                         <button 
                                             type='button' 
                                             className='admin-users-btn-remove-image' 
-                                            onClick={() => setCreateBusinessFormData(prev => ({ ...prev, url_image: '' }))}
+                                            onClick={() => setCreateBusinessFormData(prev => ({ ...prev, url_image_business: '' }))}
                                             disabled={isSubmittingBusiness}
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/></svg>
@@ -892,10 +846,10 @@ function BenefitsContent() {
                                 )}
                                 <input 
                                     type='text' 
-                                    id='create-business-url_image'
-                                    name='url_image'
+                                    id='create-business-url_image_business'
+                                    name='url_image_business'
                                     placeholder='URL de la imagen'
-                                    value={createBusinessFormData.url_image}
+                                    value={createBusinessFormData.url_image_business}
                                     onChange={handleCreateBusinessInputChange}
                                     disabled={isSubmittingBusiness}
                                 />

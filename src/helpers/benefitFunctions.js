@@ -43,7 +43,7 @@ export function filterBenefits(benefits, searchTerm) {
     return benefits.filter(benefit =>
         benefit.name?.toLowerCase().includes(term) ||
         benefit.discount?.toString().includes(term) ||
-        benefit.id_business?.toString().includes(term)
+        benefit.q_of_codes?.toString().includes(term)
     );
 }
 
@@ -85,7 +85,7 @@ export async function updateBenefit(benefitId, updatedData) {
  */
 export async function deleteBenefit(benefitId) {
     try {
-        await authDelete(`/api/benefits/${benefitId}`);
+        await authDelete(`/api/admin/benefits/${benefitId}`);
     } catch (err) {
         console.error('Error deleting benefit:', err);
         throw err;

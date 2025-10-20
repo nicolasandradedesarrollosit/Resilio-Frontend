@@ -45,7 +45,6 @@ export function filterBusiness(businesses, searchTerm) {
     const term = searchTerm.toLowerCase().trim();
     return businesses.filter(business =>
         business.name?.toLowerCase().includes(term) ||
-        business.description?.toLowerCase().includes(term) ||
         business.location?.toLowerCase().includes(term)
     );
 }

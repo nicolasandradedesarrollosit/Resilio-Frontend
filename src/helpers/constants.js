@@ -18,16 +18,14 @@ export const INITIAL_EVENT_FORM = {
 export const INITIAL_BENEFIT_FORM = {
     name: '',
     q_of_codes: null,
-    id_business: null,
+    id_business_discount: null,
     discount: null
 };
 
 export const INITIAL_BUSINESS_FORM = {
     name: '',
-    description: '',
     location: '',
-    phone: '',
-    url_image: ''
+    url_image_business: ''
 };
 
 export const USERS_PER_PAGE = 10;
