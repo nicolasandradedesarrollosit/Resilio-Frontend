@@ -19,7 +19,6 @@ import { useImageUpload } from '../../hooks/useImageUpload';
 
 function ContentEvents() {
     const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
@@ -40,15 +39,12 @@ function ContentEvents() {
 
     const loadEvents = async () => {
         try {
-            setLoading(true);
             const offset = (currentPage - 1) * EVENTS_PER_PAGE;
             const data = await getAdminEvents(EVENTS_PER_PAGE, offset);
             setEvents(data);
         } catch (err) {
             setError(err.message);
             console.error('Error fetching events:', err);
-        } finally {
-            setLoading(false);
         }
     };
 
