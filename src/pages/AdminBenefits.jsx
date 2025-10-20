@@ -5,6 +5,7 @@ import LoadingScreen from '../components/others/LoadingScreen';
 import AdminErrorState from '../components/others/AdminErrorState';
 import { AdminContext } from '../components/context/AdminContext';
 import '../styles/main-admin/mainAdmin.css';
+import ContentBenefits from '../components/main-admin/ContentBenefits.jsx';
 
 function AdminBenefits() {
     const navigate = useNavigate();
@@ -34,7 +35,7 @@ function AdminBenefits() {
             <div className='container-admin-page'>
                 <AsideMenu userData={adminData} activeItem={'benefits'} />
                 <main className='main-admin-page'>
-                    {/* Aquí irá el contenido de beneficios */}
+                    <ContentBenefits />
                 </main>
             </div>
         </>

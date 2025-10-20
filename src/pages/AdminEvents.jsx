@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AsideMenu from '../components/others/AsideMenu.jsx';
 import LoadingScreen from '../components/others/LoadingScreen';
 import AdminErrorState from '../components/others/AdminErrorState';
-import ContentEvents from '../components/main-admin/contentEvents.jsx';
+import ContentEvents from '../components/main-admin/ContentEvents.jsx';
 import { AdminContext } from '../components/context/AdminContext';
 import '../styles/main-admin/mainAdmin.css';
 
