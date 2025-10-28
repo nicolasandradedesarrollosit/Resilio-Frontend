@@ -1,8 +1,3 @@
-/**
- * Cliente API centralizado para todas las peticiones HTTP
- * Maneja autenticación, reintentos y gestión de errores
- */
-
 import { 
     getApiUrl, 
     createAuthFetchOptions, 
@@ -15,7 +10,6 @@ import {
 const API_URL = getApiUrl();
 
 /**
- * Verifica el estado de autenticación
  * @returns {Promise<{isAuthenticated: boolean, userId: string|null}>}
  */
 export async function checkAuthStatus() {
@@ -38,7 +32,6 @@ export async function checkAuthStatus() {
 }
 
 /**
- * Refresca el token de acceso
  * @returns {Promise<boolean>} 
  */
 export async function refreshAccessToken() {
@@ -62,7 +55,6 @@ export async function refreshAccessToken() {
 }
 
 /**
- * Cierra la sesión del usuario
  * @returns {Promise<boolean>} 
  */
 export async function logout() {
@@ -86,7 +78,6 @@ export async function logout() {
 }
 
 /**
- * Fetch autenticado con renovación automática de token
  * @param {string} url 
  * @param {Object} options 
  * @returns {Promise<Response>} 
@@ -108,7 +99,6 @@ export async function authenticatedFetch(url, options = {}) {
 }
 
 /**
- * GET autenticado
  * @param {string} endpoint
  * @returns {Promise<any>} 
  */
@@ -126,7 +116,6 @@ export async function authGet(endpoint) {
 }
 
 /**
- * POST autenticado
  * @param {string} endpoint
  * @param {Object} body 
  * @returns {Promise<any>} 
@@ -146,7 +135,6 @@ export async function authPost(endpoint, body = {}) {
 }
 
 /**
- * PATCH autenticado
  * @param {string} endpoint 
  * @param {Object} body 
  * @returns {Promise<any>} 
@@ -166,7 +154,6 @@ export async function authPatch(endpoint, body = {}) {
 }
 
 /**
- * DELETE autenticado
  * @param {string} endpoint 
  * @returns {Promise<any>} 
  */
