@@ -1,8 +1,8 @@
 import React, {useContext, useEffect} from 'react';
-import NavbarMainUser from '../components/main-user/NavbarMainUser'; '../components/main-user/NavbarMainUser'
+import NavbarMainUser from '../components/main-user/NavbarMainUser';
 import { UserContext } from '../components/context/UserContext';
 import BenefitsSection from '../components/user-events/BenefitsSection';
-import '../styles/user-benefits/userBenefits.css';
+import '../styles/user-benefits/userBenefitss.css';
 
 function UserBenefits() {
     const { userData, loading, error} = useContext(UserContext);
