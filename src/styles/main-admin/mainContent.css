@@ -599,6 +599,8 @@
     .admin-users-table-container {
         width: 100%;
         max-width: 100%;
+        flex-direction: column;
+        gap: 2rem;
     }
 
     .admin-users-first-row {
