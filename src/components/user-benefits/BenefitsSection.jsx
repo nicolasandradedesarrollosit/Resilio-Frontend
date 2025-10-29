@@ -4,13 +4,12 @@ import '../../styles/user-benefits/userBenefitsSection.css'
 import { useNavigate } from 'react-router-dom';
 
 function BenefitsSection() {
-    const { benefits = [], loading } = useContext(UserContext) || {};
+    const { benefits = [], loading } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
-    const { userData } = useContext(UserContext) || {};
-    const { businessData } = useContext(UserContext) || {};
-    const navigate = useNavigate();
+    const { userData } = useContext(UserContext);
     const [benefitsData, setBenefitsData] = useState(null);
     const [activeFilter, setActiveFilter] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setBenefitsData(benefits);
@@ -34,7 +33,6 @@ function BenefitsSection() {
                 })
             });
         } catch (err) {
-            console.error('Error adding benefit:', err);
         } finally {
             setIsLoading(false);
         }
@@ -111,7 +109,7 @@ function BenefitsSection() {
                         <div className='container-image'>
                             <img 
                                 className='image-benefit' 
-                                src={benefit.route_jpg || businessData.route_jpg || 'https://via.placeholder.com/400x250'} 
+                                src={benefit.route_jpg || 'https://via.placeholder.com/400x250'} 
                                 alt={benefit.name || "beneficio"} 
                             />
                         </div>
