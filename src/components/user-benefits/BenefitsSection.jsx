@@ -3,10 +3,9 @@ import { UserContext } from '../context/UserContext'
 import '../../styles/user-benefits/userBenefitsSection.css'
 import { useNavigate } from 'react-router-dom';
 
-function BenefitsSection() {
+function BenefitsSection({ userData }) {
     const { benefits = [], loading } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
-    const { userData } = useContext(UserContext);
     const [benefitsData, setBenefitsData] = useState(null);
     const [activeFilter, setActiveFilter] = useState(null);
     const navigate = useNavigate();
