@@ -1,8 +1,6 @@
 import React from 'react';
 
-/**
- * Componente reutilizable para mostrar errores en páginas admin
- */
+
 function AdminErrorState({ 
     error = 'Error al cargar los datos', 
     onRetry, 

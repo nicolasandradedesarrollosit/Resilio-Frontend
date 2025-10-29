@@ -9,9 +9,7 @@ import {
 
 const API_URL = getApiUrl();
 
-/**
- * @returns {Promise<{isAuthenticated: boolean, userId: string|null}>}
- */
+
 export async function checkAuthStatus() {
     try {
         const response = await fetch(`${API_URL}/api/user-data`, createAuthFetchOptions());
@@ -31,9 +29,7 @@ export async function checkAuthStatus() {
     }
 }
 
-/**
- * @returns {Promise<boolean>} 
- */
+
 export async function refreshAccessToken() {
     try {
         const response = await fetch(
@@ -54,9 +50,7 @@ export async function refreshAccessToken() {
     }
 }
 
-/**
- * @returns {Promise<boolean>} 
- */
+
 export async function logout() {
     try {
         const response = await fetch(
@@ -77,11 +71,7 @@ export async function logout() {
     }
 }
 
-/**
- * @param {string} url 
- * @param {Object} options 
- * @returns {Promise<Response>} 
- */
+
 export async function authenticatedFetch(url, options = {}) {
     const fetchOptions = createAuthFetchOptions(options);
     let response = await fetch(url, fetchOptions);
@@ -98,10 +88,7 @@ export async function authenticatedFetch(url, options = {}) {
     return response;
 }
 
-/**
- * @param {string} endpoint
- * @returns {Promise<any>} 
- */
+
 export async function authGet(endpoint) {
     try {
         const response = await authenticatedFetch(`${API_URL}${endpoint}`, {
@@ -115,11 +102,7 @@ export async function authGet(endpoint) {
     }
 }
 
-/**
- * @param {string} endpoint
- * @param {Object} body 
- * @returns {Promise<any>} 
- */
+
 export async function authPost(endpoint, body = {}) {
     try {
         const response = await authenticatedFetch(`${API_URL}${endpoint}`, {
@@ -134,11 +117,7 @@ export async function authPost(endpoint, body = {}) {
     }
 }
 
-/**
- * @param {string} endpoint 
- * @param {Object} body 
- * @returns {Promise<any>} 
- */
+
 export async function authPatch(endpoint, body = {}) {
     try {
         const response = await authenticatedFetch(`${API_URL}${endpoint}`, {
@@ -153,10 +132,7 @@ export async function authPatch(endpoint, body = {}) {
     }
 }
 
-/**
- * @param {string} endpoint 
- * @returns {Promise<any>} 
- */
+
 export async function authDelete(endpoint) {
     try {
         const response = await authenticatedFetch(`${API_URL}${endpoint}`, {

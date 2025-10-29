@@ -1,13 +1,7 @@
 import React from 'react';
 import '../../styles/others/errorState.css';
 
-/**
- * Componente reutilizable para mostrar estados de error
- * @param {string} title - Título del error
- * @param {string} message - Mensaje de error
- * @param {Function} onRetry - Función para reintentar (opcional)
- * @param {string} variant - Variante de estilo: 'inline' | 'fullscreen' (default: 'inline')
- */
+
 function ErrorState({ 
     title = 'Error al cargar', 
     message = 'Ha ocurrido un error', 

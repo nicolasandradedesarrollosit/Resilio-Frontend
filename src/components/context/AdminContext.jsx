@@ -8,10 +8,7 @@ import { handleAuthError } from '../../helpers/authHelpers';
 
 export const AdminContext = createContext();
 
-/**
- * Provider del contexto de administrador
- * Precarga y mantiene en caché todos los datos necesarios para el panel admin
- */
+
 export default function AdminProvider({ children }) {
     const [adminData, setAdminData] = useState(null);
     const [users, setUsers] = useState([]);
@@ -21,15 +18,12 @@ export default function AdminProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    /**
-     * Carga todos los datos necesarios para el panel de administrador
-     */
+    
     const loadAllAdminData = useCallback(async () => {
         setLoading(true);
         setError(null);
 
         try {
-            // Cargar todos los datos en paralelo para máxima velocidad
             const [adminInfo, usersData, eventsData, businessData, benefitsData] = await Promise.allSettled([
                 getAdminData(),
                 getAllUsers(),
@@ -38,15 +32,12 @@ export default function AdminProvider({ children }) {
                 getBenefits()
             ]);
 
-            // Procesar datos del administrador
             if (adminInfo.status === 'fulfilled') {
                 setAdminData(adminInfo.value);
             } else {
-                console.error('Error cargando datos del admin:', adminInfo.reason);
                 throw new Error('Error al cargar datos del administrador');
             }
 
-            // Procesar usuarios
             if (usersData.status === 'fulfilled') {
                 setUsers(usersData.value);
             } else {
@@ -54,7 +45,6 @@ export default function AdminProvider({ children }) {
                 setUsers([]);
             }
 
-            // Procesar eventos
             if (eventsData.status === 'fulfilled') {
                 setEvents(eventsData.value);
             } else {
@@ -62,7 +52,6 @@ export default function AdminProvider({ children }) {
                 setEvents([]);
             }
 
-            // Procesar negocios
             if (businessData.status === 'fulfilled') {
                 setBusiness(businessData.value);
             } else {
@@ -70,7 +59,6 @@ export default function AdminProvider({ children }) {
                 setBusiness([]);
             }
 
-            // Procesar beneficios
             if (benefitsData.status === 'fulfilled') {
                 setBenefits(benefitsData.value);
             } else {
@@ -86,9 +74,7 @@ export default function AdminProvider({ children }) {
         }
     }, []);
 
-    /**
-     * Refresca los datos de usuarios
-     */
+    
     const refreshUsers = useCallback(async () => {
         try {
             const usersData = await getAllUsers();
@@ -98,9 +84,7 @@ export default function AdminProvider({ children }) {
         }
     }, []);
 
-    /**
-     * Refresca los datos de eventos
-     */
+    
     const refreshEvents = useCallback(async () => {
         try {
             const eventsData = await getEvents();
@@ -110,9 +94,7 @@ export default function AdminProvider({ children }) {
         }
     }, []);
 
-    /**
-     * Refresca los datos de negocios
-     */
+    
     const refreshBusiness = useCallback(async () => {
         try {
             const businessData = await getBusiness();
@@ -122,9 +104,7 @@ export default function AdminProvider({ children }) {
         }
     }, []);
 
-    /**
-     * Refresca los datos de beneficios
-     */
+    
     const refreshBenefits = useCallback(async () => {
         try {
             const benefitsData = await getBenefits();
@@ -134,20 +114,16 @@ export default function AdminProvider({ children }) {
         }
     }, []);
 
-    /**
-     * Refresca todos los datos
-     */
+    
     const refreshAllData = useCallback(async () => {
         await loadAllAdminData();
     }, [loadAllAdminData]);
 
-    // Carga inicial de datos
     useEffect(() => {
         loadAllAdminData();
     }, [loadAllAdminData]);
 
     const value = {
-        // Datos
         adminData,
         users,
         events,
@@ -156,14 +132,12 @@ export default function AdminProvider({ children }) {
         loading,
         error,
 
-        // Funciones de refresco
         refreshUsers,
         refreshEvents,
         refreshBusiness,
         refreshBenefits,
         refreshAllData,
 
-        // Setters directos (para actualizaciones optimistas)
         setUsers,
         setEvents,
         setBusiness,

@@ -1,11 +1,9 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import NavbarMainUser from '../components/main-user/NavbarMainUser';
-import { UserContext } from '../components/context/UserContext';
-import BenefitsSection from '../components/user-events/BenefitsSection';
+import BenefitsSection from '../components/user-benefits/BenefitsSection';
 import '../styles/user-benefits/userBenefitss.css';
 
 function UserBenefits() {
-    const { userData, loading, error} = useContext(UserContext);
 
     useEffect(() => {
             const contenedor = document.getElementById("top");

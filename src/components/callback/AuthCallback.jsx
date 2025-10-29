@@ -6,18 +6,12 @@ import { AuthContext } from '../context/AuthContextOauth';
 import { fetchUserData, getUserData } from '../../helpers/userFunctions';
 import { extractUserData, handleAuthError } from '../../helpers/authHelpers';
 
-/**
- * Detecta si el dispositivo es móvil
- * @returns {boolean}
- */
+
 const isMobileDevice = () => {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 };
 
-/**
- * Obtiene la configuración de tiempos según el tipo de dispositivo
- * @returns {Object}
- */
+
 const getDeviceConfig = () => {
   const isMobile = isMobileDevice();
   return {
@@ -27,21 +21,13 @@ const getDeviceConfig = () => {
   };
 };
 
-/**
- * Redirige al usuario según su rol
- * @param {string} role - Rol del usuario
- * @param {Function} navigate - Función de navegación
- */
+
 const redirectByRole = (role, navigate) => {
   const destination = role === 'admin' ? '/main/admin' : '/main/user';
   navigate(destination, { state: { fromApp: true }, replace: true });
 };
 
-/**
- * Intenta obtener datos del usuario con reintentos
- * @param {number} maxRetries - Número máximo de reintentos
- * @returns {Promise<Object|null>}
- */
+
 const fetchUserDataWithRetries = async (maxRetries) => {
   let retries = 0;
   let userData = null;
@@ -68,14 +54,11 @@ const fetchUserDataWithRetries = async (maxRetries) => {
   return userData;
 };
 
-/**
- * @returns {Promise<Object|null>}
- */
+
 const checkExistingSession = async () => {
   try {
     const userData = await fetchUserData();
     if (userData) {
-      console.log('✅ Sesión ya existente, redirigiendo...');
     }
     return userData;
   } catch (error) {
@@ -95,15 +78,11 @@ const AuthCallback = () => {
     
     const handleAuthCallback = async () => {
       try {
-        // Verificar parámetros de error en la URL
         const urlParams = new URLSearchParams(window.location.search);
         const errorParam = urlParams.get('error');
         const errorDescription = urlParams.get('error_description');
         
-        // Si hay error o el usuario canceló, redirigir al login
         if (errorParam) {
-          console.log('❌ Error en OAuth:', errorParam, errorDescription);
-          
           if (errorParam === 'access_denied' || errorDescription?.includes('cancel')) {
             setError('Has cancelado el inicio de sesión con Google.');
           } else {
@@ -115,9 +94,6 @@ const AuthCallback = () => {
         }
         
         const { isMobile, initialWait, maxRetries } = getDeviceConfig();
-        
-        console.log('📱 Dispositivo:', isMobile ? 'Móvil' : 'Desktop');
-        console.log('⏱️ Tiempo de espera inicial:', initialWait, 'ms');
         
         timeoutId = setTimeout(() => {
           setError('La autenticación está tomando más tiempo del esperado. Por favor, intenta nuevamente.');
@@ -137,12 +113,10 @@ const AuthCallback = () => {
           return;
         }
         
-        console.log('🔄 No hay sesión existente, procesando OAuth...');
         setLoadingStep('Verificando credenciales con Google...');
         
         await sendUserDataToBackend();
         
-        console.log('⏳ Esperando establecimiento de cookies...');
         setLoadingStep('Estableciendo sesión segura...');
         await new Promise(resolve => setTimeout(resolve, initialWait));
         

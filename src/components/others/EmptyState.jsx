@@ -1,12 +1,7 @@
 import React from 'react';
 import '../../styles/others/emptyState.css';
 
-/**
- * Componente reutilizable para mostrar estados vacíos
- * @param {string} title - Título del estado vacío
- * @param {string} message - Mensaje descriptivo
- * @param {string} icon - Tipo de icono: 'box' | 'search' | 'calendar' | 'gift' (default: 'box')
- */
+
 function EmptyState({ 
     title = 'No hay datos disponibles',
     message = 'No se encontraron elementos para mostrar.',

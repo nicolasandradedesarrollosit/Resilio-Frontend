@@ -1,8 +1,6 @@
 import React from 'react';
 
-/**
- * Componente reutilizable para mostrar errores en páginas de usuario
- */
+
 function UserErrorState({ 
     error = 'Error al cargar', 
     onRetry 

@@ -44,7 +44,6 @@ function ContentEvents() {
             setEvents(data);
         } catch (err) {
             setError(err.message);
-            console.error('Error fetching events:', err);
         }
     };
 
@@ -91,7 +90,6 @@ function ContentEvents() {
             loadEvents();
             createImageUpload.resetImage();
         } catch (err) {
-            console.error('Error creating event:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -105,7 +103,6 @@ function ContentEvents() {
             setShowEditModal(false);
             loadEvents();
         } catch (err) {
-            console.error('Error updating event:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -118,7 +115,6 @@ function ContentEvents() {
             setShowDeleteModal(false);
             loadEvents();
         } catch (err) {
-            console.error('Error deleting event:', err);
         } finally {
             setIsSubmitting(false);
         }

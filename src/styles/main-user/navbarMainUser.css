@@ -146,7 +146,7 @@
   }
 }
 
-/* Mobile layout - Cambio a columna */
+
 @media (max-width: 768px) {
   .navbar-main-user {
     flex-direction: column;

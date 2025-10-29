@@ -3,10 +3,7 @@ import { handleAuthError } from './authHelpers';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-/**
- * @returns {Promise<void>}
- * @throws {Error} Si hay un error en el proceso de autenticación
- */
+
 export const loginWithGoogle = async () => {
     try {
         const redirectUrl = `${window.location.origin}/auth/callback`;
@@ -38,9 +35,7 @@ export const loginWithGoogle = async () => {
     }
 };
 
-/**
- * @returns {Promise<void>}
- */
+
 export const logOut = async () => {
     try {
         await fetch(`${API_URL}/api/log-out`, {
@@ -49,7 +44,6 @@ export const logOut = async () => {
             headers: { 'Content-Type': 'application/json' }
         });
         
-        // Cerrar sesión en Supabase
         await supabase.auth.signOut();
         
     } catch (error) {

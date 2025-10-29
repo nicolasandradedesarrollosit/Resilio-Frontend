@@ -44,11 +44,9 @@
     background-color: #e8e6e1;
 }
 
-/* ============================================
-   MEDIA QUERIES - Responsive Design
-   ============================================ */
 
-/* Desktop: 1024px - 1200px */
+
+
 @media (max-width: 1200px) {
     .main-admin-page {
         margin-left: 275px;
@@ -62,7 +60,7 @@
     }
 }
 
-/* Tablet: 768px - 1024px */
+
 @media (max-width: 1024px) {
     .main-admin-page {
         margin-left: 255px;
@@ -76,13 +74,13 @@
     }
 }
 
-/* Mobile: 768px and below */
+
 @media (max-width: 768px) {
     .main-admin-page {
         margin-left: 0;
         width: 100%;
         padding: 20px;
-        padding-top: 80px; /* Espacio para el botón hamburguesa */
+        padding-top: 80px; 
         gap: 14px;
     }
 
@@ -91,7 +89,7 @@
     }
 }
 
-/* Small Mobile: 480px and below */
+
 @media (max-width: 480px) {
     .main-admin-page {
         padding: 16px;
@@ -104,7 +102,7 @@
     }
 }
 
-/* Extra Small Mobile: 320px and below */
+
 @media (max-width: 320px) {
     .main-admin-page {
         padding: 12px;

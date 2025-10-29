@@ -177,11 +177,9 @@ function Profile(){
             
             setIsLoading(false);
             setModal(false);
-            // Recargar la página para refrescar los datos del contexto
             window.location.reload();
         }
         catch (error) {
-            console.error('Error en handleSubmit:', error);
             setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
             setIsLoading(false);
         }
@@ -206,7 +204,6 @@ function Profile(){
         }
         catch(err){
             if(import.meta.env.DEV){
-                console.error('Error al cerrar sesión:', err);
             }
             navigate('/log-in');
         }

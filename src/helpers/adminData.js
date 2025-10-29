@@ -1,11 +1,7 @@
 import { authGet } from '../services/api/apiClient';
 import { handleAuthError } from './authHelpers';
 
-/**
- * Obtiene los datos del administrador
- * @returns {Promise<Object>}
- * @throws {Error}
- */
+
 export async function getAdminData() {
     try {
         const result = await authGet('/api/user-data');

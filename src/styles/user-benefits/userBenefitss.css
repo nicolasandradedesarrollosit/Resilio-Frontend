@@ -1,4 +1,4 @@
-.main-container-user{
+.main-container-user-events{
     height: auto;
     min-height: 100vh;
     display: flex;
@@ -55,7 +55,7 @@
     flex-direction: column;
 }
 
-.main-content-user{
+.main-content-user-events{
     width: 100%;
     height: auto;
     display: flex;

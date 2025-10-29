@@ -22,7 +22,6 @@ import { calculatePageRange, canGoPrevious, canGoNext } from '../../helpers/pagi
 import { BENEFITS_PER_PAGE, BUSINESS_PER_PAGE, INITIAL_BENEFIT_FORM, INITIAL_BUSINESS_FORM, MESSAGES } from '../../helpers/constants';
 
 function BenefitsContent() {
-    // Benefits
     const [benefits, setBenefits] = useState([]);
     const [benefitsError, setBenefitsError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,7 +34,6 @@ function BenefitsContent() {
     const [createFormData, setCreateFormData] = useState(INITIAL_BENEFIT_FORM);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Businesses
     const [businesses, setBusinesses] = useState([]);
     const [businessError, setBusinessError] = useState(null);
     const [currentBusinessPage, setCurrentBusinessPage] = useState(1);
@@ -61,7 +59,6 @@ function BenefitsContent() {
             setBenefits(data);
         } catch (err) {
             setBenefitsError(err.message);
-            console.error('Error fetching benefits:', err);
         }
     };
 
@@ -71,14 +68,12 @@ function BenefitsContent() {
             setBusinesses(data);
         } catch (err) {
             setBusinessError(err.message);
-            console.error('Error fetching businesses:', err);
         }
     };
 
     const filteredBenefits = filterBenefits(benefits, searchTerm);
     const filteredBusinesses = filterBusiness(businesses, businessSearchTerm);
 
-    // Paginated data
     const paginatedBenefits = filteredBenefits.slice(
         (currentPage - 1) * BENEFITS_PER_PAGE,
         currentPage * BENEFITS_PER_PAGE
@@ -123,7 +118,6 @@ function BenefitsContent() {
             setCurrentPage(1);
             loadBenefits();
         } catch (err) {
-            console.error('Error creating benefit:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -137,7 +131,6 @@ function BenefitsContent() {
             setShowEditModal(false);
             loadBenefits();
         } catch (err) {
-            console.error('Error updating benefit:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -150,7 +143,6 @@ function BenefitsContent() {
             setShowDeleteModal(false);
             loadBenefits();
         } catch (err) {
-            console.error('Error deleting benefit:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -159,7 +151,6 @@ function BenefitsContent() {
     const handleInputChange = (e) => handleFormInputChange(e, setEditFormData);
     const handleCreateInputChange = (e) => handleFormInputChange(e, setCreateFormData);
 
-    // Business handlers
     const handleEditBusinessClick = (business) => {
         setSelectedBusiness(business);
         setEditBusinessFormData({
@@ -194,7 +185,6 @@ function BenefitsContent() {
             setCurrentBusinessPage(1);
             loadBusinesses();
         } catch (err) {
-            console.error('Error creating business:', err);
         } finally {
             setIsSubmittingBusiness(false);
         }
@@ -208,7 +198,6 @@ function BenefitsContent() {
             setShowEditBusinessModal(false);
             loadBusinesses();
         } catch (err) {
-            console.error('Error updating business:', err);
         } finally {
             setIsSubmittingBusiness(false);
         }
@@ -221,7 +210,6 @@ function BenefitsContent() {
             setShowDeleteBusinessModal(false);
             loadBusinesses();
         } catch (err) {
-            console.error('Error deleting business:', err);
         } finally {
             setIsSubmittingBusiness(false);
         }
@@ -594,7 +582,6 @@ function BenefitsContent() {
         );
     }
 
-    // Business section
     return (
         <div className='admin-users-container'>
             <div className='admin-users-first-row'>

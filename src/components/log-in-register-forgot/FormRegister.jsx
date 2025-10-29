@@ -112,7 +112,6 @@ function FormRegister() {
                 }));
             }
         });
-        console.log(Object.values(validationStates).every(Boolean));
     };
 
     const validate = (content, regex) => {

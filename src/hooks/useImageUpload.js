@@ -23,7 +23,6 @@ export function useImageUpload() {
             const preview = await createImagePreview(file);
             setImagePreview(preview);
         } catch (error) {
-            console.error('Error creating preview:', error);
         }
     };
 

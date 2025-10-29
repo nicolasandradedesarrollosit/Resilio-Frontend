@@ -182,7 +182,6 @@ function FormContact(){
                     return preferredClient;
                 }
             } catch (e) {
-                console.error(e);
             }
             
             return null;
@@ -295,7 +294,6 @@ function FormContact(){
                     try {
                         localStorage.setItem('preferredEmailClient', client);
                     } catch (e) {
-                        console.error(e);
                     }
                     document.body.removeChild(modal);
                     resolve(client);
@@ -336,7 +334,6 @@ function FormContact(){
 
             
         } catch (error) {
-            console.error('Error al enviar email:', error);
             window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
     };

@@ -97,7 +97,6 @@ function FormLogIn() {
 
             setTimeout(async () => {
                 try {
-                    // Login request - el servidor enviará las cookies automáticamente
                     const response = await fetch(`${API_URL}/api/log-in`, {
                         method: 'POST',
                         credentials: 'include', // Importante: permite que el servidor envíe cookies
@@ -114,8 +113,6 @@ function FormLogIn() {
                         return;
                     }
 
-                    // Ya no recibimos el accessToken en el response, ahora está en una cookie HTTP-only
-                    // Obtener datos del usuario usando la cookie
                     const userDataResponse = await fetch(`${API_URL}/api/user-data`, {
                         method: 'GET',
                         credentials: 'include', // Envía las cookies automáticamente
@@ -148,7 +145,6 @@ function FormLogIn() {
                     }
                 } 
                 catch (err) {
-                    console.error('Error en login:', err);
                     setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
                     setIsLoading(false);
                     form.reset();

@@ -38,9 +38,7 @@ function AsideMenu({ userData, activeItem }) {
             await logOut();
             navigate('/log-in', { replace: true });
         } catch (error) {
-            console.error('Error during logout:', error);
             setIsLoggingOut(false);
-            // Intentar redirigir de todos modos en caso de error
             navigate('/log-in', { replace: true });
         }
     };

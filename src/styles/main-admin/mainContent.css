@@ -51,7 +51,7 @@
     transform: translateY(0);
 }
 
-/* Image Upload Styles */
+
 .admin-image-upload-container {
     display: flex;
     flex-direction: column;
@@ -586,11 +586,9 @@
     box-shadow: 0 4px 12px rgba(143, 109, 223, 0.4);
 }
 
-/* ============================================
-   MEDIA QUERIES - Responsive Design
-   ============================================ */
 
-/* Desktop: 1024px - 1200px */
+
+
 @media (max-width: 1200px) {
     .admin-users-container {
         width: 80%;
@@ -612,7 +610,7 @@
     }
 }
 
-/* Tablet: 768px - 1024px */
+
 @media (max-width: 1024px) {
     .admin-users-container {
         width: 90%;
@@ -627,7 +625,7 @@
     }
 }
 
-/* Mobile: 768px and below */
+
 @media (max-width: 768px) {
     .admin-users-container {
         width: 100%;
@@ -760,7 +758,7 @@
     }
 }
 
-/* Modal Styles */
+
 .admin-users-modal-overlay {
     position: fixed;
     top: 0;

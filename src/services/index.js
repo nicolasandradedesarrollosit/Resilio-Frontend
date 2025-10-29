@@ -1,6 +1,4 @@
-/**
- * Exportación centralizada de servicios
- */
+
 
 export {
     loginWithGoogle,

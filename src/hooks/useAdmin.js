@@ -1,6 +1,4 @@
-/**
- * Hook personalizado para acceder al contexto de administrador
- */
+
 
 import { useContext } from 'react';
 import { AdminContext } from '../components/context/AdminContext';

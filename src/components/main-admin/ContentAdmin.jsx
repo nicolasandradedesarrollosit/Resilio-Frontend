@@ -38,7 +38,6 @@ function ContentMain() {
             }
         } catch (err) {
             setError(err.message);
-            console.error('Error fetching users:', err);
         } finally {
             setLoading(false);
         }
@@ -75,7 +74,6 @@ function ContentMain() {
             setShowUnbanModal(false);
             loadUsers();
         } catch (err) {
-            console.error('Error unbanning user:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -89,7 +87,6 @@ function ContentMain() {
             setShowEditModal(false);
             loadUsers();
         } catch (err) {
-            console.error('Error updating user:', err);
         } finally {
             setIsSubmitting(false);
         }
@@ -102,7 +99,6 @@ function ContentMain() {
             setShowBanModal(false);
             loadUsers();
         } catch (err) {
-            console.error('Error banning user:', err);
         } finally {
             setIsSubmitting(false);
         }

@@ -1,6 +1,4 @@
-/**
- * Hook personalizado para acceder al contexto de usuario
- */
+
 
 import { useContext } from 'react';
 import { UserContext } from '../components/context/UserContext';

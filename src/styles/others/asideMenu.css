@@ -296,7 +296,7 @@
   white-space: nowrap;
 }
 
-/* Logout Button Styles */
+
 .logout-button {
   display: flex;
   align-items: center;
@@ -361,11 +361,9 @@
   100% { transform: rotate(360deg); }
 }
 
-/* ============================================
-   MEDIA QUERIES - Responsive Design
-   ============================================ */
 
-/* Desktop: 1024px - 1200px */
+
+
 @media (max-width: 1200px) {
   .admin-menu {
     width: 260px;
@@ -396,7 +394,7 @@
   }
 }
 
-/* Tablet: 768px - 1024px */
+
 @media (max-width: 1024px) {
   .admin-menu {
     width: 240px;
