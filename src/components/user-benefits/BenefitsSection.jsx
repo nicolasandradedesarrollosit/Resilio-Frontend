@@ -108,13 +108,14 @@ function BenefitsSection({ userData }) {
                         <div className='container-image'>
                             <img 
                                 className='image-benefit' 
-                                src={benefit.route_jpg || 'https://via.placeholder.com/400x250'} 
+                                src={benefit.route_jpg} 
                                 alt={benefit.name || "beneficio"} 
                             />
                         </div>
                         <div className='benefit-content'>
-                            <h3>{benefit.name ?? benefit.title}</h3>
-                            <p className='benefit-description'>{benefit.description ?? ''}</p>
+                            <h3>{benefit.name}</h3>
+                            <p className='benefit-description'>De: {benefit.business_name}</p>
+                            <p className='benefit-description'>Ubicacion: {benefit.location}</p>
                             <div className='benefit-details'>
                                 {benefit.discount && (
                                     <span className='benefit-discount'>
@@ -131,7 +132,7 @@ function BenefitsSection({ userData }) {
                         <div className='container-buttons-benefit'>
                             <button 
                                 onClick={() => handleAddBenefit(benefit)} 
-                                className={`btn-benefit ${userData.isPremium ? 'btn-premium' : 'btn-basic'} ${isLoading ? 'loading' : ''}`} 
+                                className={`btn-benefit ${userData.ispremium ? 'btn-premium' : 'btn-basic'} ${isLoading ? 'loading' : ''}`} 
                                 disabled={isLoading}
                             >
                                 {isLoading ? (
@@ -139,7 +140,7 @@ function BenefitsSection({ userData }) {
                                         <span className='spinner'></span>
                                         Procesando...
                                     </>
-                                ) : userData.isPremium ? (
+                                ) : userData.ispremium ? (
                                     <>
                                         ✨ Acceder a beneficio
                                     </>
