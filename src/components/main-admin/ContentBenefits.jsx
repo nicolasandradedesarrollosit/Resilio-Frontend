@@ -14,10 +14,12 @@ import {
     getAdminBusiness,
     filterBusiness,
     createBusiness,
+    uploadBusinessImage,
     updateBusiness,
     deleteBusiness
 } from '../../helpers/businessFunctions';
 import { handleFormInputChange, resetForm } from '../../helpers/formHelpers';
+import { useImageUpload } from '../../hooks/useImageUpload';
 import { calculatePageRange, canGoPrevious, canGoNext } from '../../helpers/paginationHelpers';
 import { BENEFITS_PER_PAGE, BUSINESS_PER_PAGE, INITIAL_BENEFIT_FORM, INITIAL_BUSINESS_FORM, MESSAGES } from '../../helpers/constants';
 
@@ -184,6 +186,7 @@ function BenefitsContent() {
             setShowCreateBusinessModal(false);
             setCurrentBusinessPage(1);
             loadBusinesses();
+            createImageUpload.resetImage();
         } catch (err) {
         } finally {
             setIsSubmittingBusiness(false);
@@ -197,6 +200,7 @@ function BenefitsContent() {
             await updateBusiness(selectedBusiness.id, editBusinessFormData);
             setShowEditBusinessModal(false);
             loadBusinesses();
+            editImageUpload.resetImage();
         } catch (err) {
         } finally {
             setIsSubmittingBusiness(false);
@@ -217,6 +221,52 @@ function BenefitsContent() {
 
     const handleBusinessInputChange = (e) => handleFormInputChange(e, setEditBusinessFormData);
     const handleCreateBusinessInputChange = (e) => handleFormInputChange(e, setCreateBusinessFormData);
+
+    const createImageUpload = useImageUpload();
+    const editImageUpload = useImageUpload();
+
+    const handleUploadImage = async () => {
+        if (!createImageUpload.selectedFile) return;
+
+        createImageUpload.setUploading(true);
+        try {
+            const data = await uploadBusinessImage(createImageUpload.selectedFile);
+            setCreateBusinessFormData(prev => ({ ...prev, url_image_business: data.url }));
+            alert('Imagen subida exitosamente');
+        } catch (err) {
+            alert(err.message || 'Error al subir la imagen');
+        } finally {
+            createImageUpload.setUploading(false);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        createImageUpload.resetImage();
+        setCreateBusinessFormData(prev => ({ ...prev, url_image_business: '' }));
+    };
+
+    const handleUploadEditImage = async () => {
+        if (!editImageUpload.selectedFile) {
+            alert('Por favor selecciona una imagen');
+            return;
+        }
+
+        editImageUpload.setUploading(true);
+        try {
+            const data = await uploadBusinessImage(editImageUpload.selectedFile);
+            setEditBusinessFormData(prev => ({ ...prev, url_image_business: data.url }));
+            alert('Imagen subida exitosamente');
+        } catch (err) {
+            alert(err.message || 'Error al subir la imagen');
+        } finally {
+            editImageUpload.setUploading(false);
+        }
+    };
+
+    const handleRemoveEditImage = () => {
+        editImageUpload.resetImage();
+        setEditBusinessFormData(prev => ({ ...prev, url_image_business: '' }));
+    };
 
     const handlePreviousPage = () => {
         if (canGoPrevious(currentPage)) {
@@ -632,7 +682,7 @@ function BenefitsContent() {
                                     <td>{business.id}</td>
                                     <td className='admin-users-name'>{business.name || 'No especificado'}</td>
                                     <td>{business.location || 'No especificado'}</td>
-                                    <td>{business.url_image_business ? 'Sí' : 'No'}</td>
+                                    <td>{business.url_image_business || 'No especificado'}</td>
                                     <td className='admin-users-actions'>
                                         <button 
                                             className='admin-users-btn-action admin-users-btn-edit' 
@@ -725,32 +775,143 @@ function BenefitsContent() {
                             </div>
                             <div className='admin-users-form-group'>
                                 <label>Imagen del negocio</label>
-                                {editBusinessFormData.url_image_business && (
-                                    <div className='admin-users-image-preview-container'>
-                                        <img 
-                                            src={editBusinessFormData.url_image_business} 
-                                            alt="Preview" 
-                                            className='admin-users-image-preview' 
-                                        />
-                                        <button 
-                                            type='button' 
-                                            className='admin-users-btn-remove-image' 
-                                            onClick={() => setEditBusinessFormData(prev => ({ ...prev, url_image_business: '' }))}
-                                            disabled={isSubmittingBusiness}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {editBusinessFormData.url_image_business && !editImageUpload.imagePreview && (
+                                        <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+                                            <img 
+                                                src={editBusinessFormData.url_image_business} 
+                                                alt="Imagen actual" 
+                                                style={{ 
+                                                    width: '100%', 
+                                                    height: '100%', 
+                                                    objectFit: 'cover', 
+                                                    borderRadius: '8px',
+                                                    border: '2px solid #e2e8f0'
+                                                }}
+                                            />
+                                            <button
+                                                type='button'
+                                                onClick={handleRemoveEditImage}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '8px',
+                                                    right: '8px',
+                                                    background: '#ef4444',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '50%',
+                                                    width: '30px',
+                                                    height: '30px',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {editImageUpload.imagePreview && (
+                                        <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+                                            <img 
+                                                src={editImageUpload.imagePreview} 
+                                                alt="Preview" 
+                                                style={{ 
+                                                    width: '100%', 
+                                                    height: '100%', 
+                                                    objectFit: 'cover', 
+                                                    borderRadius: '8px',
+                                                    border: '2px solid #e2e8f0'
+                                                }}
+                                            />
+                                            <button
+                                                type='button'
+                                                onClick={handleRemoveEditImage}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '8px',
+                                                    right: '8px',
+                                                    background: '#ef4444',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '50%',
+                                                    width: '30px',
+                                                    height: '30px',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {!editBusinessFormData.url_image_business && !editImageUpload.imagePreview && (
+                                        <div>
+                                            <input 
+                                                type='file' 
+                                                id='edit-image'
+                                                accept='image/jpeg,image/jpg,image/webp'
+                                                onChange={editImageUpload.handleFileSelect}
+                                                disabled={isSubmittingBusiness || editImageUpload.uploading}
+                                                style={{ marginBottom: '0.5rem' }}
+                                            />
+                                            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>
+                                                Formatos permitidos: JPG, JPEG, WEBP (máx. 5MB)
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {(editBusinessFormData.url_image_business || editImageUpload.imagePreview) && !editImageUpload.selectedFile && (
+                                        <div>
+                                            <input 
+                                                type='file' 
+                                                id='edit-image-replace'
+                                                accept='image/jpeg,image/jpg,image/webp'
+                                                onChange={editImageUpload.handleFileSelect}
+                                                disabled={isSubmittingBusiness || editImageUpload.uploading}
+                                                style={{ marginBottom: '0.5rem' }}
+                                            />
+                                            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>
+                                                Selecciona una nueva imagen para reemplazar la actual
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {editImageUpload.selectedFile && (
+                                        <button
+                                            type='button'
+                                            onClick={handleUploadEditImage}
+                                            disabled={editImageUpload.uploading}
+                                            style={{
+                                                padding: '0.5rem 1rem',
+                                                background: '#3b82f6',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '6px',
+                                                cursor: editImageUpload.uploading ? 'not-allowed' : 'pointer',
+                                                opacity: editImageUpload.uploading ? 0.6 : 1
+                                            }}
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"/></svg>
+                                            {editImageUpload.uploading ? 'Subiendo...' : 'Subir Nueva Imagen'}
                                         </button>
-                                    </div>
-                                )}
-                                <input 
-                                    type='text' 
-                                    id='business-url_image_business'
-                                    name='url_image_business'
-                                    placeholder='URL de la imagen'
-                                    value={editBusinessFormData.url_image_business}
-                                    onChange={handleBusinessInputChange}
-                                    disabled={isSubmittingBusiness}
-                                />
+                                    )}
+                                </div>
+                                <div className='admin-users-form-group'>
+                                    <label htmlFor='business-url_image_business'>O ingresa URL de Imagen</label>
+                                    <input 
+                                        type='url' 
+                                        id='business-url_image_business'
+                                        name='url_image_business'
+                                        value={editBusinessFormData.url_image_business}
+                                        onChange={handleBusinessInputChange}
+                                        disabled={isSubmittingBusiness || !!editImageUpload.selectedFile}
+                                    />
+                                </div>
                             </div>
                             <div className='admin-users-modal-actions'>
                                 <button 
@@ -831,14 +992,93 @@ function BenefitsContent() {
                                         </button>
                                     </div>
                                 )}
+                                <label>Imagen del Negocio</label>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {createImageUpload.imagePreview ? (
+                                        <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+                                            <img 
+                                                src={createImageUpload.imagePreview} 
+                                                alt="Preview" 
+                                                style={{ 
+                                                    width: '100%', 
+                                                    height: '100%', 
+                                                    objectFit: 'cover', 
+                                                    borderRadius: '8px',
+                                                    border: '2px solid #e2e8f0'
+                                                }}
+                                            />
+                                            <button
+                                                type='button'
+                                                onClick={handleRemoveImage}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '8px',
+                                                    right: '8px',
+                                                    background: '#ef4444',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '50%',
+                                                    width: '30px',
+                                                    height: '30px',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <input 
+                                                type='file' 
+                                                id='create-image'
+                                                accept='image/jpeg,image/jpg,image/webp'
+                                                onChange={createImageUpload.handleFileSelect}
+                                                disabled={isSubmitting || createImageUpload.uploading}
+                                                style={{ marginBottom: '0.5rem' }}
+                                            />
+                                            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>
+                                                Formatos permitidos: JPG, JPEG, WEBP (máx. 5MB)
+                                            </p>
+                                        </div>
+                                    )}
+                                    {createImageUpload.selectedFile && !createBusinessFormData.url_image_business && (
+                                        <button
+                                            type='button'
+                                            onClick={handleUploadImage}
+                                            disabled={createImageUpload.uploading}
+                                            style={{
+                                                padding: '0.5rem 1rem',
+                                                background: '#3b82f6',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '6px',
+                                                cursor: createImageUpload.uploading ? 'not-allowed' : 'pointer',
+                                                opacity: createImageUpload.uploading ? 0.6 : 1
+                                            }}
+                                        >
+                                            {createImageUpload.uploading ? 'Subiendo...' : 'Subir Imagen'}
+                                        </button>
+                                    )}
+                                    {createBusinessFormData.url_image_business && (
+                                        <p style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: '600', margin: 0 }}>
+                                            ✓ Imagen subida correctamente
+                                        </p>
+                                    )}
+                                </div>
+                                </div>
+                            <div className='admin-users-form-group'>
+                                <label htmlFor='create-url_image'>O ingresa URL de Imagen</label>
                                 <input 
-                                    type='text' 
-                                    id='create-business-url_image_business'
-                                    name='url_image_business'
-                                    placeholder='URL de la imagen'
+                                    type='url' 
+                                    id='create-url_image'
+                                    name='url_image'
                                     value={createBusinessFormData.url_image_business}
                                     onChange={handleCreateBusinessInputChange}
-                                    disabled={isSubmittingBusiness}
+                                    disabled={isSubmittingBusiness || !!createImageUpload.selectedFile}
+                                    placeholder='https://ejemplo.com/imagen.jpg'
                                 />
                             </div>
                             <div className='admin-users-modal-actions'>

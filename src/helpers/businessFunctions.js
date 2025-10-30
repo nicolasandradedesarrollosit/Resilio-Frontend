@@ -47,21 +47,35 @@ export async function createBusiness(businessData) {
 
 export async function uploadBusinessImage(imageFile) {
     try {
-        const formData = new FormData();
-        formData.append('image', imageFile);
+        const reader = new FileReader();
+        
+        return new Promise((resolve, reject) => {
+            reader.onload = async () => {
+                try {
+                    const base64Image = reader.result;
 
-        const response = await fetch(`${API_URL}/api/admin/business/upload-image`, {
-            method: 'POST',
-            credentials: 'include',
-            body: formData
+                    const data = await authPost('/api/admin/business/upload-image', {
+                        image: base64Image,
+                        fileName: imageFile.name,
+                        mimeType: imageFile.type
+                    });
+
+                    if (!data) {
+                        throw new Error('Error al subir la imagen del negocio');
+                    }
+
+                    resolve(data);
+                } catch (err) {
+                    reject(err);
+                }
+            };
+
+            reader.onerror = () => {
+                reject(new Error('Error al leer el archivo'));
+            };
+
+            reader.readAsDataURL(imageFile);
         });
-
-        if (!response.ok) {
-            throw new Error('Error al subir la imagen del negocio');
-        }
-
-        const data = await response.json();
-        return data;
     } catch (err) {
         throw err;
     }
