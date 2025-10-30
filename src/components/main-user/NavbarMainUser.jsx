@@ -19,7 +19,7 @@ function NavbarMainUser({ userData }) {
       
       <div className='container-links-main-user'>
         <Link 
-          className={`link-navigate-user ${location.pathname === '/main/user ' ? 'active' : ''}`}
+          className={`link-navigate-user ${location.pathname === '/main/user' ? 'active' : ''}`}
           to={'/main/user'}
         >
           Inicio
@@ -36,7 +36,6 @@ function NavbarMainUser({ userData }) {
         >
           Eventos
         </Link>
-        
       </div>
     </nav>
   );

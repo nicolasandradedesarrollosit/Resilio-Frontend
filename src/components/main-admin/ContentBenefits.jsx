@@ -550,15 +550,14 @@ function BenefitsContent() {
                                     />
                                 </div>
                                 <div className='admin-users-form-group'>
-                                    <label htmlFor='create-id_business'>ID Negocio</label>
-                                    <input 
-                                        type='text' 
-                                        id='create-id_business_discount'
-                                        name='id_business_discount'
-                                        value={createFormData.id_business_discount}
-                                        onChange={handleCreateInputChange}
-                                        disabled={isSubmitting}
-                                    />
+                                    <select name="id_business_discount" id="create-id_business_discount" value={createFormData.id_business_discount} onChange={handleCreateInputChange} disabled={isSubmitting}>
+                                        <option value="">Seleccione un negocio</option>
+                                        {businessList.map(business => (
+                                            <option key={business.id} value={business.id}>
+                                                {business.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className='admin-users-modal-actions'>
                                     <button 
@@ -682,7 +681,17 @@ function BenefitsContent() {
                                     <td>{business.id}</td>
                                     <td className='admin-users-name'>{business.name || 'No especificado'}</td>
                                     <td>{business.location || 'No especificado'}</td>
-                                    <td>{business.url_image_business || 'No especificado'}</td>
+                                    <td>
+                                        {business.url_image_business ? (
+                                            <img 
+                                                src={business.url_image_business} 
+                                                alt={business.name} 
+                                                className="admin-event-thumbnail"
+                                            />
+                                        ) : (
+                                            'Sin imagen'
+                                        )}
+                                    </td>
                                     <td className='admin-users-actions'>
                                         <button 
                                             className='admin-users-btn-action admin-users-btn-edit' 
