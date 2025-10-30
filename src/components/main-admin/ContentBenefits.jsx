@@ -552,7 +552,7 @@ function BenefitsContent() {
                                 <div className='admin-users-form-group'>
                                     <select name="id_business_discount" id="create-id_business_discount" value={createFormData.id_business_discount} onChange={handleCreateInputChange} disabled={isSubmitting}>
                                         <option value="">Seleccione un negocio</option>
-                                        {businessList.map(business => (
+                                        {paginatedBusinesses.map(business => (
                                             <option key={business.id} value={business.id}>
                                                 {business.name}
                                             </option>
