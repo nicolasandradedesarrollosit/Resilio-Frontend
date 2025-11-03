@@ -31,10 +31,10 @@ function NavbarMainUser({ userData }) {
           Beneficios
         </Link>
         <Link 
-          className={`link-navigate-user ${location.pathname === '/events/user' ? 'active' : ''}`}
-          to={'/events/user'}
+          className={`link-navigate-user ${location.pathname === '/my-benefits/user' ? 'active' : ''}`}
+          to={'/my-benefits/user'}
         >
-          Eventos
+          Mis Beneficios
         </Link>
       </div>
     </nav>

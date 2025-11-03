@@ -3,6 +3,7 @@ import { AuthContext } from './AuthContextOauth';
 import { getEvents } from '../../helpers/eventsFunctions';
 import { getBenefits } from '../../helpers/benefitFunctions';
 import { getBannerData } from '../../helpers/bannerData';
+import { getMyBenefits } from '../../helpers/myBenefitsFunctions';
 
 export const UserContext = createContext();
 
@@ -14,6 +15,8 @@ export default function UserProvider({ children }) {
     const [banner, setBanner] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [myBenefits, setMyBenefits] = useState([]);
+    const userId = userData?.id;
 
     
     const loadAllUserData = useCallback(async () => {
@@ -26,10 +29,11 @@ export default function UserProvider({ children }) {
         setError(null);
 
         try {
-            const [eventsResult, benefitsResult, bannerResult] = await Promise.allSettled([
+            const [eventsResult, benefitsResult, bannerResult, myBenefitsResult] = await Promise.allSettled([
                 getEvents(),
                 getBenefits(),
-                getBannerData()
+                getBannerData(),
+                getMyBenefits(userId)
             ]);
 
             if (eventsResult.status === 'fulfilled') {
@@ -77,6 +81,20 @@ export default function UserProvider({ children }) {
                 setBanner(null);
             }
 
+            if (myBenefitsResult.status === 'fulfilled') {
+                const myBenefitsData = myBenefitsResult.value;
+                if (Array.isArray(myBenefitsData)) {
+                    setMyBenefits(myBenefitsData);
+                } else if (myBenefitsData?.ok && Array.isArray(myBenefitsData.data)) {
+                    setMyBenefits(myBenefitsData.data);
+                } else if (myBenefitsData?.data && Array.isArray(myBenefitsData.data)) {
+                    setMyBenefits(myBenefitsData.data);
+                } else {
+                    setMyBenefits([]);
+                }
+            } else {
+                setMyBenefits([]);
+            }
         } catch (err) {
             setError(err.message || 'Error al cargar datos del usuario');
         } finally {

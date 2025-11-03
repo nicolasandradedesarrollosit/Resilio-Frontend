@@ -19,7 +19,7 @@ function PartnerBenefits() {
 
     return(
         <div className="partner_benefits_container">
-            <Link to={'/user/benefits'} className="benefits-title-link"><h2 className="partner-benefits-title">Red de beneficios</h2></Link>
+            <Link to={'/benefits/user'} className="benefits-title-link"><h2 className="partner-benefits-title">Red de beneficios</h2></Link>
             <p className="subtitle-benefits">Descubre los beneficios exclusivos que ofrecemos a nuestros socios.</p>
             
             {formattedBenefits.length === 0 ? (

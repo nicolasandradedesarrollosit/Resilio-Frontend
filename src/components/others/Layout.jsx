@@ -18,6 +18,7 @@ import AdminBenefits from '../../pages/AdminBenefits.jsx';
 import AdminLayout from './AdminLayout.jsx';
 import UserLayout from './UserLayout.jsx';
 import UserBenefits from '../../pages/UserBenefits.jsx';
+import UserMyBenefits from '../../pages/UserMyBenefits.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -72,7 +73,18 @@ function Layout(){
             </ProtectedRoute>
           } 
         />
-        
+
+        <Route 
+          path='/my-benefits/user' 
+          element={
+            <ProtectedRoute requiredRole="user">
+              <UserLayout>
+                <UserMyBenefits />
+              </UserLayout>
+            </ProtectedRoute>
+          } 
+        />
+
         <Route 
           path='/main/admin' 
           element={

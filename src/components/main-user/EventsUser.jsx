@@ -10,7 +10,7 @@ function EventsUser() {
     return (
             <section className="events-container">
                 <div className="events-header">
-                    <Link to={'/user/events'} className="events-title-link"><h2 className="events-title">Eventos destacados</h2></Link>
+                    <Link className="events-title-link"><h2 className="events-title">Eventos destacados</h2></Link>
                     <p className='subtitle-events'>Explora los eventos más relevantes para ti</p>
                 </div>
                 {events.length === 0 ? (
