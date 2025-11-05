@@ -90,7 +90,9 @@ function Layout(){
           path='/user/map/benefits' 
           element={
             <ProtectedRoute requiredRole="user">
-              <MapBenefitsPage />
+              <UserLayout>
+                <MapBenefitsPage />
+              </UserLayout>
             </ProtectedRoute>
           } 
         />
