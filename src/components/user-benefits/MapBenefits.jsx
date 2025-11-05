@@ -12,7 +12,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-// Componente para ajustar el mapa a los marcadores
 function FitBounds({ markers }) {
   const map = useMap();
 
@@ -92,7 +91,6 @@ function MapBenefits({ benefits = [] }) {
       const results = [];
       const errors = [];
 
-      // Geocodificar cada beneficio con un delay para no saturar la API
       for (let i = 0; i < benefits.length; i++) {
         const benefit = benefits[i];
         
@@ -109,7 +107,6 @@ function MapBenefits({ benefits = [] }) {
             errors.push(result);
           }
 
-          // Delay de 1 segundo entre peticiones (política de Nominatim)
           if (i < benefits.length - 1) {
             await new Promise(resolve => setTimeout(resolve, 1000));
           }

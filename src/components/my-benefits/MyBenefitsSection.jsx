@@ -1,6 +1,3 @@
-import {
-    getMyBenefits
-} from '../../helpers/myBenefitsFunctions';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import '../../styles/my-benefits/myBenefits.css';
