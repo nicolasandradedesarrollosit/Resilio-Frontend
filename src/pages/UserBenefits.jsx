@@ -3,7 +3,7 @@ import NavbarMainUser from '../components/main-user/NavbarMainUser';
 import BenefitsSection from '../components/user-benefits/BenefitsSection';
 import MapBenefitsSection from '../components/user-benefits/MapBenefitsSection';
 import { UserContext } from '../components/context/UserContext';
-import '../styles/user-benefits/userBenefitss.css';
+import '../styles/user-benefits/userBenefits.css';
 
 function UserBenefits() {
     const { userData, benefits } = useContext(UserContext);
