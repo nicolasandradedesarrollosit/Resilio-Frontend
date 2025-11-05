@@ -1,26 +1,28 @@
 import React, {useEffect, useContext} from 'react';
 import NavbarMainUser from '../components/main-user/NavbarMainUser';
 import BenefitsSection from '../components/user-benefits/BenefitsSection';
-import MapBenefits from '../components/user-benefits/MapBenefits';
+import MapBenefitsSection from '../components/user-benefits/MapBenefitsSection';
 import { UserContext } from '../components/context/UserContext';
-import '../styles/user-benefits/userBenefits.css';
+import '../styles/user-benefits/userBenefitss.css';
 
 function UserBenefits() {
-    const { userData } = useContext(UserContext);
+    const { userData, benefits } = useContext(UserContext);
+    
     useEffect(() => {
-            const contenedor = document.getElementById("top");
-            if (contenedor) {
-                contenedor.scrollIntoView({ behavior: "instant" });
-            }
-        }, []);
+        const contenedor = document.getElementById("top");
+        if (contenedor) {
+            contenedor.scrollIntoView({ behavior: "instant" });
+        }
+    }, []);
+    
     return (
         <>
             <div id='top'></div>
             <div className='main-container-user-events'>
                 <NavbarMainUser userData={userData} />
                 <main className='main-content-user-events'>
-                    <MapBenefits benefits={userData.benefits} />
-                    <BenefitsSection userData={userData}/>
+                    <MapBenefitsSection benefits={benefits} />
+                    <BenefitsSection userData={userData} />
                 </main>
             </div>
         </>
