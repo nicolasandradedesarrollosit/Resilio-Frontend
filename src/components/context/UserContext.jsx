@@ -164,6 +164,7 @@ export default function UserProvider({ children }) {
         events,
         benefits,
         banner,
+        myBenefits,
         loading,
         error,
 

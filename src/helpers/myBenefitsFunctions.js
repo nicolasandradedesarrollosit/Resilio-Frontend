@@ -1,7 +1,8 @@
-async function getMyBenefits(userData) {
+import { authGet } from '../services/api/apiClient';
+
+export async function getMyBenefits(userId) {
     try {
-        id = userData?.id;
-        const data = await authGet(`api/my-benefits/:${id}`);
+        const data = await authGet(`/api/my-benefits/${userId}`);
         return data || [];
     }
     catch (err) {
