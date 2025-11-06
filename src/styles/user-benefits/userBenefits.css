@@ -70,23 +70,98 @@
     width: 100%;
 }
 
+/* Pantallas grandes */
+@media (max-width: 1440px) {
+    .main-content-user-events {
+        padding: 38px 36px 58px;
+        gap: 58px;
+    }
+}
+
+/* Tablet y pantallas medianas */
 @media (max-width: 1024px) {
-    .main-content-user {
+    .main-content-user-events {
         padding: 36px 32px 56px;
         gap: 56px;
     }
-}
 
-@media (max-width: 768px) {
-    .main-content-user {
-        padding: 30px 24px 50px;
-        gap: 50px;
+    .container-top-banner {
+        min-height: 55px;
     }
 }
 
+/* Tablets pequeñas y móviles grandes */
+@media (max-width: 768px) {
+    .main-container-user-events {
+        background:
+            radial-gradient(1000px 700px at 10% -10%, rgba(124, 58, 237, 0.22), transparent 65%),
+            radial-gradient(900px 800px at 110% 10%, rgba(79, 70, 229, 0.20), transparent 65%),
+            radial-gradient(600px 600px at 50% 100%, rgba(109, 40, 217, 0.12), transparent 70%),
+            #0b1022;
+    }
+
+    .main-content-user-events {
+        padding: 30px 24px 50px;
+        gap: 50px;
+    }
+
+    .container-top-banner {
+        min-height: 50px;
+    }
+}
+
+/* Móviles pequeños */
 @media (max-width: 480px) {
-    .main-content-user {
+    .main-container-user-events {
+        background:
+            radial-gradient(800px 600px at 10% -10%, rgba(124, 58, 237, 0.22), transparent 65%),
+            radial-gradient(700px 700px at 110% 10%, rgba(79, 70, 229, 0.20), transparent 65%),
+            radial-gradient(500px 500px at 50% 100%, rgba(109, 40, 217, 0.12), transparent 70%),
+            #0b1022;
+    }
+
+    .main-content-user-events {
         padding: 24px 16px 40px;
         gap: 40px;
+    }
+
+    .container-top-banner {
+        min-height: 45px;
+    }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+    .main-content-user-events {
+        padding: 20px 12px 36px;
+        gap: 36px;
+    }
+
+    .container-top-banner {
+        min-height: 40px;
+    }
+}
+
+/* Orientación horizontal en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+    .main-container-user-events {
+        min-height: auto;
+    }
+
+    .main-content-user-events {
+        padding: 24px 28px 40px;
+    }
+}
+
+/* Reducir movimiento para usuarios con preferencias de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .main-container-user::before {
+        animation: none;
+    }
+
+    @keyframes slideTopBorder {
+        0%, 100% {
+            opacity: 0.5;
+        }
     }
 }
