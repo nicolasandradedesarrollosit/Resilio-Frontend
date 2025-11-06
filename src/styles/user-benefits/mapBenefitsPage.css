@@ -1,6 +1,7 @@
 .map-benefits-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 100%;
+  background: radial-gradient(1400px 900px at 10% -10%,rgba(124,58,237,.22),transparent 65%),radial-gradient(1200px 1000px at 110% 10%,rgba(79,70,229,.2),transparent 65%),radial-gradient(800px 800px at 50% 100%,rgba(109,40,217,.12),transparent 70%),#0b1022; 
   padding: 2rem;
 }
 
@@ -48,10 +49,11 @@
 .map-page-content {
   max-width: 1200px;
   margin: 0 auto;
-  background: white;
+  background: #fff;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px #0003;
+  background: rgba(30, 41, 59, 0.8);
 }
 
 .map-page-loading {
@@ -104,7 +106,6 @@
   font-size: 1rem;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .map-benefits-page {
     padding: 1rem;

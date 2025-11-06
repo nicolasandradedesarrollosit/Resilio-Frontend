@@ -23,7 +23,7 @@
     z-index: 0;
 }
 
-.benefits-events-user h2 {
+h2 {
     font-size: 2.5rem;
     font-weight: 700;
     text-align: center;
@@ -37,7 +37,7 @@
     transition: color 0.4s ease;
 }
 
-.benefits-events-user h2::after {
+h2::after {
     content: '';
     display: block;
     width: 90px;
@@ -47,7 +47,6 @@
     border-radius: 2px;
 }
 
-/* Filtros de categorías */
 .container-filters {
     display: flex;
     gap: 12px;
