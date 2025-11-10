@@ -12,6 +12,7 @@ import {
 } from '../../helpers/benefitFunctions';
 import {
     getAdminBusiness,
+    getAllBusinesses,
     filterBusiness,
     createBusiness,
     uploadBusinessImage,
@@ -37,6 +38,7 @@ function BenefitsContent() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [businesses, setBusinesses] = useState([]);
+    const [allBusinesses, setAllBusinesses] = useState([]); // Todos los negocios para el select
     const [businessError, setBusinessError] = useState(null);
     const [currentBusinessPage, setCurrentBusinessPage] = useState(1);
     const [businessSearchTerm, setBusinessSearchTerm] = useState('');
@@ -53,6 +55,7 @@ function BenefitsContent() {
     useEffect(() => {
         loadBenefits();
         loadBusinesses();
+        loadAllBusinesses();
     }, []);
 
     const loadBenefits = async () => {
@@ -70,6 +73,15 @@ function BenefitsContent() {
             setBusinesses(data);
         } catch (err) {
             setBusinessError(err.message);
+        }
+    };
+
+    const loadAllBusinesses = async () => {
+        try {
+            const data = await getAllBusinesses();
+            setAllBusinesses(data);
+        } catch (err) {
+            console.error('Error loading all businesses:', err);
         }
     };
 
@@ -115,11 +127,26 @@ function BenefitsContent() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await createBenefit(createFormData);
+            // Convertir campos numéricos a integers
+            const benefitDataToSend = {
+                name: createFormData.name,
+                q_of_codes: createFormData.q_of_codes ? parseInt(createFormData.q_of_codes, 10) : 0,
+                discount: createFormData.discount ? parseInt(createFormData.discount, 10) : 0,
+                id_business_discount: parseInt(createFormData.id_business_discount, 10)
+            };
+
+            // Validación básica
+            if (!benefitDataToSend.name || !benefitDataToSend.id_business_discount) {
+                alert('El nombre y el negocio son campos requeridos');
+                return;
+            }
+
+            await createBenefit(benefitDataToSend);
             setShowCreateModal(false);
             setCurrentPage(1);
             loadBenefits();
         } catch (err) {
+            alert(err.message || 'Error al crear el beneficio');
         } finally {
             setIsSubmitting(false);
         }
@@ -129,10 +156,19 @@ function BenefitsContent() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await updateBenefit(selectedBenefit.id, editFormData);
+            // Convertir campos numéricos a integers
+            const benefitDataToSend = {
+                name: editFormData.name,
+                q_of_codes: editFormData.q_of_codes ? parseInt(editFormData.q_of_codes, 10) : 0,
+                discount: editFormData.discount ? parseInt(editFormData.discount, 10) : 0,
+                id_business_discount: parseInt(editFormData.id_business_discount, 10)
+            };
+
+            await updateBenefit(selectedBenefit.id, benefitDataToSend);
             setShowEditModal(false);
             loadBenefits();
         } catch (err) {
+            alert(err.message || 'Error al actualizar el beneficio');
         } finally {
             setIsSubmitting(false);
         }
@@ -182,12 +218,25 @@ function BenefitsContent() {
         e.preventDefault();
         setIsSubmittingBusiness(true);
         try {
+            // Validar campos requeridos
+            if (!createBusinessFormData.name || !createBusinessFormData.name.trim()) {
+                alert('El nombre del negocio es requerido');
+                return;
+            }
+
+            if (!createBusinessFormData.location || !createBusinessFormData.location.trim()) {
+                alert('La ubicación del negocio es requerida');
+                return;
+            }
+
             await createBusiness(createBusinessFormData);
             setShowCreateBusinessModal(false);
             setCurrentBusinessPage(1);
             loadBusinesses();
+            loadAllBusinesses(); // Recargar todos los negocios para el select
             createImageUpload.resetImage();
         } catch (err) {
+            alert(err.message || 'Error al crear el negocio');
         } finally {
             setIsSubmittingBusiness(false);
         }
@@ -197,11 +246,19 @@ function BenefitsContent() {
         e.preventDefault();
         setIsSubmittingBusiness(true);
         try {
+            // Validar campos requeridos
+            if (!editBusinessFormData.name || !editBusinessFormData.name.trim()) {
+                alert('El nombre del negocio es requerido');
+                return;
+            }
+
             await updateBusiness(selectedBusiness.id, editBusinessFormData);
             setShowEditBusinessModal(false);
             loadBusinesses();
+            loadAllBusinesses(); // Recargar todos los negocios para el select
             editImageUpload.resetImage();
         } catch (err) {
+            alert(err.message || 'Error al actualizar el negocio');
         } finally {
             setIsSubmittingBusiness(false);
         }
@@ -213,7 +270,9 @@ function BenefitsContent() {
             await deleteBusiness(selectedBusiness.id);
             setShowDeleteBusinessModal(false);
             loadBusinesses();
+            loadAllBusinesses(); // Recargar todos los negocios para el select
         } catch (err) {
+            alert(err.message || 'Error al eliminar el negocio');
         } finally {
             setIsSubmittingBusiness(false);
         }
@@ -226,7 +285,10 @@ function BenefitsContent() {
     const editImageUpload = useImageUpload();
 
     const handleUploadImage = async () => {
-        if (!createImageUpload.selectedFile) return;
+        if (!createImageUpload.selectedFile) {
+            alert('Por favor selecciona una imagen primero');
+            return;
+        }
 
         createImageUpload.setUploading(true);
         try {
@@ -234,7 +296,9 @@ function BenefitsContent() {
             setCreateBusinessFormData(prev => ({ ...prev, url_image_business: data.url }));
             alert('Imagen subida exitosamente');
         } catch (err) {
-            alert(err.message || 'Error al subir la imagen');
+            const errorMessage = err.message || 'Error al subir la imagen';
+            alert(errorMessage);
+            console.error('Error uploading image:', err);
         } finally {
             createImageUpload.setUploading(false);
         }
@@ -247,7 +311,7 @@ function BenefitsContent() {
 
     const handleUploadEditImage = async () => {
         if (!editImageUpload.selectedFile) {
-            alert('Por favor selecciona una imagen');
+            alert('Por favor selecciona una imagen primero');
             return;
         }
 
@@ -257,7 +321,9 @@ function BenefitsContent() {
             setEditBusinessFormData(prev => ({ ...prev, url_image_business: data.url }));
             alert('Imagen subida exitosamente');
         } catch (err) {
-            alert(err.message || 'Error al subir la imagen');
+            const errorMessage = err.message || 'Error al subir la imagen';
+            alert(errorMessage);
+            console.error('Error uploading image:', err);
         } finally {
             editImageUpload.setUploading(false);
         }
@@ -468,15 +534,22 @@ function BenefitsContent() {
                                     />
                                 </div>
                                 <div className='admin-users-form-group'>
-                                    <label htmlFor='id_business'>ID Negocio</label>
-                                    <input 
-                                        type='text' 
+                                    <label htmlFor='id_business_discount'>Negocio *</label>
+                                    <select 
                                         id='id_business_discount'
                                         name='id_business_discount'
-                                        value={editFormData.id_business_discount}
+                                        value={editFormData.id_business_discount || ''}
                                         onChange={handleInputChange}
                                         disabled={isSubmitting}
-                                    />
+                                        required
+                                    >
+                                        <option value="">Seleccione un negocio</option>
+                                        {allBusinesses.map(business => (
+                                            <option key={business.id} value={business.id}>
+                                                {business.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className='admin-users-modal-actions'>
                                     <button 
@@ -550,9 +623,17 @@ function BenefitsContent() {
                                     />
                                 </div>
                                 <div className='admin-users-form-group'>
-                                    <select name="id_business_discount" id="create-id_business_discount" value={createFormData.id_business_discount} onChange={handleCreateInputChange} disabled={isSubmitting}>
+                                    <label htmlFor='create-id_business_discount'>Negocio *</label>
+                                    <select 
+                                        name="id_business_discount" 
+                                        id="create-id_business_discount" 
+                                        value={createFormData.id_business_discount || ''} 
+                                        onChange={handleCreateInputChange} 
+                                        disabled={isSubmitting}
+                                        required
+                                    >
                                         <option value="">Seleccione un negocio</option>
-                                        {paginatedBusinesses.map(business => (
+                                        {allBusinesses.map(business => (
                                             <option key={business.id} value={business.id}>
                                                 {business.name}
                                             </option>

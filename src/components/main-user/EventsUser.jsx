@@ -24,7 +24,7 @@ function EventsUser() {
                     {events.map(( event, index ) => (
                         <article key={event.id ?? index} className={`event-card`}>
                             <div className='container-event-image'>
-                                <img src={event.image || '/logo-resilio-group.png'} alt={event.title || 'Evento'} />
+                                <img src={event.url_image_event || '/logo-resilio-group.png'} alt={event.name || 'Evento'} />
                             </div>
                             <div className='container-event-content'>
                                 <div className='container-event-text'>

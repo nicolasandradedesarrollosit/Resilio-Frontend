@@ -393,7 +393,6 @@ h2::after {
     }
 }
 
-/* Pantallas grandes */
 @media (max-width: 1440px) {
     .benefits-events-user {
         padding: 44px 22px;
@@ -410,7 +409,6 @@ h2::after {
     }
 }
 
-/* Tablet y pantallas medianas */
 @media (max-width: 1024px) {
     .benefits-events-user {
         padding: 42px 20px;
@@ -461,7 +459,6 @@ h2::after {
     }
 }
 
-/* Tablets pequeñas y móviles grandes */
 @media (max-width: 768px) {
     .benefits-events-user {
         padding: 36px 18px;
