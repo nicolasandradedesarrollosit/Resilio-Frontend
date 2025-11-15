@@ -32,10 +32,12 @@ export default function UserProvider({ children }) {
     
     const loadAllUserData = useCallback(async () => {
         if (!userData || !userId) {
+            console.log('[UserContext] No hay userData o userId, saliendo...', { userData, userId });
             setLoading(false);
             return;
         }
 
+        console.log('[UserContext] Iniciando carga de datos para userId:', userId);
         setLoading(true);
         setError(null);
 
@@ -46,6 +48,13 @@ export default function UserProvider({ children }) {
                 getBannerData(),
                 getMyBenefits(userId)
             ]);
+
+            console.log('[UserContext] Resultados recibidos:', {
+                events: eventsResult.status,
+                benefits: benefitsResult.status,
+                banner: bannerResult.status,
+                myBenefits: myBenefitsResult.status
+            });
 
             if (eventsResult.status === 'fulfilled') {
                 const eventsData = eventsResult.value;
@@ -94,6 +103,7 @@ export default function UserProvider({ children }) {
 
             if (myBenefitsResult.status === 'fulfilled') {
                 const myBenefitsData = myBenefitsResult.value;
+                console.log('[UserContext] myBenefits data recibida:', myBenefitsData);
                 if (Array.isArray(myBenefitsData)) {
                     setMyBenefits(myBenefitsData);
                 } else if (myBenefitsData?.ok && Array.isArray(myBenefitsData.data)) {
@@ -104,11 +114,14 @@ export default function UserProvider({ children }) {
                     setMyBenefits([]);
                 }
             } else {
+                console.error('[UserContext] myBenefits falló:', myBenefitsResult.reason);
                 setMyBenefits([]);
             }
         } catch (err) {
+            console.error('[UserContext] Error en loadAllUserData:', err);
             setError(err.message || 'Error al cargar datos del usuario');
         } finally {
+            console.log('[UserContext] Finalizando carga, setLoading(false)');
             setLoading(false);
         }
     }, [userData, userId]);
