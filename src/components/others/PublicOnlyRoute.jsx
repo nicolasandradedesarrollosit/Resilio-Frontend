@@ -10,18 +10,15 @@ import LoadingScreen from './LoadingScreen';
 const PublicOnlyRoute = ({ children }) => {
     const { userData, authLoading } = useContext(AuthContext);
 
-    // Mientras se verifica la autenticación, mostrar loading
     if (authLoading) {
         return <LoadingScreen message="Verificando sesión" subtitle="Un momento por favor..." />;
     }
 
-    // Si el usuario ya está logueado, redirigir a su página principal
     if (userData) {
         const destination = userData.role === 'admin' ? '/main/admin' : '/main/user';
         return <Navigate to={destination} replace />;
     }
 
-    // Si no está logueado, permitir acceso a la ruta pública
     return children;
 };
 
