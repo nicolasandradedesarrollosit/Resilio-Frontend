@@ -18,9 +18,21 @@ export default function UserProvider({ children }) {
     const [myBenefits, setMyBenefits] = useState([]);
     const userId = userData?.id;
 
+    // Reset all user-specific data when user changes or logs out
+    useEffect(() => {
+        if (!userData) {
+            setEvents([]);
+            setBenefits([]);
+            setBanner(null);
+            setMyBenefits([]);
+            setError(null);
+            setLoading(false);
+        }
+    }, [userData]);
+
     
     const loadAllUserData = useCallback(async () => {
-        if (!userData) {
+        if (!userData || !userId) {
             setLoading(false);
             return;
         }
@@ -100,7 +112,7 @@ export default function UserProvider({ children }) {
         } finally {
             setLoading(false);
         }
-    }, [userData]);
+    }, [userData, userId]);
 
     
     const refreshEvents = useCallback(async () => {
@@ -153,10 +165,10 @@ export default function UserProvider({ children }) {
     }, [loadAllUserData]);
 
     useEffect(() => {
-        if (userData) {
+        if (userData && userId) {
             loadAllUserData();
         }
-    }, [userData, loadAllUserData]);
+    }, [userData, userId, loadAllUserData]);
 
     const value = {
         userData,

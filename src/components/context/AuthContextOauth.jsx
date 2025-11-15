@@ -46,10 +46,15 @@ const AuthProvider = ({ children }) => {
     const handleLogOut = async () => {
         try {
             setIsLoggingOut(true);
-            await logOut();
+            
+            // Clear user data immediately to prevent stale data
             setUserData(null);
+            
+            await logOut();
+            
             setIsLoggingOut(false);
         } catch (error) {
+            // Even if logout fails, clear local state
             setUserData(null);
             setIsLoggingOut(false);
             throw error;

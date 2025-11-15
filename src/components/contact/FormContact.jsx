@@ -219,73 +219,104 @@ function FormContact(){
                     animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 `;
 
-                content.innerHTML = `
-                    <style>
-                        @keyframes modalSlideIn {
-                            from {
-                                opacity: 0;
-                                transform: translateY(-20px) scale(0.95);
-                            }
-                            to {
-                                opacity: 1;
-                                transform: translateY(0) scale(1);
-                            }
+                // Safely create style element
+                const styleElement = document.createElement('style');
+                styleElement.textContent = `
+                    @keyframes modalSlideIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-20px) scale(0.95);
                         }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0) scale(1);
+                        }
+                    }
 
-                        .svg{
-                            height: 30px;
-                            width: 30px;
-                        }
+                    .svg{
+                        height: 30px;
+                        width: 30px;
+                    }
 
-                        .email-btn {
-                            width: 100%;
-                            padding: 1rem 1.5rem;
-                            margin: 0.5rem 0;
-                            border: 2px solid rgba(148, 163, 184, 0.2);
-                            border-radius: 15px;
-                            background: rgba(30, 41, 59, 0.8);
-                            color: #f8fafc;
-                            cursor: pointer;
-                            font-size: 1rem;
-                            font-weight: 500;
-                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 0.75rem;
-                        }
-                        .email-btn:hover {
-                            transform: translateY(-2px);
-                            border-color: #8b5cf6;
-                            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-                            background: rgba(139, 92, 246, 0.1);
-                        }
-                        .email-btn.gmail:hover { border-color: #ea4335; box-shadow: 0 0 20px rgba(234, 67, 53, 0.3); }
-                        .email-btn.outlook:hover { border-color: #0078d4; box-shadow: 0 0 20px rgba(0, 120, 212, 0.3); }
-                        .email-btn.yahoo:hover { border-color: #7b0099; box-shadow: 0 0 20px rgba(123, 0, 153, 0.3); }
-                        .email-btn.icloud:hover { border-color: #007aff; box-shadow: 0 0 20px rgba(0, 122, 255, 0.3); }
-                    </style>
-                    <h3 style="margin-bottom: 2rem; color: #f8fafc; font-size: 1.5rem; font-weight: 600;">
-                        ¿Cuál es tu cliente de email preferido?
-                    </h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <button id="gmail-btn" class="email-btn gmail">
-                            <span style="font-size: 1.2rem;"><svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#000000" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64L12 9.548l6.545-4.91l1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></span> Gmail
-                        </button>
-                        <button id="outlook-btn" class="email-btn outlook">
-                            <span style="font-size: 1.2rem;"><svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 432 432"><path fill="#000000" d="M267 93h145q4 0 9.5 5t5.5 12l-127 85h-4l-29-18V93zm0 115l27 18q2 1 4 1h3l1-1q-2 1 29-19.5t64-41.5l32-21v153q0 12-6.5 18t-16.5 6H267V208zm-139-39q13 0 20.5 12.5T156 216t-7.5 34t-21.5 12q-13 0-21-12.5T98 216t8-34t22-13zM0 51L251 3v426L0 377V51zm168 218q16-21 16-54t-15.5-53.5T128 141q-26 0-42 21t-16 56q0 32 16 52t41 20t41-21z"/></svg></span> Outlook
-                        </button>
-                        <button id="yahoo-btn" class="email-btn yahoo">
-                            <span style="font-size: 1.2rem;"><svg class= 'svg' xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#000000" d="M10.5 7.59L8.16 13.2L5.85 7.59H2l4.29 9.64l-1.54 3.47H8.5l5.74-13.11H10.5m4.5 5.14c-1.37 0-2.41 1.04-2.41 2.27c0 1.17 1 2.16 2.34 2.16c1.39 0 2.43-1.03 2.43-2.26c0-1.21-1-2.17-2.36-2.17m2.72-9.43l-3.83 8.59h4.28L22 3.3h-4.28Z"/></svg></span> Yahoo Mail
-                        </button>
-                        <button id="icloud-btn" class="email-btn icloud">
-                            <span style="font-size: 1.2rem;"><svg class='svg' xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#000000" d="M13.762 4.29a6.51 6.51 0 0 0-5.669 3.332a3.571 3.571 0 0 0-1.558-.36a3.571 3.571 0 0 0-3.516 3A4.918 4.918 0 0 0 0 14.796a4.918 4.918 0 0 0 4.92 4.914a4.93 4.93 0 0 0 .617-.045h14.42c2.305-.272 4.041-2.258 4.043-4.589v-.009a4.594 4.594 0 0 0-3.727-4.508a6.51 6.51 0 0 0-6.511-6.27z"/></svg></span> iCloud
-                        </button>
-                        <button id="other-btn" class="email-btn">
-                            <span style="font-size: 1.2rem;"><svg class = "svg"  xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14"><path fill="#000000" fill-rule="evenodd" d="M13.854.146a.5.5 0 0 1 .113.534l-5 13a.5.5 0 0 1-.922.027l-2.091-4.6L9.03 6.03a.75.75 0 0 0-1.06-1.06L4.893 8.046l-4.6-2.09a.5.5 0 0 1 .028-.923l13-5a.5.5 0 0 1 .533.113" clip-rule="evenodd"/></svg></span> Otro
-                        </button>
-                    </div>
+                    .email-btn {
+                        width: 100%;
+                        padding: 1rem 1.5rem;
+                        margin: 0.5rem 0;
+                        border: 2px solid rgba(148, 163, 184, 0.2);
+                        border-radius: 15px;
+                        background: rgba(30, 41, 59, 0.8);
+                        color: #f8fafc;
+                        cursor: pointer;
+                        font-size: 1rem;
+                        font-weight: 500;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 0.75rem;
+                    }
+                    .email-btn:hover {
+                        transform: translateY(-2px);
+                        border-color: #8b5cf6;
+                        box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+                        background: rgba(139, 92, 246, 0.1);
+                    }
+                    .email-btn.gmail:hover { border-color: #ea4335; box-shadow: 0 0 20px rgba(234, 67, 53, 0.3); }
+                    .email-btn.outlook:hover { border-color: #0078d4; box-shadow: 0 0 20px rgba(0, 120, 212, 0.3); }
+                    .email-btn.yahoo:hover { border-color: #7b0099; box-shadow: 0 0 20px rgba(123, 0, 153, 0.3); }
+                    .email-btn.icloud:hover { border-color: #007aff; box-shadow: 0 0 20px rgba(0, 122, 255, 0.3); }
                 `;
+
+                // Safely create heading
+                const heading = document.createElement('h3');
+                heading.style.cssText = 'margin-bottom: 2rem; color: #f8fafc; font-size: 1.5rem; font-weight: 600;';
+                heading.textContent = '¿Cuál es tu cliente de email preferido?';
+
+                // Create button container
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.cssText = 'display: flex; flex-direction: column; gap: 0.5rem;';
+
+                // Helper function to create email buttons safely
+                const createEmailButton = (id, className, svgPath, label) => {
+                    const btn = document.createElement('button');
+                    btn.id = id;
+                    btn.className = `email-btn ${className}`;
+                    
+                    const span = document.createElement('span');
+                    span.style.fontSize = '1.2rem';
+                    span.innerHTML = svgPath; // SVG is static content, safe to use
+                    
+                    btn.appendChild(span);
+                    btn.appendChild(document.createTextNode(' ' + label));
+                    
+                    return btn;
+                };
+
+                // Create buttons
+                buttonContainer.appendChild(createEmailButton('gmail-btn', 'gmail', 
+                    '<svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#000000" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64L12 9.548l6.545-4.91l1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>', 
+                    'Gmail'));
+                
+                buttonContainer.appendChild(createEmailButton('outlook-btn', 'outlook',
+                    '<svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 432 432"><path fill="#000000" d="M267 93h145q4 0 9.5 5t5.5 12l-127 85h-4l-29-18V93zm0 115l27 18q2 1 4 1h3l1-1q-2 1 29-19.5t64-41.5l32-21v153q0 12-6.5 18t-16.5 6H267V208zm-139-39q13 0 20.5 12.5T156 216t-7.5 34t-21.5 12q-13 0-21-12.5T98 216t8-34t22-13zM0 51L251 3v426L0 377V51zm168 218q16-21 16-54t-15.5-53.5T128 141q-26 0-42 21t-16 56q0 32 16 52t41 20t41-21z"/></svg>',
+                    'Outlook'));
+                
+                buttonContainer.appendChild(createEmailButton('yahoo-btn', 'yahoo',
+                    '<svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#000000" d="M10.5 7.59L8.16 13.2L5.85 7.59H2l4.29 9.64l-1.54 3.47H8.5l5.74-13.11H10.5m4.5 5.14c-1.37 0-2.41 1.04-2.41 2.27c0 1.17 1 2.16 2.34 2.16c1.39 0 2.43-1.03 2.43-2.26c0-1.21-1-2.17-2.36-2.17m2.72-9.43l-3.83 8.59h4.28L22 3.3h-4.28Z"/></svg>',
+                    'Yahoo Mail'));
+                
+                buttonContainer.appendChild(createEmailButton('icloud-btn', 'icloud',
+                    '<svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#000000" d="M13.762 4.29a6.51 6.51 0 0 0-5.669 3.332a3.571 3.571 0 0 0-1.558-.36a3.571 3.571 0 0 0-3.516 3A4.918 4.918 0 0 0 0 14.796a4.918 4.918 0 0 0 4.92 4.914a4.93 4.93 0 0 0 .617-.045h14.42c2.305-.272 4.041-2.258 4.043-4.589v-.009a4.594 4.594 0 0 0-3.727-4.508a6.51 6.51 0 0 0-6.511-6.27z"/></svg>',
+                    'iCloud'));
+                
+                buttonContainer.appendChild(createEmailButton('other-btn', '',
+                    '<svg class="svg" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14"><path fill="#000000" fill-rule="evenodd" d="M13.854.146a.5.5 0 0 1 .113.534l-5 13a.5.5 0 0 1-.922.027l-2.091-4.6L9.03 6.03a.75.75 0 0 0-1.06-1.06L4.893 8.046l-4.6-2.09a.5.5 0 0 1 .028-.923l13-5a.5.5 0 0 1 .533.113" clip-rule="evenodd"/></svg>',
+                    'Otro'));
+
+                // Assemble the modal content
+                content.appendChild(styleElement);
+                content.appendChild(heading);
+                content.appendChild(buttonContainer);
 
                 modal.appendChild(content);
                 document.body.appendChild(modal);

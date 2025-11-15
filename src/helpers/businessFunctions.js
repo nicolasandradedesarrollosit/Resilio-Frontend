@@ -13,7 +13,6 @@ export async function getAdminBusiness(limit = 10, offset = 0) {
     }
 }
 
-// Nueva función para obtener TODOS los negocios sin límite (para selects)
 export async function getAllBusinesses() {
     try {
         const data = await authGet('/api/admin/business?limit=1000&offset=0');
@@ -57,7 +56,6 @@ export async function createBusiness(businessData) {
 
 export async function uploadBusinessImage(imageFile) {
     try {
-        // Validar archivo antes de procesar
         if (!imageFile) {
             throw new Error('No se seleccionó ningún archivo');
         }
@@ -67,7 +65,7 @@ export async function uploadBusinessImage(imageFile) {
             throw new Error('Formato de imagen no válido. Solo se aceptan JPG, JPEG y WEBP');
         }
 
-        const maxSize = 5 * 1024 * 1024; // 5MB
+        const maxSize = 5 * 1024 * 1024;
         if (imageFile.size > maxSize) {
             throw new Error('El archivo es demasiado grande. Tamaño máximo: 5MB');
         }
@@ -91,7 +89,6 @@ export async function uploadBusinessImage(imageFile) {
 
                     resolve(data);
                 } catch (err) {
-                    // Extraer mensaje de error específico del backend
                     const errorMessage = err.message || err.error || 'Error al subir la imagen';
                     reject(new Error(errorMessage));
                 }

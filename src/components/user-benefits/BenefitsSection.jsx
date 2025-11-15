@@ -21,7 +21,7 @@ function BenefitsSection({ userData }) {
                 return;
             }
             setIsLoading(true);
-            await fetch(`${import.meta.env.VITE_API_URL}/benefits/add`, {
+            await fetch(`${import.meta.env.VITE_API_URL}api/my-benefits`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
