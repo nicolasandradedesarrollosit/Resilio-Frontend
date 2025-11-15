@@ -18,7 +18,6 @@ export default function UserProvider({ children }) {
     const [myBenefits, setMyBenefits] = useState([]);
     const userId = userData?.id;
 
-    // Reset all user-specific data when user changes or logs out
     useEffect(() => {
         if (!userData) {
             setEvents([]);
@@ -168,7 +167,8 @@ export default function UserProvider({ children }) {
         if (userData && userId) {
             loadAllUserData();
         }
-    }, [userData, userId, loadAllUserData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userData, userId]); // Solo ejecutar cuando userData o userId cambien, no cuando loadAllUserData cambie
 
     const value = {
         userData,

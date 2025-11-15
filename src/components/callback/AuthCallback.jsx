@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { sendUserDataToBackend } from '../../services/authService';
 import LoadingScreen from '../others/LoadingScreen';
 import { AuthContext } from '../context/AuthContextOauth';
-import { fetchUserData, getUserData } from '../../helpers/userFunctions';
-import { extractUserData, handleAuthError } from '../../helpers/authHelpers';
+import { fetchUserData } from '../../helpers/userFunctions';
+import { handleAuthError } from '../../helpers/authHelpers';
 
 
 const isMobileDevice = () => {
@@ -28,37 +28,11 @@ const redirectByRole = (role, navigate) => {
 };
 
 
-const fetchUserDataWithRetries = async (maxRetries) => {
-  let retries = 0;
-  let userData = null;
-
-  while (retries < maxRetries && !userData) {
-    try {
-      const result = await getUserData();
-      userData = extractUserData(result);
-      
-      if (userData) {
-        break;
-      }
-    } catch (fetchError) {
-      handleAuthError(fetchError, 'Reintento de obtención de datos');
-    }
-
-    retries++;
-    if (retries < maxRetries) {
-      const waitTime = 1000 * retries;
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-    }
-  }
-
-  return userData;
-};
-
-
 const checkExistingSession = async () => {
   try {
     const userData = await fetchUserData();
     if (userData) {
+      console.log('Sesión existente encontrada:', userData);
     }
     return userData;
   } catch (error) {
@@ -75,6 +49,7 @@ const AuthCallback = () => {
 
   useEffect(() => {
     let timeoutId;
+    let isMounted = true; // Flag para prevenir actualizaciones después de desmontar
     
     const handleAuthCallback = async () => {
       try {
@@ -83,69 +58,89 @@ const AuthCallback = () => {
         const errorDescription = urlParams.get('error_description');
         
         if (errorParam) {
+          if (!isMounted) return;
+          
           if (errorParam === 'access_denied' || errorDescription?.includes('cancel')) {
             setError('Has cancelado el inicio de sesión con Google.');
           } else {
             setError('Error al autenticar con Google. Por favor, intenta nuevamente.');
           }
           
-          setTimeout(() => navigate('/log-in', { replace: true }), 2000);
+          setTimeout(() => {
+            if (isMounted) navigate('/log-in', { replace: true });
+          }, 2000);
           return;
         }
         
-        const { isMobile, initialWait, maxRetries } = getDeviceConfig();
+        const { isMobile, initialWait } = getDeviceConfig();
         
+        // Timeout de 30 segundos
         timeoutId = setTimeout(() => {
+          if (!isMounted) return;
           setError('La autenticación está tomando más tiempo del esperado. Por favor, intenta nuevamente.');
-          setTimeout(() => navigate('/log-in', { replace: true }), 2000);
+          setTimeout(() => {
+            if (isMounted) navigate('/log-in', { replace: true });
+          }, 2000);
         }, 30000);
 
+        if (!isMounted) return;
         setLoadingStep('Verificando sesión...');
         const existingSession = await checkExistingSession();
         
         if (existingSession) {
+          if (!isMounted) return;
           setLoadingStep('Redirigiendo a tu cuenta...');
           await new Promise(resolve => setTimeout(resolve, 500));
           
           if (timeoutId) clearTimeout(timeoutId);
+          if (!isMounted) return;
           
           redirectByRole(existingSession.role, navigate);
           return;
         }
         
+        if (!isMounted) return;
         setLoadingStep('Verificando credenciales con Google...');
         
-        await sendUserDataToBackend();
+        const authResult = await sendUserDataToBackend();
         
+        if (!isMounted) return;
         setLoadingStep('Estableciendo sesión segura...');
         await new Promise(resolve => setTimeout(resolve, initialWait));
         
+        if (!isMounted) return;
         setLoadingStep('Cargando tu perfil...');
-        const userData = await fetchUserDataWithRetries(maxRetries);
-
-        if (!userData) {
-          throw new Error('No se pudieron cargar los datos del usuario después de ' + maxRetries + ' intentos');
-        }
-
-        setLoadingStep('Preparando tu experiencia...');
+        
+        // Refrescar los datos del usuario en el contexto
         await refreshUserData();
-        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Pequeña pausa para asegurar que los datos se propaguen
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         if (timeoutId) clearTimeout(timeoutId);
+        if (!isMounted) return;
 
-        redirectByRole(userData.role, navigate);
+        // Usar el rol del resultado de autenticación si está disponible
+        const userRole = authResult?.role || 'user';
+        redirectByRole(userRole, navigate);
         
       } catch (err) {
         if (timeoutId) clearTimeout(timeoutId);
+        if (!isMounted) return;
+        
         handleAuthError(err, 'AuthCallback');
+        console.error('Error en AuthCallback:', err);
         setError(err.message || 'Error al procesar el inicio de sesión. Por favor, intenta nuevamente.');
-        setTimeout(() => navigate('/log-in', { replace: true }), 3000);
+        setTimeout(() => {
+          if (isMounted) navigate('/log-in', { replace: true });
+        }, 3000);
       }
     };
 
     handleAuthCallback();
     
     return () => {
+      isMounted = false;
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [navigate, refreshUserData]);
