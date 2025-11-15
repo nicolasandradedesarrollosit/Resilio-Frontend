@@ -172,6 +172,25 @@ export default function UserProvider({ children }) {
     }, []);
 
     
+    const refreshMyBenefits = useCallback(async () => {
+        if (!userId) return;
+        try {
+            const myBenefitsData = await getMyBenefits(userId);
+            if (Array.isArray(myBenefitsData)) {
+                setMyBenefits(myBenefitsData);
+            } else if (myBenefitsData?.ok && Array.isArray(myBenefitsData.data)) {
+                setMyBenefits(myBenefitsData.data);
+            } else if (myBenefitsData?.data && Array.isArray(myBenefitsData.data)) {
+                setMyBenefits(myBenefitsData.data);
+            } else {
+                setMyBenefits([]);
+            }
+        } catch (err) {
+            console.error('[UserContext] Error al recargar myBenefits:', err);
+        }
+    }, [userId]);
+
+    
     const refreshAllData = useCallback(async () => {
         await loadAllUserData();
     }, [loadAllUserData]);
@@ -196,6 +215,7 @@ export default function UserProvider({ children }) {
         refreshEvents,
         refreshBenefits,
         refreshBanner,
+        refreshMyBenefits,
         refreshAllData,
 
         setEvents,

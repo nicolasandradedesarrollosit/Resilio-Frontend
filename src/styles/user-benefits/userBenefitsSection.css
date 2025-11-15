@@ -835,6 +835,330 @@ h2::after {
     }
 }
 
+/* Estilos para beneficios canjeados */
+.benefit-redeemed {
+    border-color: rgba(34, 197, 94, 0.4) !important;
+    position: relative;
+}
+
+.benefit-redeemed::before {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2)) !important;
+}
+
+.redeemed-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(22, 163, 74, 0.95));
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    z-index: 2;
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.redeemed-badge svg {
+    width: 18px;
+    height: 18px;
+}
+
+.redeemed-code-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 12px;
+    margin-top: 8px;
+}
+
+.code-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.code-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: rgba(134, 239, 172, 0.95);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+}
+
+.btn-already-redeemed {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3)) !important;
+    border: 1px solid rgba(34, 197, 94, 0.5);
+    color: rgba(134, 239, 172, 0.95) !important;
+    cursor: not-allowed !important;
+    opacity: 0.9;
+}
+
+.btn-already-redeemed:hover {
+    transform: none !important;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2) !important;
+}
+
+.btn-already-redeemed svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Modal de éxito */
+.success-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.success-modal-content {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 27, 75, 0.98) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 
+        0 20px 60px rgba(124, 58, 237, 0.3),
+        0 8px 24px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    text-align: center;
+    animation: slideUp 0.4s ease-out;
+    position: relative;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.5s ease-out 0.2s both;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-icon svg {
+    color: rgba(134, 239, 172, 1);
+    filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.4));
+}
+
+.success-modal-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: hsl(280, 100%, 98%);
+    margin: 0 0 16px 0;
+    text-shadow: 0 2px 20px rgba(124, 58, 237, 0.45);
+}
+
+.success-modal-content h2::after {
+    display: none;
+}
+
+.success-modal-content > p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 20px 0;
+    line-height: 1.6;
+}
+
+.code-display {
+    background: rgba(124, 58, 237, 0.2);
+    border: 2px solid rgba(124, 58, 237, 0.5);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 20px 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: rgba(180, 140, 255, 1);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 12px rgba(124, 58, 237, 0.6);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+    }
+}
+
+.code-instructions {
+    font-size: 0.95rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    margin: 16px 0 !important;
+    line-height: 1.6 !important;
+}
+
+.code-instructions strong {
+    color: rgba(180, 140, 255, 1);
+    font-weight: 600;
+}
+
+.code-note {
+    font-size: 0.85rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    margin: 12px 0 24px !important;
+    font-style: italic;
+}
+
+.btn-close-modal {
+    width: 100%;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(79, 70, 229, 0.9) 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+}
+
+.btn-close-modal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(124, 58, 237, 0.5);
+}
+
+.btn-close-modal:active {
+    transform: translateY(0);
+}
+
+/* Responsive para modal */
+@media (max-width: 768px) {
+    .success-modal-content {
+        padding: 32px 24px;
+        max-width: 90%;
+    }
+
+    .success-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+
+    .success-icon svg {
+        width: 56px;
+        height: 56px;
+    }
+
+    .success-modal-content h2 {
+        font-size: 1.75rem;
+    }
+
+    .code-display {
+        font-size: 1.75rem;
+        padding: 20px;
+        letter-spacing: 3px;
+    }
+
+    .btn-close-modal {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .success-modal-content {
+        padding: 28px 20px;
+    }
+
+    .success-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .success-icon svg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .success-modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .code-display {
+        font-size: 1.5rem;
+        padding: 18px;
+        letter-spacing: 2px;
+    }
+
+    .redeemed-badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
+    .redeemed-badge svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+
 .container-map {
     width: 60%;
     height: 250px;
