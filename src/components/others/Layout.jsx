@@ -13,6 +13,7 @@ import Profile from '../../pages/Profile.jsx';
 import AuthCallback from '../callback/AuthCallback.jsx';
 import MainAdmin from '../../pages/MainAdmin.jsx';
 import ProtectedRoute from './ProtectedRoute.jsx';
+import PublicOnlyRoute from './PublicOnlyRoute.jsx';
 import AdminEvents from '../../pages/AdminEvents.jsx';
 import AdminBenefits from '../../pages/AdminBenefits.jsx';
 import AdminLayout from './AdminLayout.jsx';
@@ -36,9 +37,33 @@ function Layout(){
         <Route path='/contact' element={<Contact />} />
         <Route path='/service' element={<Terms />} />
         <Route path='/privacity' element={<Privacity />} />
-        <Route path='/log-in' element={<LogIn />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/reset-password' element={<ForgotPassword />} />
+        
+        <Route 
+          path='/log-in' 
+          element={
+            <PublicOnlyRoute>
+              <LogIn />
+            </PublicOnlyRoute>
+          } 
+        />
+        
+        <Route 
+          path='/register' 
+          element={
+            <PublicOnlyRoute>
+              <Register />
+            </PublicOnlyRoute>
+          } 
+        />
+        
+        <Route 
+          path='/reset-password' 
+          element={
+            <PublicOnlyRoute>
+              <ForgotPassword />
+            </PublicOnlyRoute>
+          } 
+        />
         
         <Route path="/auth/callback" element={<AuthCallback />} />
         

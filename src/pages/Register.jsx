@@ -1,34 +1,16 @@
-import { React, useEffect, useContext } from 'react';
+import { React, useEffect } from 'react';
 import GoBack from '../components/others/GoBack';
-import AlreadyLoggedIn from '../components/others/AlreadyLoggedIn';
-import { AuthContext } from '../components/context/AuthContextOauth';
 import logo from '/logo-resilio-group.png';
 import '../styles/log-in-register-forgot/logInRegForg.css';
 import FormRegister from '../components/log-in-register-forgot/FormRegister';
 
 function Register() {
-    const { userData, authLoading } = useContext(AuthContext);
-
     useEffect(() => {
         const contenedor = document.getElementById("top");
         if (contenedor) {
             contenedor.scrollIntoView({ behavior: "instant" });
         }
     }, []);
-
-    // Si está cargando la autenticación, mostrar loading
-    if (authLoading) {
-        return (
-            <div className="auth-loading-screen">
-                <div className="auth-loading-spinner"></div>
-            </div>
-        );
-    }
-
-    // Si el usuario ya está logueado, mostrar el modal de sesión activa
-    if (userData) {
-        return <AlreadyLoggedIn />;
-    }
 
     return (
         <>
