@@ -1,17 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import GoBack from '../components/others/GoBack';
 import FormLogIn from '../components/log-in-register-forgot/FormLogIn';
+import AlreadyLoggedIn from '../components/others/AlreadyLoggedIn';
+import { AuthContext } from '../components/context/AuthContextOauth';
 import logo from '/logo-resilio-group.png';
 import '../styles/log-in-register-forgot/logInRegForg.css';
 
 function LogIn() {
+    const { userData, authLoading } = useContext(AuthContext);
+
     useEffect(() => {
         const contenedor = document.getElementById("top");
         if (contenedor) {
             contenedor.scrollIntoView({ behavior: "instant" });
         }
     }, []);
+
+    if (authLoading) {
+        return (
+            <div className="auth-loading-screen">
+                <div className="auth-loading-spinner"></div>
+            </div>
+        );
+    }
+
+    if (userData) {
+        return <AlreadyLoggedIn />;
+    }
     
     return (
         <>
