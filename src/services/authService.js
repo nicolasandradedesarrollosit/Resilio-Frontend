@@ -40,45 +40,29 @@ export async function loginWithGoogle() {
 
 export async function logOut() {
     try {
+        // Llamar al backend para limpiar cookies
         await fetch(`${API_URL}/api/log-out`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }
         });
         
+        // Cerrar sesión de Supabase
         await supabase.auth.signOut();
         
     } catch (error) {
-        handleAuthError(error, 'logOut');
-        throw error;
+        console.error('Error en logout:', error);
     }
 }
 
 
 export async function sendUserDataToBackend() {
     try {
+        // Obtener sesión de Supabase
         const { data: { session }, error } = await supabase.auth.getSession();
         
-        if (error) {
-            console.error('Error obteniendo sesión de Supabase:', error);
-            throw new Error('No se pudo obtener la sesión de autenticación');
-        }
-        
-        if (!session) {
-            throw new Error('No se encontró sesión de autenticación');
-        }
-        
-        if (!session.access_token) {
-            throw new Error('Token de acceso no disponible');
-        }
-        
-        if (!session.user || !session.user.email) {
-            throw new Error('Información de usuario incompleta');
-        }
-        
-        // Verificar expiración de la sesión
-        if (session.expires_at && session.expires_at * 1000 < Date.now()) {
-            throw new Error('La sesión de autenticación ha expirado');
+        if (error || !session) {
+            throw new Error('No se pudo obtener la sesión');
         }
         
         // Enviar datos al backend
@@ -92,54 +76,14 @@ export async function sendUserDataToBackend() {
             })
         });
         
-        // Manejar respuestas de error del servidor
         if (!response.ok) {
-            let errorMessage = 'Error al procesar la autenticación';
-            
-            try {
-                const errorData = await response.json();
-                errorMessage = errorData.message || errorMessage;
-            } catch (parseError) {
-                console.error('Error parseando respuesta de error:', parseError);
-                
-                // Mensajes específicos según código de estado
-                if (response.status === 401) {
-                    errorMessage = 'Credenciales inválidas';
-                } else if (response.status === 403) {
-                    errorMessage = 'Acceso denegado';
-                } else if (response.status === 404) {
-                    errorMessage = 'Servicio de autenticación no encontrado';
-                } else if (response.status === 500) {
-                    errorMessage = 'Error del servidor. Intenta nuevamente';
-                } else if (response.status >= 500) {
-                    errorMessage = 'El servidor no está disponible';
-                }
-            }
-            
-            throw new Error(errorMessage);
+            throw new Error('Error en el servidor');
         }
         
-        // Procesar respuesta exitosa
-        let result;
-        try {
-            result = await response.json();
-        } catch (parseError) {
-            console.error('Error parseando respuesta exitosa:', parseError);
-            throw new Error('Respuesta del servidor inválida');
-        }
+        const result = await response.json();
         
-        // Validar que la respuesta tenga los datos necesarios
-        if (!result || typeof result !== 'object') {
-            throw new Error('Respuesta del servidor inválida');
-        }
-        
-        // Cerrar sesión de Supabase después de enviar los datos
-        try {
-            await supabase.auth.signOut();
-        } catch (signOutError) {
-            console.warn('Error al cerrar sesión de Supabase:', signOutError);
-            // No lanzar error aquí, la autenticación fue exitosa
-        }
+        // Cerrar sesión de Supabase después de autenticar
+        await supabase.auth.signOut();
         
         return { 
             user: session.user,
@@ -148,16 +92,7 @@ export async function sendUserDataToBackend() {
         };
         
     } catch (err) {
-        // Log detallado en desarrollo
-        if (import.meta.env.DEV) {
-            console.error('Error detallado en sendUserDataToBackend:', {
-                message: err.message,
-                stack: err.stack,
-                error: err
-            });
-        }
-        
-        // Re-lanzar el error para que sea manejado por el componente
+        console.error('Error en sendUserDataToBackend:', err);
         throw err;
     }
 }

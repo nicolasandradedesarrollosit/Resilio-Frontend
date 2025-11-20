@@ -12,11 +12,21 @@ function BenefitCard({ benefit, userData }) {
 
     const handleAddBenefit = async () => {
         try {
-            if (!userData.ispremium) {
+            // Debug: verificar userData
+            console.log('[BenefitCard] userData completo:', userData);
+            console.log('[BenefitCard] ispremium:', userData.ispremium, 'tipo:', typeof userData.ispremium);
+            
+            // Verificación flexible de premium (maneja string y boolean)
+            const isPremium = userData.ispremium === true || userData.ispremium === 'true';
+            
+            if (!isPremium) {
+                console.warn('[BenefitCard] Usuario no premium, redirigiendo a planes');
+                alert('Necesitas ser usuario Premium para canjear beneficios. Te redirigiremos a los planes disponibles.');
                 navigate('/user/plans');
                 return;
             }
             
+            console.log('[BenefitCard] Usuario es premium, procediendo con canje...');
             setIsLoading(true);
             
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/my-benefits`, {

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../components/context/UserContext";
+import { AuthContext } from "../components/context/AuthContextOauth";
 import "../styles/profile/profile.css";
 import GoBack from '../components/others/GoBack';
 import { useNavigate } from "react-router-dom";
@@ -7,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Profile(){
     const navigate = useNavigate();
     const { userData, loading } = useContext(UserContext);
+    const { logOut: authLogOut, isLoggingOut } = useContext(AuthContext);
     const [modal, setModal] = useState(false);
     const [logoutModal, setLogoutModal] = useState(false);
     const [validationStates, setValidationStates] = useState({
@@ -186,30 +188,16 @@ function Profile(){
     }
 
     const logOutSession = async () => {
-        setIsLoading(true);
-        try{
-            const logOutResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/log-out`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if(!logOutResponse.ok){
-                throw new Error('Error al cerrar sesión');
-            }
-            window.location.reload();
-            navigate('/log-in');
-        }
-        catch(err){
-            if(import.meta.env.DEV){
-            }
-            navigate('/log-in');
-        }
-        finally {
-            setIsLoading(false);
+        if (isLoggingOut) return;
+        
+        try {
+            await authLogOut();
             setLogoutModal(false);
+            navigate('/log-in', { replace: true });
+        } catch (error) {
+            console.error('Error en logout:', error);
+            setLogoutModal(false);
+            navigate('/log-in', { replace: true });
         }
     }
 
@@ -453,16 +441,16 @@ function Profile(){
                             <button 
                                 onClick={() => setLogoutModal(false)} 
                                 className="logout-cancel-button"
-                                disabled={isLoading}
+                                disabled={isLoggingOut}
                             >
                                 Cancelar
                             </button>
                             <button 
                                 onClick={logOutSession} 
                                 className="logout-confirm-button"
-                                disabled={isLoading}
+                                disabled={isLoggingOut}
                             >
-                                {isLoading ? 'Cerrando sesión...' : 'Sí, cerrar sesión'}
+                                {isLoggingOut ? 'Cerrando sesión...' : 'Sí, cerrar sesión'}
                             </button>
                         </div>
                     </div>

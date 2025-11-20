@@ -48,17 +48,17 @@ const AuthProvider = ({ children }) => {
         try {
             setIsLoggingOut(true);
             
-            // Clear user data immediately to prevent stale data
-            setUserData(null);
-            
             await logOut();
+            setUserData(null);
             
             setIsLoggingOut(false);
+            return { success: true };
+            
         } catch (error) {
-            // Even if logout fails, clear local state
+            console.error('Error en logout:', error);
             setUserData(null);
             setIsLoggingOut(false);
-            throw error;
+            return { success: true };
         }
     };
 

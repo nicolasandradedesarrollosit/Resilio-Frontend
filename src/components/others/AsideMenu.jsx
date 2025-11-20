@@ -5,8 +5,7 @@ import '../../styles/others/asideMenu.css';
 
 function AsideMenu({ userData, activeItem }) {
     const navigate = useNavigate();
-    const { logOut } = useAuth();
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const { logOut, isLoggingOut } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     
     const name = userData?.name || 'Usuario';
@@ -34,11 +33,9 @@ function AsideMenu({ userData, activeItem }) {
         if (isLoggingOut) return;
         
         try {
-            setIsLoggingOut(true);
             await logOut();
             navigate('/log-in', { replace: true });
         } catch (error) {
-            setIsLoggingOut(false);
             navigate('/log-in', { replace: true });
         }
     };
