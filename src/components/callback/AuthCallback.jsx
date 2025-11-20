@@ -1,187 +1,89 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendUserDataToBackend } from '../../services/authService';
 import LoadingScreen from '../others/LoadingScreen';
 import ErrorDisplay from '../others/ErrorDisplay';
 import { AuthContext } from '../context/AuthContextOauth';
-import { fetchUserData } from '../../helpers/userFunctions';
-import { handleAuthError } from '../../helpers/authHelpers';
-
-
-const isMobileDevice = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-};
-
-
-const getDeviceConfig = () => {
-  const isMobile = isMobileDevice();
-  return {
-    isMobile,
-    initialWait: isMobile ? 2500 : 1500,
-    maxRetries: isMobile ? 8 : 5,
-    timeout: 35000 // 35 segundos timeout
-  };
-};
-
-
-const redirectByRole = (role, navigate) => {
-  const destination = role === 'admin' ? '/main/admin' : '/main/user';
-  navigate(destination, { state: { fromApp: true }, replace: true });
-};
-
-
-const checkExistingSession = async () => {
-  try {
-    const userData = await fetchUserData();
-    if (userData) {
-      console.log('Sesión existente encontrada:', userData);
-    }
-    return userData;
-  } catch (error) {
-    handleAuthError(error, 'Verificación de sesión existente');
-    return null;
-  }
-};
 
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [loadingStep, setLoadingStep] = useState('Procesando autenticación...');
+  const [loadingMessage, setLoadingMessage] = useState('Procesando autenticación...');
   const { refreshUserData } = useContext(AuthContext);
 
-  const handleAuthCallback = useCallback(async () => {
-    let timeoutId;
+  useEffect(() => {
     let isMounted = true;
-    
-    try {
-      // Verificar errores de OAuth en la URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const errorParam = urlParams.get('error');
-      const errorDescription = urlParams.get('error_description');
-      
-      if (errorParam) {
-        if (!isMounted) return;
-        
-        let errorMessage = 'Error al autenticar con Google.';
-        
-        if (errorParam === 'access_denied' || errorDescription?.includes('cancel')) {
-          errorMessage = 'Has cancelado el inicio de sesión con Google.';
-        } else if (errorDescription) {
-          errorMessage = `Error: ${errorDescription}`;
-        }
-        
-        setError(errorMessage);
-        
-        setTimeout(() => {
-          if (isMounted) navigate('/log-in', { replace: true });
-        }, 2500);
-        return;
-      }
-      
-      const { initialWait, timeout } = getDeviceConfig();
-      
-      // Configurar timeout para la autenticación
-      timeoutId = setTimeout(() => {
-        if (!isMounted) return;
-        setError('La autenticación está tomando más tiempo del esperado. Por favor, intenta nuevamente.');
-        setTimeout(() => {
-          if (isMounted) navigate('/log-in', { replace: true });
-        }, 2500);
-      }, timeout);
 
-      // Paso 1: Verificar si ya hay una sesión activa
-      if (!isMounted) return;
-      setLoadingStep('Verificando sesión...');
-      
-      const existingSession = await checkExistingSession();
-      
-      if (existingSession && existingSession.role) {
-        if (!isMounted) return;
-        setLoadingStep('✓ Sesión encontrada');
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        if (timeoutId) clearTimeout(timeoutId);
-        if (!isMounted) return;
-        
-        redirectByRole(existingSession.role, navigate);
-        return;
-      }
-      
-      // Paso 2: Procesar autenticación con Google
-      if (!isMounted) return;
-      setLoadingStep('Verificando credenciales con Google...');
-      
-      const authResult = await sendUserDataToBackend();
-      
-      if (!authResult || !authResult.role) {
-        throw new Error('No se pudo obtener la información del usuario');
-      }
-      
-      // Paso 3: Establecer sesión
-      if (!isMounted) return;
-      setLoadingStep('Estableciendo sesión segura...');
-      await new Promise(resolve => setTimeout(resolve, initialWait));
-      
-      // Paso 4: Cargar perfil de usuario
-      if (!isMounted) return;
-      setLoadingStep('Cargando tu perfil...');
-      
+    const processAuth = async () => {
       try {
-        await refreshUserData();
-        await new Promise(resolve => setTimeout(resolve, 800));
-      } catch (refreshError) {
-        console.warn('Error al refrescar datos del usuario:', refreshError);
-        // Continuar de todas formas si el refreshUserData falla
-      }
+        // 1. Verificar errores OAuth en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorParam = urlParams.get('error');
+        const errorDescription = urlParams.get('error_description');
 
-      if (timeoutId) clearTimeout(timeoutId);
-      if (!isMounted) return;
-
-      // Paso 5: Redirigir según el rol
-      setLoadingStep('✓ Inicio de sesión exitoso');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      if (!isMounted) return;
-      redirectByRole(authResult.role, navigate);
-      
-    } catch (err) {
-      if (timeoutId) clearTimeout(timeoutId);
-      if (!isMounted) return;
-      
-      handleAuthError(err, 'AuthCallback');
-      console.error('Error en AuthCallback:', err);
-      
-      // Determinar mensaje de error específico
-      let errorMessage = 'Error al procesar el inicio de sesión.';
-      
-      if (err.message) {
-        if (err.message.includes('No se encontró sesión')) {
-          errorMessage = 'No se pudo establecer la sesión. Intenta iniciar sesión nuevamente.';
-        } else if (err.message.includes('expirado')) {
-          errorMessage = 'La sesión ha expirado. Por favor, inicia sesión nuevamente.';
-        } else if (err.message.includes('incompleta')) {
-          errorMessage = 'Faltan datos de autenticación. Intenta nuevamente.';
-        } else {
-          errorMessage = err.message;
+        if (errorParam) {
+          const errorMsg = errorParam === 'access_denied' || errorDescription?.includes('cancel')
+            ? 'Has cancelado el inicio de sesión con Google.'
+            : `Error: ${errorDescription || 'Error al autenticar con Google'}`;
+          
+          if (isMounted) {
+            setError(errorMsg);
+            setTimeout(() => navigate('/log-in', { replace: true }), 3000);
+          }
+          return;
         }
+
+        // 2. Procesar autenticación
+        if (isMounted) setLoadingMessage('Verificando con Google...');
+        const authResult = await sendUserDataToBackend();
+
+        if (!authResult?.role) {
+          throw new Error('No se pudo obtener la información del usuario');
+        }
+
+        // 3. Refrescar datos del usuario en contexto
+        if (isMounted) setLoadingMessage('Cargando tu perfil...');
+        await refreshUserData();
+
+        // 4. Redirigir según rol
+        if (isMounted) {
+          const destination = authResult.role === 'admin' ? '/main/admin' : '/main/user';
+          navigate(destination, { state: { fromApp: true }, replace: true });
+        }
+
+      } catch (err) {
+        console.error('Error en autenticación:', err);
+        
+        if (!isMounted) return;
+
+        let errorMessage = 'Error al procesar el inicio de sesión.';
+        
+        if (err.message) {
+          if (err.message.includes('No se encontró sesión') || 
+              err.message.includes('Token de acceso no disponible')) {
+            errorMessage = 'No se pudo establecer la sesión. Intenta nuevamente.';
+          } else if (err.message.includes('expirado')) {
+            errorMessage = 'La sesión ha expirado. Por favor, inicia sesión nuevamente.';
+          } else if (err.message.includes('Información de usuario incompleta')) {
+            errorMessage = 'Faltan datos de autenticación. Intenta nuevamente.';
+          } else if (err.message.includes('conectar con el servidor')) {
+            errorMessage = 'No se pudo conectar con el servidor. Verifica tu conexión.';
+          } else {
+            errorMessage = err.message;
+          }
+        }
+
+        setError(errorMessage);
+        setTimeout(() => navigate('/log-in', { replace: true }), 3500);
       }
-      
-      setError(errorMessage);
-      
-      setTimeout(() => {
-        if (isMounted) navigate('/log-in', { replace: true });
-      }, 3500);
-    }
-    
+    };
+
+    processAuth();
+
     return () => {
       isMounted = false;
-      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [navigate, refreshUserData]);
-
-  useEffect(() => {
-    handleAuthCallback();
-  }, [handleAuthCallback]);
 
   if (error) {
     return (
@@ -196,7 +98,7 @@ const AuthCallback = () => {
 
   return (
     <LoadingScreen 
-      message={loadingStep} 
+      message={loadingMessage} 
       subtitle="Iniciando sesión con Google"
     />
   );
