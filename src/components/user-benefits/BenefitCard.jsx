@@ -3,30 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import BenefitRedeemModal from '../others/BenefitRedeemModal';
 
-function BenefitCard({ benefit, userData }) {
+function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [redeemedCode, setRedeemedCode] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const { refreshMyBenefits, refreshBenefits } = useContext(UserContext);
 
     const handleAddBenefit = async () => {
         try {
-            // Debug: verificar userData
-            console.log('[BenefitCard] userData completo:', userData);
-            console.log('[BenefitCard] ispremium:', userData.ispremium, 'tipo:', typeof userData.ispremium);
+            setErrorMessage('');
             
-            // Verificación flexible de premium (maneja string y boolean)
+            // Verificación de premium
             const isPremium = userData.ispremium === true || userData.ispremium === 'true';
             
             if (!isPremium) {
-                console.warn('[BenefitCard] Usuario no premium, redirigiendo a planes');
-                alert('Necesitas ser usuario Premium para canjear beneficios. Te redirigiremos a los planes disponibles.');
                 navigate('/user/plans');
                 return;
             }
             
-            console.log('[BenefitCard] Usuario es premium, procediendo con canje...');
             setIsLoading(true);
             
             const response = await fetch(`${import.meta.env.VITE_API_URL}/api/my-benefits`, {
@@ -45,24 +41,32 @@ function BenefitCard({ benefit, userData }) {
 
             if (!response.ok) {
                 if (data.code === 'ALREADY_REDEEMED') {
-                    alert('Ya has canjeado este beneficio anteriormente');
+                    setErrorMessage('Ya has canjeado este beneficio anteriormente');
                 } else {
-                    alert(data.message || 'Error al canjear el beneficio');
+                    setErrorMessage(data.message || 'Error al canjear el beneficio');
                 }
+                setIsLoading(false);
                 return;
             }
 
-            // Guardar el código canjeado y mostrar modal de éxito
+            // Guardar el código y mostrar modal
             setRedeemedCode(data.data.code);
             setShowSuccessModal(true);
 
-            // Recargar los datos de beneficios y mis beneficios
-            await refreshMyBenefits();
-            await refreshBenefits();
+            // Recargar beneficios
+            await Promise.all([
+                refreshMyBenefits(),
+                refreshBenefits()
+            ]);
+
+            // Notificar al componente padre
+            if (onBenefitRedeemed) {
+                onBenefitRedeemed(benefit.id);
+            }
             
         } catch (err) {
             console.error('Error al agregar beneficio:', err);
-            alert('Error al canjear el beneficio. Intenta nuevamente.');
+            setErrorMessage('Error al canjear el beneficio. Intenta nuevamente.');
         } finally {
             setIsLoading(false);
         }
@@ -71,27 +75,18 @@ function BenefitCard({ benefit, userData }) {
     const closeModal = () => {
         setShowSuccessModal(false);
         setRedeemedCode(null);
+        setErrorMessage('');
     };
-
-    const isRedeemed = benefit.is_redeemed === true || benefit.is_redeemed === 'true';
 
     return (
         <>
-            <div className={`benefit-item ${isRedeemed ? 'benefit-redeemed' : ''}`}>
+            <div className='benefit-item'>
                 <div className='container-image'>
                     <img 
                         className='image-benefit' 
                         src={benefit.route_jpg} 
                         alt={benefit.name || "beneficio"} 
                     />
-                    {isRedeemed && (
-                        <div className='redeemed-badge'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>Canjeado</span>
-                        </div>
-                    )}
                 </div>
                 <div className='benefit-content'>
                     <h3>{benefit.name}</h3>
@@ -109,47 +104,36 @@ function BenefitCard({ benefit, userData }) {
                             </span>
                         )}
                     </div>
-                    {isRedeemed && benefit.redeemed_code && (
-                        <div className='redeemed-code-info'>
-                            <span className='code-label'>Tu código:</span>
-                            <span className='code-value'>{benefit.redeemed_code}</span>
+                    {errorMessage && (
+                        <div className='benefit-error-message'>
+                            ⚠️ {errorMessage}
                         </div>
                     )}
                 </div>
                 <div className='container-buttons-benefit'>
-                    {isRedeemed ? (
-                        <button className='btn-benefit btn-already-redeemed' disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            Ya Canjeado
-                        </button>
-                    ) : (
-                        <button 
-                            onClick={handleAddBenefit} 
-                            className={`btn-benefit ${userData.ispremium ? 'btn-premium' : 'btn-basic'} ${isLoading ? 'loading' : ''}`} 
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <span className='spinner-small'></span>
-                                    <span className='loading-text'>Procesando...</span>
-                                </>
-                            ) : userData.ispremium ? (
-                                <>
-                                    ✨ Canjear beneficio
-                                </>
-                            ) : (
-                                <>
-                                    ⭐ Mejorar a Premium
-                                </>
-                            )}
-                        </button>
-                    )}
+                    <button 
+                        onClick={handleAddBenefit} 
+                        className={`btn-benefit ${userData.ispremium ? 'btn-premium' : 'btn-basic'} ${isLoading ? 'loading' : ''}`} 
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <span className='spinner-small'></span>
+                                <span className='loading-text'>Procesando...</span>
+                            </>
+                        ) : userData.ispremium ? (
+                            <>
+                                ✨ Canjear beneficio
+                            </>
+                        ) : (
+                            <>
+                                ⭐ Mejorar a Premium
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
 
-            {/* Modal de éxito mejorado */}
             <BenefitRedeemModal
                 isOpen={showSuccessModal}
                 onClose={closeModal}

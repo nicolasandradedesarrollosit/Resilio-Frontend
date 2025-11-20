@@ -24,6 +24,14 @@ function BenefitsSection({ userData }) {
         }
     }
 
+    // Manejar cuando un beneficio es canjeado
+    const handleBenefitRedeemed = (benefitId) => {
+        // Remover el beneficio de la lista local inmediatamente
+        setBenefitsData(prevData => 
+            prevData ? prevData.filter(b => b.id !== benefitId) : prevData
+        );
+    };
+
     if (loading) return null;
 
     if (!Array.isArray(benefits) || benefits.length === 0) {
@@ -78,13 +86,18 @@ function BenefitsSection({ userData }) {
                 </button>
             </div>
             <div className='benefits-events-user-container'>
-                {benefitsData?.map((benefit, index) => (
-                    <BenefitCard 
-                        key={benefit.id ?? index} 
-                        benefit={benefit}
-                        userData={userData}
-                    />
-                ))}
+                {benefitsData && benefitsData.length > 0 ? (
+                    benefitsData.map((benefit, index) => (
+                        <BenefitCard 
+                            key={benefit.id ?? index} 
+                            benefit={benefit}
+                            userData={userData}
+                            onBenefitRedeemed={handleBenefitRedeemed}
+                        />
+                    ))
+                ) : (
+                    <p>No hay beneficios en esta categoría.</p>
+                )}
             </div>
         </section>
     );
