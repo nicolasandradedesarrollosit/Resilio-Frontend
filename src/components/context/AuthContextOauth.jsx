@@ -45,28 +45,25 @@ const AuthProvider = ({ children }) => {
     };
 
     const handleLogOut = async () => {
+        setIsLoggingOut(true);
+        setUserData(null); // Limpiar inmediatamente
+        
         try {
-            setIsLoggingOut(true);
-            
             await logOut();
-            setUserData(null);
-            
-            setIsLoggingOut(false);
-            return { success: true };
-            
         } catch (error) {
             console.error('Error en logout:', error);
-            setUserData(null);
+        } finally {
             setIsLoggingOut(false);
-            return { success: true };
         }
+        
+        return { success: true };
     };
 
     const contextValue = {
         userData,
         loginWithGoogle: handleLoginWithGoogle,
         logOut: handleLogOut,
-        loading: loading && !isLoggingOut,
+        loading: loading,
         isLoggingOut,
         refreshUserData: loadUserData
     };

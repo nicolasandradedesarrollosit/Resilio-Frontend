@@ -8,10 +8,10 @@ import LoadingScreen from './LoadingScreen';
  * (como login y register). Si el usuario ya está logueado, redirige a su página principal.
  */
 const PublicOnlyRoute = ({ children }) => {
-    const { userData, authLoading } = useContext(AuthContext);
+    const { userData, loading } = useContext(AuthContext);
 
-    if (authLoading) {
-        return <LoadingScreen message="Verificando sesión" subtitle="Un momento por favor..." />;
+    if (loading) {
+        return <LoadingScreen message="Verificando sesión..." />;
     }
 
     if (userData) {
