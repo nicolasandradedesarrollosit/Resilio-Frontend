@@ -21,6 +21,7 @@ const AuthProvider = ({ children }) => {
             setUserData(data);
             return data;
         } catch (error) {
+            console.error('Error al cargar datos del usuario:', error);
             setUserData(null);
             return null;
         }

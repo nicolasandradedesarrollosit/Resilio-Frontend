@@ -19,8 +19,15 @@ export const extractUserData = (result) => {
 
 export const handleAuthError = (error, context = 'Authentication') => {
     if (import.meta.env.DEV) {
+        console.error(`[${context}] Error:`, {
+            message: error.message,
+            stack: error.stack,
+            context
+        });
+    } else {
+        // En producción, solo loguear el mensaje
+        console.error(`[${context}] Error:`, error.message);
     }
-
 };
 
 export const getGoogleOAuthOptions = () => {
@@ -54,24 +61,36 @@ export const createAuthFetchOptions = (options = {}) => {
 export const handleApiResponse = async (response) => {
     if (response.ok) {
         try {
-            return await response.json();
+            const data = await response.json();
+            return data;
         } catch (error) {
+            console.error('Error parseando respuesta JSON:', error);
             handleAuthError(error, 'Parsing JSON response');
             return null;
         }
     }
     
-    return null;
+    // Intentar obtener mensaje de error del servidor
+    try {
+        const errorData = await response.json();
+        console.error(`API Error (${response.status}):`, errorData.message || errorData);
+        return null;
+    } catch (e) {
+        console.error(`API Error (${response.status}):`, response.statusText);
+        return null;
+    }
 };
 
 
 export const logAuthSuccess = (operation) => {
     if (import.meta.env.DEV) {
+        console.log(`✅ [Auth Success] ${operation}`);
     }
 };
 
 
 export const logAuthFailure = (operation, status) => {
     if (import.meta.env.DEV) {
+        console.warn(`❌ [Auth Failure] ${operation} - Status: ${status}`);
     }
 };

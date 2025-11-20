@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import BenefitRedeemModal from '../others/BenefitRedeemModal';
 
 function BenefitCard({ benefit, userData }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -138,33 +139,15 @@ function BenefitCard({ benefit, userData }) {
                 </div>
             </div>
 
-            {/* Modal de éxito */}
-            {showSuccessModal && (
-                <div className='success-modal-overlay' onClick={closeModal}>
-                    <div className='success-modal-content' onClick={(e) => e.stopPropagation()}>
-                        <div className='success-icon'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                        </div>
-                        <h2>¡Beneficio Canjeado!</h2>
-                        <p>Tu código de descuento es:</p>
-                        <div className='code-display'>
-                            {redeemedCode}
-                        </div>
-                        <p className='code-instructions'>
-                            Muestra este código en <strong>{benefit.business_name}</strong> para aplicar tu descuento.
-                        </p>
-                        <p className='code-note'>
-                            También puedes encontrar este código en la sección "Mis Beneficios".
-                        </p>
-                        <button className='btn-close-modal' onClick={closeModal}>
-                            Entendido
-                        </button>
-                    </div>
-                </div>
-            )}
+            {/* Modal de éxito mejorado */}
+            <BenefitRedeemModal
+                isOpen={showSuccessModal}
+                onClose={closeModal}
+                benefitName={benefit.name}
+                businessName={benefit.business_name}
+                code={redeemedCode}
+                discount={benefit.discount}
+            />
         </>
     );
 }

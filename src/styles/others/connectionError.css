@@ -1,0 +1,164 @@
+.connection-error-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10001;
+  animation: slideInRight 0.3s ease-out;
+  max-width: 400px;
+}
+
+.connection-error-content {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.connection-error-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.connection-error-icon svg {
+  color: white;
+}
+
+.connection-error-text {
+  flex: 1;
+}
+
+.connection-error-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: white;
+}
+
+.connection-error-message {
+  font-size: 14px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+}
+
+.connection-error-close {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.connection-error-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .connection-error-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .connection-error-content {
+    padding: 14px;
+  }
+
+  .connection-error-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .connection-error-title {
+    font-size: 15px;
+  }
+
+  .connection-error-message {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .connection-error-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .connection-error-content {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .connection-error-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .connection-error-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .connection-error-title {
+    font-size: 14px;
+  }
+
+  .connection-error-message {
+    font-size: 12px;
+  }
+
+  .connection-error-close {
+    width: 24px;
+    height: 24px;
+  }
+
+  .connection-error-close svg {
+    width: 16px;
+    height: 16px;
+  }
+}
