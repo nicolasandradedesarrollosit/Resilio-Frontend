@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import '../../styles/main-admin/mainContent.css';
 import ErrorState from '../others/ErrorState';
 import EmptyState from '../others/EmptyState';
-import GenerateUniqueLinkModal from '../others/GenerateUniqueLinkModal';
 import {
     getAdminBenefits,
     filterBenefits,
@@ -50,8 +49,6 @@ function BenefitsContent() {
     const [createBusinessFormData, setCreateBusinessFormData] = useState(INITIAL_BUSINESS_FORM);
     const [editBusinessFormData, setEditBusinessFormData] = useState(INITIAL_BUSINESS_FORM);
     const [isSubmittingBusiness, setIsSubmittingBusiness] = useState(false);
-
-    const [showUniqueLinkModal, setShowUniqueLinkModal] = useState(false);
 
     const [section, setSection] = useState('benefits');
 
@@ -191,6 +188,33 @@ function BenefitsContent() {
 
     const handleInputChange = (e) => handleFormInputChange(e, setEditFormData);
     const handleCreateInputChange = (e) => handleFormInputChange(e, setCreateFormData);
+
+    const handleGenerateUniqueLink = async () => {
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/api/admin/unique-links`;
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expirationHours: 24
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.ok) {
+                await navigator.clipboard.writeText(data.data.uploadUrl);
+                alert('✅ Enlace copiado al portapapeles:\n\n' + data.data.uploadUrl + '\n\nExpira: ' + new Date(data.data.expires_at).toLocaleString('es-AR'));
+            } else {
+                alert('❌ Error al generar enlace: ' + (data.message || 'Error desconocido'));
+            }
+        } catch (err) {
+            alert('❌ Error de conexión: ' + err.message);
+        }
+    };
 
     const handleEditBusinessClick = (business) => {
         setSelectedBusiness(business);
@@ -390,7 +414,7 @@ function BenefitsContent() {
                         <button 
                             className='admin-users-btn-create'
                             style={{ background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' }}
-                            onClick={() => setShowUniqueLinkModal(true)}
+                            onClick={handleGenerateUniqueLink}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5a5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1c0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5a5 5 0 0 0-5-5Z"/>
@@ -721,11 +745,6 @@ function BenefitsContent() {
                     </div>,
                     document.body
                 )}
-
-                <GenerateUniqueLinkModal 
-                    isOpen={showUniqueLinkModal}
-                    onClose={() => setShowUniqueLinkModal(false)}
-                />
             </div>
         );
     }
@@ -1254,11 +1273,6 @@ function BenefitsContent() {
                 </div>,
                 document.body
             )}
-
-            <GenerateUniqueLinkModal 
-                isOpen={showUniqueLinkModal}
-                onClose={() => setShowUniqueLinkModal(false)}
-            />
         </div>
     );
 }
