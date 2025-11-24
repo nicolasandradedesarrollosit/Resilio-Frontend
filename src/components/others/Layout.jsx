@@ -21,6 +21,7 @@ import UserLayout from './UserLayout.jsx';
 import UserBenefits from '../../pages/UserBenefits.jsx';
 import UserMyBenefits from '../../pages/UserMyBenefits.jsx';
 import MapBenefitsPage from '../../pages/MapBenefitsPage.jsx';
+import PartnerUploadPage from '../../pages/PartnerUploadPage.jsx';
 
 function Layout(){
   const { pathname, hash } = useLocation();
@@ -154,6 +155,9 @@ function Layout(){
             </ProtectedRoute>
           } 
         />
+
+        {/* Ruta pública para partners (sin autenticación) */}
+        <Route path='/partner/upload/:token' element={<PartnerUploadPage />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>

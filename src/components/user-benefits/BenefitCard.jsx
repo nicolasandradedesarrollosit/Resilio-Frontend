@@ -1,12 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
-import BenefitRedeemModal from '../others/BenefitRedeemModal';
 
 function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
     const [isLoading, setIsLoading] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [redeemedCode, setRedeemedCode] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const { refreshMyBenefits, refreshBenefits } = useContext(UserContext);
@@ -14,6 +12,7 @@ function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
     const handleAddBenefit = async () => {
         try {
             setErrorMessage('');
+            setSuccessMessage('');
             
             // Verificación de premium
             const isPremium = userData.ispremium === true || userData.ispremium === 'true';
@@ -49,9 +48,8 @@ function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
                 return;
             }
 
-            // Guardar el código y mostrar modal
-            setRedeemedCode(data.data.code);
-            setShowSuccessModal(true);
+            // Mostrar mensaje de éxito con el código
+            setSuccessMessage(`¡Beneficio canjeado! Tu código es: ${data.data.code}`);
 
             // Recargar beneficios
             await Promise.all([
@@ -70,12 +68,6 @@ function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const closeModal = () => {
-        setShowSuccessModal(false);
-        setRedeemedCode(null);
-        setErrorMessage('');
     };
 
     return (
@@ -109,6 +101,11 @@ function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
                             ⚠️ {errorMessage}
                         </div>
                     )}
+                    {successMessage && (
+                        <div className='benefit-success-message'>
+                            ✅ {successMessage}
+                        </div>
+                    )}
                 </div>
                 <div className='container-buttons-benefit'>
                     <button 
@@ -133,15 +130,6 @@ function BenefitCard({ benefit, userData, onBenefitRedeemed }) {
                     </button>
                 </div>
             </div>
-
-            <BenefitRedeemModal
-                isOpen={showSuccessModal}
-                onClose={closeModal}
-                benefitName={benefit.name}
-                businessName={benefit.business_name}
-                code={redeemedCode}
-                discount={benefit.discount}
-            />
         </>
     );
 }

@@ -141,37 +141,41 @@ function FormRegister() {
                 phone_number: null,
                 email: null,
                 password: null
-            })
-            setTimeout(async () => {
+            });
+            
+            (async () => {
                 try {
                     const response = await fetch(`${API_URL}/api/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: nameValue, province: provinceValue, city: cityValue, phone_number: phoneNumberValue, email: emailValue, password: passwordValue }),
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            name: nameValue, 
+                            province: provinceValue, 
+                            city: cityValue, 
+                            phone_number: phoneNumberValue, 
+                            email: emailValue, 
+                            password: passwordValue 
+                        }),
                     });
 
                     const resp = await response.json();
+                    
                     if(!response.ok){
-                        const message = resp.message;
-                        setRequestErrorState(message);
-                        setIsLoading(false);
+                        setRequestErrorState(resp.message);
                         form.reset();
                         return;
                     }
 
-                    setRequestErrorState('');
-
-                    setIsLoading(false);
                     form.reset();
                     navigate('/log-in');
-                    return;
                 } 
                 catch (err) {
-                        setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
-                        setIsLoading(false);
-                        form.reset();
-                    }
-            }, 3000);
+                    setRequestErrorState('Error del servidor, intente nuevamente más tarde.');
+                    form.reset();
+                } finally {
+                    setIsLoading(false);
+                }
+            })();
             
         }
         else {

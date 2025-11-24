@@ -44,7 +44,7 @@ function ForgotPasswordForm() {
         const {email} = form;
         const emailValue = email.value.trim().toLowerCase();
 
-        setTimeout(async () => {
+        (async () => {
             try {
                 const response = await fetch(`${API_URL}/api/forgot-password`, {
                     method: 'POST',
@@ -57,8 +57,7 @@ function ForgotPasswordForm() {
                 const resp = await response.json();
 
                 if(!response.ok){
-                    const message = resp.message;
-                    setRequestErrorState(message);
+                    setRequestErrorState(resp.message);
                     setIsLoading(false);
                     form.reset();
                     return;
@@ -74,7 +73,7 @@ function ForgotPasswordForm() {
                 setIsLoading(false);
                 form.reset();
             }
-        }, 3000);
+        })();
     }
 
     return (

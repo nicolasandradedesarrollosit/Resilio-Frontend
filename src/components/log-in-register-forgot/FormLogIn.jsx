@@ -95,19 +95,19 @@ function FormLogIn() {
                 password: null
             });
 
-            setTimeout(async () => {
+            (async () => {
                 try {
                     const response = await fetch(`${API_URL}/api/log-in`, {
                         method: 'POST',
-                        credentials: 'include', // Importante: permite que el servidor envíe cookies
+                        credentials: 'include',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: emailValue, password: passwordValue }),
                     });
 
                     const resp = await response.json();
+                    
                     if(!response.ok){
-                        const message = resp.message;
-                        setRequestErrorState(message);
+                        setRequestErrorState(resp.message);
                         setIsLoading(false);
                         form.reset();
                         return;
@@ -115,7 +115,7 @@ function FormLogIn() {
 
                     const userDataResponse = await fetch(`${API_URL}/api/user-data`, {
                         method: 'GET',
-                        credentials: 'include', // Envía las cookies automáticamente
+                        credentials: 'include',
                         headers: { 'Content-Type': 'application/json' }
                     });
 
@@ -126,7 +126,6 @@ function FormLogIn() {
                     const userData = await userDataResponse.json();
                     const userRole = userData.data?.role || 'user';
 
-                    setRequestErrorState('');
                     setIsLoading(false);
                     form.reset();
 
@@ -149,7 +148,7 @@ function FormLogIn() {
                     setIsLoading(false);
                     form.reset();
                 }
-            }, 1500);
+            })();
         }
         else {
             setRequestErrorState('Por favor, complete el formulario correctamente antes de enviar.');
