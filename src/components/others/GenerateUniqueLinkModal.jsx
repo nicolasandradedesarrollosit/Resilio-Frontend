@@ -8,13 +8,20 @@ const GenerateUniqueLinkModal = ({ isOpen, onClose }) => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
+    console.log('🎭 Modal render - isOpen:', isOpen);
+
     const handleGenerate = async () => {
+        console.log('🔗 Iniciando generación de enlace...');
         setIsLoading(true);
         setError('');
         setSuccess(false);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/unique-links`, {
+            const url = `${import.meta.env.VITE_API_URL}/api/admin/unique-links`;
+            console.log('📡 URL:', url);
+            console.log('⏰ Horas de expiración:', expirationHours);
+
+            const response = await fetch(url, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -25,11 +32,15 @@ const GenerateUniqueLinkModal = ({ isOpen, onClose }) => {
                 })
             });
 
+            console.log('📥 Response status:', response.status);
             const data = await response.json();
+            console.log('📦 Response data:', data);
 
             if (data.ok) {
+                console.log('✅ Enlace generado:', data.data.uploadUrl);
                 // Copiar automáticamente al portapapeles
                 await navigator.clipboard.writeText(data.data.uploadUrl);
+                console.log('📋 Enlace copiado al portapapeles');
                 setSuccess(true);
                 
                 // Cerrar modal después de 2 segundos
@@ -37,12 +48,13 @@ const GenerateUniqueLinkModal = ({ isOpen, onClose }) => {
                     handleClose();
                 }, 2000);
             } else {
+                console.error('❌ Error en respuesta:', data.message);
                 setError(data.message || 'Error al generar enlace');
             }
 
         } catch (err) {
-            setError('Error de conexión');
-            console.error(err);
+            console.error('💥 Error al generar enlace:', err);
+            setError(`Error de conexión: ${err.message}`);
         } finally {
             setIsLoading(false);
         }
@@ -56,6 +68,8 @@ const GenerateUniqueLinkModal = ({ isOpen, onClose }) => {
     };
 
     if (!isOpen) return null;
+
+    console.log('🎭 Modal está ABIERTO, renderizando contenido...');
 
     const modalContent = (
         <div className="modal-overlay" onClick={handleClose}>
@@ -100,7 +114,10 @@ const GenerateUniqueLinkModal = ({ isOpen, onClose }) => {
                         <button 
                             className="admin-users-btn-create" 
                             style={{ width: '100%', marginTop: '16px' }}
-                            onClick={handleGenerate}
+                            onClick={() => {
+                                console.log('🔘 Click en botón dentro del modal');
+                                handleGenerate();
+                            }}
                             disabled={isLoading}
                         >
                             {isLoading ? 'Generando...' : '🔗 Crear y Copiar Enlace'}
