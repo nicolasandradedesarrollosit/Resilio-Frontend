@@ -54,11 +54,19 @@ const PartnerUploadPage = () => {
 
     const loadBusinesses = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/business`);
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/partner/upload/${token}/businesses`
+            );
             const data = await response.json();
-            setBusinesses(data);
+            
+            if (data.ok) {
+                setBusinesses(Array.isArray(data.data) ? data.data : []);
+            } else {
+                setBusinesses([]);
+            }
         } catch (err) {
             console.error('Error al cargar negocios:', err);
+            setBusinesses([]);
         }
     };
 
@@ -267,7 +275,7 @@ const PartnerUploadPage = () => {
                                 disabled={isSubmitting}
                             >
                                 <option value="">Selecciona un negocio</option>
-                                {businesses.map(business => (
+                                {Array.isArray(businesses) && businesses.map(business => (
                                     <option key={business.id} value={business.id}>
                                         {business.name}
                                     </option>

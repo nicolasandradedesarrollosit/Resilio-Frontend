@@ -51,6 +51,9 @@ function BenefitsContent() {
     const [isSubmittingBusiness, setIsSubmittingBusiness] = useState(false);
 
     const [section, setSection] = useState('benefits');
+    
+    // Estado para el toast de notificación
+    const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
     useEffect(() => {
         loadBenefits();
@@ -79,9 +82,10 @@ function BenefitsContent() {
     const loadAllBusinesses = async () => {
         try {
             const data = await getAllBusinesses();
-            setAllBusinesses(data);
+            setAllBusinesses(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Error loading all businesses:', err);
+            setAllBusinesses([]);
         }
     };
 
@@ -189,6 +193,13 @@ function BenefitsContent() {
     const handleInputChange = (e) => handleFormInputChange(e, setEditFormData);
     const handleCreateInputChange = (e) => handleFormInputChange(e, setCreateFormData);
 
+    const showToast = (message, type = 'success') => {
+        setToast({ show: true, message, type });
+        setTimeout(() => {
+            setToast({ show: false, message: '', type: 'success' });
+        }, 3000);
+    };
+
     const handleGenerateUniqueLink = async () => {
         try {
             const url = `${import.meta.env.VITE_API_URL}/api/admin/unique-links`;
@@ -207,12 +218,12 @@ function BenefitsContent() {
 
             if (data.ok) {
                 await navigator.clipboard.writeText(data.data.uploadUrl);
-                alert('✅ Enlace copiado al portapapeles:\n\n' + data.data.uploadUrl + '\n\nExpira: ' + new Date(data.data.expires_at).toLocaleString('es-AR'));
+                showToast('🔗 ¡Enlace copiado al portapapeles!', 'success');
             } else {
-                alert('❌ Error al generar enlace: ' + (data.message || 'Error desconocido'));
+                showToast('Error al generar enlace: ' + (data.message || 'Error desconocido'), 'error');
             }
         } catch (err) {
-            alert('❌ Error de conexión: ' + err.message);
+            showToast('Error de conexión: ' + err.message, 'error');
         }
     };
 
@@ -581,7 +592,7 @@ function BenefitsContent() {
                                         required
                                     >
                                         <option value="">Seleccione un negocio</option>
-                                        {allBusinesses.map(business => (
+                                        {Array.isArray(allBusinesses) && allBusinesses.map(business => (
                                             <option key={business.id} value={business.id}>
                                                 {business.name}
                                             </option>
@@ -670,7 +681,7 @@ function BenefitsContent() {
                                         required
                                     >
                                         <option value="">Seleccione un negocio</option>
-                                        {allBusinesses.map(business => (
+                                        {Array.isArray(allBusinesses) && allBusinesses.map(business => (
                                             <option key={business.id} value={business.id}>
                                                 {business.name}
                                             </option>
@@ -1270,6 +1281,36 @@ function BenefitsContent() {
                             </button>
                         </div>
                     </div>
+                </div>,
+                document.body
+            )}
+
+            {/* Toast de Notificación */}
+            {toast.show && createPortal(
+                <div 
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        background: toast.type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #ef4444, #dc2626)',
+                        color: 'white',
+                        padding: '16px 24px',
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+                        zIndex: 10000,
+                        fontWeight: '600',
+                        fontSize: '15px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        animation: 'slideInRight 0.3s ease-out',
+                        maxWidth: '400px'
+                    }}
+                >
+                    <span style={{ fontSize: '20px' }}>
+                        {toast.type === 'success' ? '✅' : '❌'}
+                    </span>
+                    {toast.message}
                 </div>,
                 document.body
             )}
