@@ -10,7 +10,6 @@ const PartnerUploadPage = () => {
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
-    const [showBusinessForm, setShowBusinessForm] = useState(false);
     const [businesses, setBusinesses] = useState([]);
     
     // Detectar el tipo de unilink basado en la URL
@@ -149,66 +148,47 @@ const PartnerUploadPage = () => {
         setIsSubmitting(true);
         setError(null);
 
-        // Si es un unilink de negocio, validar campos adicionales
-        if (isBusinessUnilink) {
-            if (!businessFormData.email || !businessFormData.password) {
-                setError('Email y contraseña son campos requeridos');
-                setIsSubmitting(false);
-                return;
-            }
+        // Validar campos de autenticación
+        if (!businessFormData.email || !businessFormData.password) {
+            setError('Email y contraseña son campos requeridos');
+            setIsSubmitting(false);
+            return;
+        }
 
-            if (businessFormData.password !== businessFormData.confirmPassword) {
-                setError('Las contraseñas no coinciden');
-                setIsSubmitting(false);
-                return;
-            }
+        if (businessFormData.password !== businessFormData.confirmPassword) {
+            setError('Las contraseñas no coinciden');
+            setIsSubmitting(false);
+            return;
+        }
 
-            if (businessFormData.password.length < 6) {
-                setError('La contraseña debe tener al menos 6 caracteres');
-                setIsSubmitting(false);
-                return;
-            }
+        if (businessFormData.password.length < 6) {
+            setError('La contraseña debe tener al menos 6 caracteres');
+            setIsSubmitting(false);
+            return;
         }
 
         try {
-            const endpoint = isBusinessUnilink
-                ? `${import.meta.env.VITE_API_URL}/api/business/upload/${token}/register`
-                : `${import.meta.env.VITE_API_URL}/api/partner/upload/${token}/business`;
-
-            const payload = isBusinessUnilink 
-                ? {
-                    name: businessFormData.name,
-                    location: businessFormData.location,
-                    url_image_business: businessFormData.url_image_business,
-                    email: businessFormData.email,
-                    password: businessFormData.password
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/business/upload/${token}/register`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: businessFormData.name,
+                        location: businessFormData.location,
+                        url_image_business: businessFormData.url_image_business,
+                        email: businessFormData.email,
+                        password: businessFormData.password
+                    })
                 }
-                : businessFormData;
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
+            );
 
             const data = await response.json();
 
             if (data.ok) {
                 setUploadSuccess(true);
-                
-                // Si es unilink de beneficios, recargar lista de negocios
-                if (!isBusinessUnilink) {
-                    await loadBusinesses();
-                    
-                    setFormData(prev => ({
-                        ...prev,
-                        id_business_discount: data.data.id
-                    }));
-                    
-                    setShowBusinessForm(false);
-                }
                 
                 setBusinessFormData({
                     name: '',
@@ -221,10 +201,7 @@ const PartnerUploadPage = () => {
 
                 setTimeout(() => {
                     setUploadSuccess(false);
-                    // Si es unilink de negocio, mostrar mensaje de éxito permanente
-                    if (isBusinessUnilink) {
-                        setError(null);
-                    }
+                    setError(null);
                 }, 5000);
 
             } else {
@@ -232,7 +209,7 @@ const PartnerUploadPage = () => {
             }
 
         } catch (err) {
-            setError(isBusinessUnilink ? 'Error al registrar el negocio' : 'Error al crear el negocio');
+            setError('Error al registrar el negocio');
             console.error(err);
         } finally {
             setIsSubmitting(false);
@@ -273,14 +250,14 @@ const PartnerUploadPage = () => {
                 {uploadSuccess && (
                     <div className="success-banner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><path fill="#FFFFFF" d="M437.3 30L202.7 339.3L64 200.7l-64 64L213.3 478L512 94z"/></svg>
-                        <span>¡{isBusinessUnilink ? 'Negocio registrado' : (showBusinessForm ? 'Negocio creado' : 'Beneficio subido')} exitosamente!</span>
+                        <span>¡{isBusinessUnilink ? 'Negocio registrado' : 'Beneficio subido'} exitosamente!</span>
                     </div>
                 )}
 
-                {/* Mostrar formulario de negocio si es unilink de negocio O si el usuario quiere crear uno */}
-                {(isBusinessUnilink || showBusinessForm) ? (
+                {/* Mostrar formulario de negocio solo si es unilink de negocio */}
+                {isBusinessUnilink ? (
                     <form onSubmit={handleSubmitBusiness} className="upload-form">
-                        <h2>{isBusinessUnilink ? 'Información del Negocio' : 'Crear Nuevo Negocio'}</h2>
+                        <h2>Registrar Negocio</h2>
 
                         <div className="form-group">
                             <label>Nombre del negocio: *</label>
@@ -374,16 +351,6 @@ const PartnerUploadPage = () => {
                         )}
 
                         <div style={{ display: 'flex', gap: '12px' }}>
-                            {!isBusinessUnilink && (
-                                <button 
-                                    type="button"
-                                    className="cancel-btn"
-                                    onClick={() => setShowBusinessForm(false)}
-                                    disabled={isSubmitting}
-                                >
-                                    Cancelar
-                                </button>
-                            )}
                             <button 
                                 type="submit" 
                                 className="submit-btn"
@@ -393,20 +360,20 @@ const PartnerUploadPage = () => {
                                     alignItems: 'center', 
                                     justifyContent: 'center', 
                                     gap: '10px',
-                                    flex: isBusinessUnilink ? 1 : 'initial'
+                                    flex: 1
                                 }}
                             >
                                 {isSubmitting ? (
                                     <>
                                         <div className="btn-spinner"></div>
-                                        <span>{isBusinessUnilink ? 'Registrando...' : 'Creando...'}</span>
+                                        <span>Registrando...</span>
                                     </>
                                 ) : (
                                     <>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1024 1024">
                                             <path fill="currentColor" d="M992 1024H32q-13 0-22.5-9.5T0 992t9.5-22.5T32 960h32q27 0 45.5-19t18.5-45V64q0-26 19-45t45-19h640q27 0 45.5 19T896 64v832q0 27 19 45.5t45 18.5h32q13 0 22.5 9.5t9.5 22.5t-9.5 22.5t-22.5 9.5zM384 160q0-13-9.5-22.5T352 128h-64q-13 0-22.5 9.5T256 160v64q0 13 9.5 22.5T288 256h64q13 0 22.5-9.5T384 224v-64zm0 192q0-13-9.5-22.5T352 320h-64q-13 0-22.5 9.5T256 352v64q0 13 9.5 22.5T288 448h64q13 0 22.5-9.5T384 416v-64zm0 192q0-13-9.5-22.5T352 512h-64q-13 0-22.5 9.5T256 544v64q0 13 9.5 22.5T288 640h64q13 0 22.5-9.5T384 608v-64zm192-384q0-13-9.5-22.5T544 128h-64q-13 0-22.5 9.5T448 160v64q0 13 9.5 22.5T480 256h64q13 0 22.5-9.5T576 224v-64zm0 192q0-13-9.5-22.5T544 320h-64q-13 0-22.5 9.5T448 352v64q0 13 9.5 22.5T480 448h64q13 0 22.5-9.5T576 416v-64zm0 192q0-13-9.5-22.5T544 512h-64q-13 0-22.5 9.5T448 544v64q0 13 9.5 22.5T480 640h64q13 0 22.5-9.5T576 608v-64zm32 224H416q-13 0-22.5 9.5T384 800v128q0 13 9.5 22.5T416 960h192q13 0 22.5-9.5T640 928V800q0-13-9.5-22.5T608 768zm160-608q0-13-9.5-22.5T736 128h-64q-13 0-22.5 9.5T640 160v64q0 13 9.5 22.5T672 256h64q13 0 22.5-9.5T768 224v-64zm0 192q0-13-9.5-22.5T736 320h-64q-13 0-22.5 9.5T640 352v64q0 13 9.5 22.5T672 448h64q13 0 22.5-9.5T768 416v-64zm0 192q0-13-9.5-22.5T736 512h-64q-13 0-22.5 9.5T640 544v64q0 13 9.5 22.5T672 640h64q13 0 22.5-9.5T768 608v-64z"/>
                                         </svg>
-                                        <span>{isBusinessUnilink ? 'Registrar Negocio' : 'Crear Negocio'}</span>
+                                        <span>Registrar Negocio</span>
                                     </>
                                 )}
                             </button>
@@ -472,13 +439,6 @@ const PartnerUploadPage = () => {
                                     </option>
                                 ))}
                             </select>
-                            <button 
-                                type="button"
-                                className="link-button"
-                                onClick={() => setShowBusinessForm(true)}
-                            >
-                                ¿No está tu negocio? Créalo aquí
-                            </button>
                         </div>
 
                         {error && (
