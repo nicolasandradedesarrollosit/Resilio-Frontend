@@ -156,8 +156,9 @@ function Layout(){
           } 
         />
 
-        {/* Ruta pública para partners (sin autenticación) */}
+        {/* Rutas públicas para partners y negocios (sin autenticación) */}
         <Route path='/partner/upload/:token' element={<PartnerUploadPage />} />
+        <Route path='/business/upload/:token' element={<PartnerUploadPage />} />
 
         <Route path='*' element={<NotFound />} />
       </Routes>
