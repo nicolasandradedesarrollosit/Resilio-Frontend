@@ -41,7 +41,9 @@
 }
 
 .item-svg>.svg-icon{
-    margin-left: 5px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-60%);
     height: 35%;
     width: 35%;
 }
@@ -92,6 +94,12 @@
         height: 20%;
         width: 20%;
     }
+
+    .item-svg>.svg-icon{
+        position: relative;
+        left: 50%;
+        transform: translateX(-60%);
+    }
     
     .card-item>.title-card{
         font-size: 1.3rem;
@@ -130,6 +138,12 @@
     .card-item>.item-svg{
         height: 70px;
         width: 70px;
+    }
+
+    .item-svg>.svg-icon{
+        position: relative;
+        left: 50%;
+        transform: translateX(-60%);
     }
     
     .card-item>.title-card{
@@ -172,6 +186,12 @@
         font-size: 1.4rem;
         box-shadow: 1px 1px 3px hsl(268, 100%, 70%);
     }
+
+    .item-svg>.svg-icon{
+        position: relative;
+        left: 50%;
+        transform: translateX(-60%);
+    }
     
     .card-item>.title-card{
         font-size: 1.1rem;
@@ -209,6 +229,12 @@
         height: 50px;
         width: 50px;
         font-size: 1.2rem;
+    }
+
+    .item-svg>.svg-icon{
+        position: relative;
+        left: 50%;
+        transform: translateX(-60%);
     }
     
     .card-item>.title-card{

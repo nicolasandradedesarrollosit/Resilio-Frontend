@@ -662,6 +662,11 @@
     .admin-users-table-container {
         width: 98%;
     }
+
+    .admin-users-btn-create {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -701,6 +706,13 @@
     .admin-users-btn-action svg {
         width: 13px;
         height: 13px;
+    }
+
+    .admin-users-btn-create {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+        margin-top: 10px;
     }
 }
 

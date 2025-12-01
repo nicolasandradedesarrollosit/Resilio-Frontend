@@ -10,7 +10,7 @@ function FormLogIn() {
     const authContext = useContext(AuthContext);
     
     
-    const { loginWithGoogle } = authContext;
+    const { loginWithGoogle, refreshUserData } = authContext;
 
     const [validationStates, setValidationStates] = useState({
         email: null,
@@ -113,18 +113,13 @@ function FormLogIn() {
                         return;
                     }
 
-                    const userDataResponse = await fetch(`${API_URL}/api/user-data`, {
-                        method: 'GET',
-                        credentials: 'include',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
+                    const userData = await refreshUserData();
 
-                    if (!userDataResponse.ok) {
+                    if (!userData) {
                         throw new Error('Error al obtener datos del usuario');
                     }
 
-                    const userData = await userDataResponse.json();
-                    const userRole = userData.data?.role || 'user';
+                    const userRole = userData.role || 'user';
 
                     setIsLoading(false);
                     form.reset();

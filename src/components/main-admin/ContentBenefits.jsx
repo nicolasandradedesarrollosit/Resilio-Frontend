@@ -227,6 +227,33 @@ function BenefitsContent() {
         }
     };
 
+    const handleGenerateBusinessLink = async () => {
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/api/admin/unique-links/business`;
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    expirationHours: 24
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.ok) {
+                await navigator.clipboard.writeText(data.data.uploadUrl);
+                showToast('🏢 ¡Enlace de registro de negocio copiado al portapapeles!', 'success');
+            } else {
+                showToast('Error al generar enlace: ' + (data.message || 'Error desconocido'), 'error');
+            }
+        } catch (err) {
+            showToast('Error de conexión: ' + err.message, 'error');
+        }
+    };
+
     const handleEditBusinessClick = (business) => {
         setSelectedBusiness(business);
         setEditBusinessFormData({
@@ -430,7 +457,7 @@ function BenefitsContent() {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5a5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1c0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5a5 5 0 0 0-5-5Z"/>
                             </svg>
-                            Crear Enlace
+                            Enlace Beneficios
                         </button>
                         <button 
                             className='admin-users-btn-create' 
@@ -765,6 +792,16 @@ function BenefitsContent() {
             <div className='admin-users-first-row'>
                 <span className='admin-users-title-section'>Administrar Negocios</span>
                 <div style={{ display: 'flex', gap: 8 }}>
+                    <button 
+                        className='admin-users-btn-create'
+                        style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
+                        onClick={handleGenerateBusinessLink}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5a5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1c0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5a5 5 0 0 0-5-5Z"/>
+                        </svg>
+                        Enlace Negocios
+                    </button>
                     <button className='admin-users-btn-create' onClick={() => setSection('benefits')}>
                         Ir a Beneficios
                     </button>
