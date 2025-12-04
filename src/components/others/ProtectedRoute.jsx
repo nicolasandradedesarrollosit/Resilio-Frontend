@@ -28,12 +28,30 @@ function ProtectedRoute({ children, requiredRole = null }) {
     if (requiredRole) {
         // Si requiere admin pero no es admin
         if (requiredRole === 'admin' && userRole !== 'admin') {
+            // Si es user, ir a main/user, si es business, ir a main/business
+            if (userRole === 'business') {
+                return <Navigate to="/main/business" replace />;
+            }
             return <Navigate to="/main/user" replace />;
         }
         
-        // Si requiere user pero es admin, redirigir a panel admin
-        if (requiredRole === 'user' && userRole === 'admin') {
-            return <Navigate to="/main/admin" replace />;
+        // Si requiere business pero no es business
+        if (requiredRole === 'business' && userRole !== 'business') {
+            // Si es admin, ir a main/admin, si es user, ir a main/user
+            if (userRole === 'admin') {
+                return <Navigate to="/main/admin" replace />;
+            }
+            return <Navigate to="/main/user" replace />;
+        }
+        
+        // Si requiere user pero es admin o business, redirigir al panel correspondiente
+        if (requiredRole === 'user' && userRole !== 'user') {
+            if (userRole === 'admin') {
+                return <Navigate to="/main/admin" replace />;
+            }
+            if (userRole === 'business') {
+                return <Navigate to="/main/business" replace />;
+            }
         }
     }
 

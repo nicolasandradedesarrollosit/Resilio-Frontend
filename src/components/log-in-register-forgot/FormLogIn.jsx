@@ -107,12 +107,56 @@ function FormLogIn() {
                     const resp = await response.json();
                     
                     if(!response.ok){
-                        setRequestErrorState(resp.message);
+                        // Si falla el login normal, intentar login de negocio
+                        const businessResponse = await fetch(`${API_URL}/api/business-login`, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: emailValue, password: passwordValue }),
+                        });
+
+                        const businessResp = await businessResponse.json();
+                        
+                        if(!businessResponse.ok){
+                            console.log('❌ Business login falló:', businessResp);
+                            setRequestErrorState(businessResp.message || resp.message);
+                            setIsLoading(false);
+                            form.reset();
+                            return;
+                        }
+
+                        console.log('✅ Business login exitoso, obteniendo datos...');
+                        
+                        // Login de negocio exitoso - cargar datos directamente
+                        const businessData = await fetch(`${API_URL}/api/business-data`, {
+                            method: 'GET',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+
+                        console.log('📊 Response de business-data:', businessData.status);
+
+                        if (!businessData.ok) {
+                            const errorData = await businessData.json();
+                            console.log('❌ Error business-data:', errorData);
+                            throw new Error(errorData.message || 'Error al obtener datos del negocio');
+                        }
+
+                        const businessResult = await businessData.json();
+                        
+                        // El contexto se actualizará automáticamente al navegar
+                        
                         setIsLoading(false);
                         form.reset();
+                        setLoadingMessage('Accediendo al panel de negocio...');
+                        setShowLoadingScreen(true);
+                        setTimeout(() => {
+                            navigate("/main/business", { state: { fromApp: true } });
+                        }, 1500);
                         return;
                     }
 
+                    // Login de usuario normal exitoso
                     const userData = await refreshUserData();
 
                     if (!userData) {
@@ -129,6 +173,12 @@ function FormLogIn() {
                         setShowLoadingScreen(true);
                         setTimeout(() => {
                             navigate("/main/admin", { state: { fromApp: true } });
+                        }, 1500);
+                    } else if (userRole === 'business') {
+                        setLoadingMessage('Accediendo al panel de negocio...');
+                        setShowLoadingScreen(true);
+                        setTimeout(() => {
+                            navigate("/main/business", { state: { fromApp: true } });
                         }, 1500);
                     } else {
                         setLoadingMessage('Cargando tu espacio personal...');

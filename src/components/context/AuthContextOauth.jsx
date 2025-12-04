@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { loginWithGoogle, logOut } from '../../services/authService';
 import { fetchUserData } from '../../helpers/userFunctions';
+import { fetchBusinessData } from '../../helpers/businessFunctions';
 
 export const AuthContext = createContext({
     userData: null,
@@ -17,7 +18,14 @@ const AuthProvider = ({ children }) => {
 
     const loadUserData = async () => {
         try {
-            const data = await fetchUserData();
+            // Intentar cargar datos de usuario primero
+            let data = await fetchUserData();
+            
+            // Si no hay datos de usuario, intentar cargar datos de negocio
+            if (!data) {
+                data = await fetchBusinessData();
+            }
+            
             setUserData(data);
             return data;
         } catch (error) {

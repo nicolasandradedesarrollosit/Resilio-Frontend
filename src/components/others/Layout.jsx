@@ -8,6 +8,7 @@ import LogIn from '../../pages/LogIn.jsx';
 import Register from '../../pages/Register.jsx';
 import ForgotPassword from '../../pages/ForgotPassword.jsx';
 import MainUser from '../../pages/MainUser.jsx';
+import MainBusiness from '../../pages/MainBusiness.jsx';
 import NotFound from './NotFound.jsx';
 import Profile from '../../pages/Profile.jsx';
 import AuthCallback from '../callback/AuthCallback.jsx';
@@ -129,6 +130,17 @@ function Layout(){
             <ProtectedRoute requiredRole="admin">
               <AdminLayout>
                 <MainAdmin />
+              </AdminLayout>
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path='/main/business' 
+          element={
+            <ProtectedRoute requiredRole="business">
+              <AdminLayout>
+                <MainBusiness />
               </AdminLayout>
             </ProtectedRoute>
           } 

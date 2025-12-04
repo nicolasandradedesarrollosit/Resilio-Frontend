@@ -254,7 +254,6 @@ const PartnerUploadPage = () => {
                     </div>
                 )}
 
-                {/* Mostrar formulario de negocio solo si es unilink de negocio */}
                 {isBusinessUnilink ? (
                     <form onSubmit={handleSubmitBusiness} className="upload-form">
                         <h2>Registrar Negocio</h2>
@@ -296,7 +295,6 @@ const PartnerUploadPage = () => {
                             />
                         </div>
 
-                        {/* Campos de autenticación solo para unilinks de negocio */}
                         {isBusinessUnilink && (
                             <>
                                 <div className="form-group">

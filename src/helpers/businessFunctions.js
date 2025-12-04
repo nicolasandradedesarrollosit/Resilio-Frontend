@@ -1,7 +1,38 @@
 import { authGet, authPost, authPatch, authDelete } from '../services/api/apiClient';
-import { getApiUrl, createAuthFetchOptions } from './authHelpers';
+import { getApiUrl, createAuthFetchOptions, extractUserData, handleAuthError } from './authHelpers';
 
 const API_URL = getApiUrl();
+
+
+export async function fetchBusinessData() {
+    try {
+        const result = await authGet('/api/business-data');
+        return extractUserData(result);
+    } catch (error) {
+        handleAuthError(error, 'fetchBusinessData');
+        return null;
+    }
+}
+
+
+export async function getBusinessData() {
+    try {
+        const result = await authGet('/api/business-data');
+        if (!result) {
+            throw new Error('Error al obtener los datos del negocio');
+        }
+        
+        const data = extractUserData(result);
+        if (!data) {
+            throw new Error('No se pudo extraer los datos del negocio');
+        }
+
+        return data;
+    } catch (error) {
+        handleAuthError(error, 'getBusinessData');
+        throw error;
+    }
+}
 
 
 export async function getAdminBusiness(limit = 10, offset = 0) {
